@@ -1,7 +1,8 @@
 <?php 
 	session_start();
+	include('inc/auth.php');
 	include("inc/connectionToMysql.php");
-	include("registerUserController.php");
+	include("registerAgentController.php");
 /////////////////////////////////////////////////////////
 	//initilize the page
 	require_once ("inc/init.php");
@@ -17,7 +18,7 @@
 	$page_title = "Agent Management";
 	
 	/* ---------------- END PHP Custom Scripts ------------- */
-	include("inc/loginDataBase.php");
+	
 	//include header
 	//you can add your custom css in $page_css array.
 	//Note: all css files are inside css/ folder
@@ -110,7 +111,7 @@
 	<?php
 		//configure ribbon (breadcrumbs) array("name"=>"url"), leave url empty if no url
 		//$breadcrumbs["New Crumb"] => "http://url.com"
-		$breadcrumbs["Tables"] = "";
+		$breadcrumbs["Setup"] = "";
 		include("inc/ribbon.php");
 	?>
 	
@@ -144,16 +145,16 @@
 						</div>
 						<div class="col-xs-8 col-sm-4 col-md-6 status" style="padding-top: 5px;">
 							<div class="filterbar">
-							<input type="checkbox" name="vehicle" id="StatusA" value="">
+							<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked >
 								<label for="StatusA" style="background-color: #5dc156;">Active</label>
-							<input type="checkbox" name="vehicle" id="StatusI" value="">
+							<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked>
 								<label for="StatusI" style="background-color: #6dd0ca;">Inactive</label>
-							<input type="checkbox" name="vehicle" id="StatusC" value="">
+							<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked>
 								<label for="StatusC" style="background-color: #ffba42;">Cancel</label>
 							</div>
 						</div>
 						<div class="col-xs-4 col-sm-4 col-md-2 filterbar">
-							<button class="btn btn-primary" id="m1s" data-toggle="modal" data-target="#myModal">Add new</button>
+							<button class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal">Add new</button>
 						</div>
 					</div>
 
@@ -170,41 +171,41 @@
 											<th data-class="expand">Email</th>
 											<th data-hide="phone">Username</th>
 											<th>Status</th>
-											<!-- <th data-hide="phone,tablet"><i class="fa fa-fw fa-map-marker txt-color-blue hidden-md hidden-sm hidden-xs"></i> Zip</th> -->
-											<!-- <th data-hide="phone,tablet">City</th> -->
-											<!-- <th data-hide="phone,tablet"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Date</th> -->
+											<th></th>
 										</tr>
 									</thead>
 									<tbody>
 										<?PHP
-											$sql = "SELECT `userid`, `username`, `email`, `password`, `type`, `status`,
-												   `createdatetime`, `createby`, `updatedatetime`, `updateby` FROM `user` ";
-												$result = mysqli_query($conn ,$sql);
-												if(mysqli_num_rows($result) > 0){
-													//show data for each row
+											$sql = "SELECT `agentid`, `username`, `email`, `password`, `agentname`, 
+													`agentaddress`, `agentcontactname`, `agentcontacttel`, `maximumcredit`, 
+													`remaincredit`, `creditterm`, `pricetype`, `vattype`, `status`, `note`
+													FROM `agent` ";
+											$result = mysqli_query($conn ,$sql);
+											if(mysqli_num_rows($result) > 0){
+												//show data for each row
 												while($row = mysqli_fetch_assoc($result)){
 													if($row['status'] == 'A'){
 														$statusUser = '<font color="green">Active</font>';
-													}else if($row['status'] == 'I'){
+														}else if($row['status'] == 'I'){
 														$statusUser = 'Inactive';
-													}else if($row['status'] == 'C'){
+														
+														}else if($row['status'] == 'C'){
 														$statusUser = '<font color="red">Cancel</font>';
 													}
-												 if($row['type'] == 'S'){
-														$typeUser = 'Staf';
-													}else if($row['type'] == 'M'){
-														$typeUser = 'Manager';
-													}else if($row['type'] == 'A'){
-														$typeUser = 'Admin';
-												 }?>
-												<tr>
-													 <td><?=$row['username']?></td>
-													 <td><?=$row['email']?></td>
-													 <td><?=$typeUser?></td>
-													 <td><?=$statusUser?></td>
-												</tr>
-												<?PHP
-												}}
+													?>
+													<tr>
+														<td><?=$row['agentname']?></td>
+														<td><?=$row['email']?></td>
+														<td><?=$row['username']?></td>
+														<td><?=$statusUser?></td>
+														<td><a class="btn btn-small btn-primary"
+															data-toggle="modal"
+															data-target="#myModal"
+															data-whatever="<?=$row['agentid']?>" >Edit</a>
+														</td>
+													</tr>
+													<?PHP
+													}}
 										?>
 								
 									</tbody>
@@ -225,7 +226,7 @@
       <!-- Modal content-->
 	  
       <div class="modal-content">
-	  <form action='user-management.php' method='post' >
+	  <form action='agent-management.php' method='post' >
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="header">Agent Manager</h4>
@@ -242,26 +243,26 @@
 						<label style="background-color: #5dc156;" for="m_StatusA">Active</label>
 					<input type="radio" name="status" value="I" id="m_StatusI">
 						<label style="background-color: #6dd0ca;" for="m_StatusI">Inactive</label>
-					<input type="radio" name="status" value="C" id="m_Statusc">
-						<label style="background-color: #ffba42;" for="m_Statusc">Cancel</label>
+					<input type="radio" name="status" value="C" id="m_StatusC">
+						<label style="background-color: #ffba42;" for="m_StatusC">Cancel</label>
 				</div>
 				<div class="col-sm-12 col-md-4 header">
 					Agent Name <font color="red">*</font>
 				</div>
 				<div class="col-sm-12 col-md-8">
-					<input type="text" name="agentName" value="" required>
+					<input type="text" id="agentName" name="agentName" value="" required>
 				</div>
 				<div class="col-sm-12 col-md-4 header">
 					Username <font color="red">*</font>
 				</div>
 				<div class="col-sm-12 col-md-8">
-					<input type="text" name="username" value="" required>
+					<input type="text" id="username" name="username" value="" required>
 				</div>
 				<div class="col-sm-12 col-md-4 header">
 					Password <font color="red">*</font>
 				</div>
 				<div class="col-sm-12 col-md-8">
-					<input type="text" name="password" value="" required>
+					<input type="text" id="password" name="password" value="" required>
 				</div>
 				
 			</div>
@@ -271,30 +272,30 @@
 				Maximum Credit <font color="red"> *</font>
 				</div>
 				<div class="col-sm-12 col-md-8">
-					<input type="text" name="maxCredit" value="" required>
+					<input type="text" id="maxCredit" name="maxCredit" value="" required>
 				</div>
 				<div class="col-sm-12 col-md-4 header">
 					Credit Term (Day)<font color="red">*</font>
 				</div>
 				<div class="col-sm-12 col-md-8">
-					<input type="text" name="creditTerm" value="" required> 
+					<input type="number" step="1" id="creditTerm" name="creditTerm"  value="" required> 
 				</div>
 				<div class="col-xs-4 col-sm-4 col-md-4 header">
 					Price Type <font color="red">*</font>
 				</div>
 				<div class="col-xs-8 col-sm-8 col-md-8">
-					<input type="radio" name="priceType" value="Normat" id="p_TypeN" required>
+					<input type="radio" name="priceType" value="N" id="p_TypeN" required>
 						<label for="p_TypeN">Normat</label>
-					<input type="radio" name="priceType" value="Special" id="p_TypeS">
+					<input type="radio" name="priceType" value="S" id="p_TypeS">
 						<label for="p_TypeS">Special</label>
 				</div>
 				<div class="col-xs-4 col-sm-4 col-md-4 header">
 					Vat Type <font color="red">*</font>
 				</div>
 				<div class="col-xs-8 col-sm-8 col-md-8">
-					<input type="radio" name="varType" value="Include" id="v_TypeI" required>
+					<input type="radio" name="varType" value="I" id="v_TypeI" required>
 						<label for="v_TypeI">Include</label>
-					<input type="radio" name="varType" value="Exclude" id="v_TypeE">
+					<input type="radio" name="varType" value="E" id="v_TypeE">
 						<label for="v_TypeE">Exclude</label>
 				</div>
 				
@@ -305,37 +306,39 @@
 				Email <font color="red">*</font>
 				</div>
 				<div class="col-sm-12 col-md-8">
-					<input type="Email" name="email" value="" required>
+					<input type="Email" id="email" name="email" value="" required>
 				</div>
 				<div class="col-sm-12 col-md-4 header">
 				Contact Name
 				</div>
 				<div class="col-sm-12 col-md-8">
-					<input type="text" name="conatactName" value="">
+					<input type="text" id="conatactName" name="conatactName" value="">
 				</div>
 				<div class="col-sm-12 col-md-4 header">
 				Tel
 				</div>
 				<div class="col-sm-12 col-md-8">
-					<input type="text" name="tel" value="">
+					<input type="text" id="tel" name="tel" value="">
 				</div>
 				<div class="col-sm-12 col-md-4 header">
 				Address
 				</div>
 				<div class="col-sm-12 col-md-8">
-					<input type="text" name="address" value="">
+					<input type="text" id="address" name="address" value="">
 				</div>
 				<div class="col-sm-12 col-md-4 header">
 				Remark
 				</div>
 				<div class="col-sm-12 col-md-8">
-					<textarea name="Text1" cols="40" rows="5"></textarea>
+					<textarea id="note" name="note" value="" cols="40" rows="5"></textarea>
 				</div>
 				
 			</div>
 			
 			<div class="col-md-12 center">
-				<button type="submit" name="submitAddUser" class="btn btn-info mr-20">Save</button>
+				<input type="hidden" name="agent_id" id="agent_id" />
+				<button type="submit" name="submitAddAgent" id="submitAddAgent" value="" 
+				class="btn btn-info mr-20" onclick="return confirm('Do you want to save the data')">Save</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			</div></div>
         </div>
@@ -345,12 +348,6 @@
     </div>
   </div>
 	<!-- ==========================CONTENT ENDS HERE ========================== -->
-
-	<!-- PAGE FOOTER -->
-	<?php // include page footer
-	include ("inc/footer.php");
-	?>
-	<!-- END PAGE FOOTER -->
 
 	<?php //include required scripts
 	include ("inc/scripts.php");
@@ -366,7 +363,7 @@
 	<script type="text/javascript">
 
 	// DO NOT REMOVE : GLOBAL FUNCTIONS!
-
+	var otable;
 	$(document).ready(function() {
 
 		/* // DOM Position key index //
@@ -413,14 +410,86 @@
 		});
 		/* Custom Search box*/
 		var table_dtbasic = $('#dt_basic').DataTable();
+		otable = $('#dt_basic').dataTable();
 
 		$( "#column3_search" ).keyup(function() {
 		  //alert( "Handler for .keyup() called." );
 			table_dtbasic.search( this.value ).draw();
 		});
+		
+		$('#myModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget) // Button that triggered the modal
+			var recipient = button.data('whatever') // Extract info from data-* attributes
+			var modal = $(this);
+			var dataString = 'agent_id=' + recipient;
+			console.log('dataString :'+dataString);
+            $.ajax({
+                
+                url: "fetchEdit.php",
+				type:"POST",
+                data: dataString,
+				dataType : 'json',
+                
+                success: function (data) {
+					if(data != null){
+						$('#m_Status' + data.status).prop('checked',true);
+						$('#agentName').val(data.agentname);
+						$('#username').val(data.username);  
+						$('#email').val(data.email);  
+						$('#password').val(data.password);  
+						$('#maxCredit').val(data.maximumcredit);   
+						//$('#creditTerm').val(data.creditterm);
+						$('#p_Type' + data.pricetype).prop('checked',true);
+						$('#v_Type' + data.vattype).prop('checked',true);
+						$('#email').val(data.email);
+						$('#conatactName').val(data.agentcontactname);
+						$('#tel').val(data.agentcontacttel);
+						$('#address').val(data.agentaddress);
+						$('#note').val(data.note);
+						$('#agent_id').val(data.agentid);
+						
+						$('#submitAddAgent').val("Update");  
+					}else{
+						$('#m_StatusA').prop('checked',false);
+						$('#m_StatusI').prop('checked',false);
+						$('#m_StatusC').prop('checked',false);
+						$('#agentname').val('');
+						$('#username').val('');  
+						$('#email').val('');  
+						$('#password').val('');  
+						$('#maxCredit').val('');   
+						//$('#creditTerm').val('');
+						$('#p_TypeN').prop('checked',false);
+						$('#p_TypeS').prop('checked',false);
+						$('#v_TypeI').prop('checked',false);
+						$('#v_TypeE').prop('checked',false);
+						$('#email').val('');
+						$('#conatactName').val('');
+						$('#tel').val('');
+						$('#address').val('');
+						$('#note').val('');
+						$('#agent_id').val('');
+						$('#submitAddAgent').val("Insert");
+					}
+				},
+                error: function(err) {
+                    console.log('err : '+err);
+					
+				}
+			});  
+		});
 	});
 
 	/* END BASIC */
+	function filterCheckbox(){
+
+		var types = $('input:checkbox[name="status"]:checked').map(function() {
+    		return '^' + this.value + '\$';
+ 		 }).get().join('|');
+		  //filter in column 0, with an regex, no smart filtering, no inputbox,not case sensitive
+		  //console.log(types);
+		  otable.fnFilter(types, 3, true, false, false, false);
+	}
 
 
 	</script>

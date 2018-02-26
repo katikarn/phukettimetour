@@ -110,7 +110,7 @@
 	<?php
 		//configure ribbon (breadcrumbs) array("name"=>"url"), leave url empty if no url
 		//$breadcrumbs["New Crumb"] => "http://url.com"
-		$breadcrumbs["Tables"] = "";
+		$breadcrumbs["Setup"] = "";
 		include("inc/ribbon.php");
 	?>
 	
@@ -144,11 +144,11 @@
 						</div>
 						<div class="col-xs-8 col-sm-4 col-md-6 status" style="padding-top: 5px;">
 							<div class="filterbar">
-							<input type="checkbox" name="vehicle" id="StatusA" value="">
+							<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked >
 								<label for="StatusA" style="background-color: #5dc156;">Active</label>
-							<input type="checkbox" name="vehicle" id="StatusI" value="">
+							<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked>
 								<label for="StatusI" style="background-color: #6dd0ca;">Inactive</label>
-							<input type="checkbox" name="vehicle" id="StatusC" value="">
+							<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked>
 								<label for="StatusC" style="background-color: #ffba42;">Cancel</label>
 							</div>
 						</div>
@@ -259,10 +259,10 @@
 				<div class="col-sm-12 col-md-8">
 					<input type="text" name="username" value="" required>
 				</div>
-				<div class="col-xs-4 col-sm-4 col-md-4 header">
+				<div class="col-sm-4 col-md-4 header">
 					Type <font color="red">*</font>
 				</div>
-				<div class="col-xs-8 col-sm-8 col-md-8">
+				<div class="col-sm-8 col-md-8">
 					<input type="radio" name="priceType" value="Normat" id="p_TypeN" required>
 						<label for="p_TypeN">Ticket</label>
 					<input type="radio" name="priceType" value="Special" id="p_TypeS">
@@ -275,6 +275,15 @@
 				</div>
 				<div class="col-sm-12 col-md-8">
 					<textarea name="Text1" cols="40" rows="5"></textarea>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4 header">
+					Confirm Class <font color="red">*</font>
+				</div>
+				<div class="col-xs-8 col-sm-8 col-md-8">
+					<input type="radio" name="priceType" value="Normat" id="p_TypeN" required>
+						<label for="p_TypeN">Manual</label>
+					<input type="radio" name="priceType" value="Special" id="p_TypeS">
+						<label for="p_TypeS">Auto</label>
 				</div>	
 			</div>
 			<div class="sectionHead" >Finance</div>
@@ -313,20 +322,28 @@
 					<input type="radio" name="priceType" value="Normat" id="p_TypeN" required>
 						<label for="p_TypeN">Open</label>
 					<input type="radio" name="priceType" value="Special" id="p_TypeS">
-						<label for="p_TypeS">Close</label>
+						<label for="p_TypeS">Fixed Seat</label>
 				</div>
 				<div class="col-xs-4 col-sm-4 col-md-4 header">
 					Ticket Type <font color="red">*</font>
 				</div>
 				<div class="col-xs-8 col-sm-8 col-md-8">
-					<input type="radio" name="priceType" value="Normat" id="p_TypeN" required>
+					<div>
+						<input type="radio" name="priceType" value="Normat" id="p_TypeN" required>
 						<label for="p_TypeN">Same Price</label>
-					<input type="radio" name="priceType" value="Special" id="p_TypeS">
-						<label for="p_TypeS">Adult</label>
-					<input type="radio" name="priceType" value="Normat" id="p_TypeN" required>
+					</div>
+					<div>
+						<input type="radio" name="priceType" value="Special" id="p_TypeS">
+						<label for="p_TypeS">Adult</label>						
+					</div>
+					<div>
+						<input type="radio" name="priceType" value="Normat" id="p_TypeN" required>
 						<label for="p_TypeN">Chident</label>
-					<input type="radio" name="priceType" value="Special" id="p_TypeS">
+					</div>
+					<div>
+						<input type="radio" name="priceType" value="Special" id="p_TypeS">
 						<label for="p_TypeS">Senier</label>
+					</div>		
 				</div>
 				<div class="col-sm-12 col-md-4 header">
 				Show Time <font color="red">*</font>
@@ -393,12 +410,6 @@
   </div>
 	<!-- ==========================CONTENT ENDS HERE ========================== -->
 
-	<!-- PAGE FOOTER -->
-	<?php // include page footer
-	include ("inc/footer.php");
-	?>
-	<!-- END PAGE FOOTER -->
-
 	<?php //include required scripts
 	include ("inc/scripts.php");
 	?>
@@ -413,7 +424,7 @@
 	<script type="text/javascript">
 
 	// DO NOT REMOVE : GLOBAL FUNCTIONS!
-
+	var otable;
 	$(document).ready(function() {
 
 		/* // DOM Position key index //
@@ -460,6 +471,7 @@
 		});
 		/* Custom Search box*/
 		var table_dtbasic = $('#dt_basic').DataTable();
+		otable = $('#dt_basic').dataTable();
 
 		$( "#column3_search" ).keyup(function() {
 		  //alert( "Handler for .keyup() called." );
@@ -468,7 +480,15 @@
 	});
 
 	/* END BASIC */
+	function filterCheckbox(){
 
+		var types = $('input:checkbox[name="status"]:checked').map(function() {
+    		return '^' + this.value + '\$';
+ 		 }).get().join('|');
+		  //filter in column 0, with an regex, no smart filtering, no inputbox,not case sensitive
+		  //console.log(types);
+		  otable.fnFilter(types, 4, true, false, false, false);
+	}
 
 	</script>
 
