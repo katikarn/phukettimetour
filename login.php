@@ -36,6 +36,15 @@ include("inc/header.php");
 		background: -webkit-linear-gradient(to right, #1D2671, #C33764) !important;  /* Chrome 10-25, Safari 5.1-6 */
 		background: linear-gradient(to right, #1D2671, #C33764) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 	}
+
+	.error{
+		margin-top: 6px;
+	    padding: 0 1px;
+	    font-style: normal;
+	    font-size: 11px;
+	    line-height: 15px;
+	    color: #D56161;
+	}
 </style>
 <!-- ==========================CONTENT STARTS HERE ========================== -->
 <!-- possible classes: minified, no-right-panel, fixed-ribbon, fixed-header, fixed-width-->
@@ -48,7 +57,7 @@ include("inc/header.php");
 		<!-- END AJAX-DROPDOWN -->
 	</div>
 
-	<span id="extr-page-header-space"> <span class="hidden-mobile hiddex-xs">Need an account?</span> <a href="<?php echo APP_URL; ?>/register.php" class="btn btn-danger">Create account</a> </span>
+	<!-- <span id="extr-page-header-space"> <span class="hidden-mobile hiddex-xs">Need an account?</span> <a href="<?php echo APP_URL; ?>/register.php" class="btn btn-danger">Create account</a> </span> -->
 
 </header>
 
@@ -71,15 +80,15 @@ include("inc/header.php");
 							<section>
 								<label class="label">Username</label>
 								<label class="input"> <i class="icon-append fa fa-user"></i>
-									<input type="text" name="username">
-									<b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Please enter email address/username</b></label>
+									<input type="text" name="username" id="username">
+									<!-- <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Please enter username</b> --></label>
 							</section>
 
 							<section>
 								<label class="label">Password</label>
 								<label class="input"> <i class="icon-append fa fa-lock"></i>
-									<input type="password" name="password">
-									<b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Enter your password</b> </label>
+									<input type="password" name="password" id="password">
+									<!-- <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Enter your password</b> --> </label>
 								<div class="note">
 									<a href="<?php echo APP_URL; ?>/forgotpassword.php">Forgot password?</a>
 								</div>
@@ -118,32 +127,28 @@ include("inc/header.php");
 <script src="..."></script>-->
 
 <script type="text/javascript">
-	runAllForms();
+	// runAllForms();
 
 	$(function() {
 		// Validation
 		$("#login-form").validate({
 			// Rules for form validation
 			rules : {
-				email : {
+				username : {
 					required : true,
-					email : true
 				},
 				password : {
 					required : true,
-					minlength : 3,
-					maxlength : 20
 				}
 			},
 
 			// Messages for form validation
 			messages : {
-				email : {
-					required : 'Please enter your email address',
-					email : 'Please enter a VALID email address'
+				username : {
+					required : 'Please input Username'
 				},
 				password : {
-					required : 'Please enter your password'
+					required : 'Please input Password'
 				}
 			},
 
@@ -155,7 +160,7 @@ include("inc/header.php");
 	});
 </script>
 
-<?php 
+<!-- <?php 
 	//include footer
-	include("inc/google-analytics.php"); 
-?>
+	// include("inc/google-analytics.php"); 
+?> -->

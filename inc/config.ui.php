@@ -33,11 +33,11 @@ $page_nav = array(
 		"sub" => array(
 			"Booking List" => array(
 				"title" => "Booking List",
-				"url" => APP_URL
+				"url" => APP_URL."/bookingList.php"
 			),
 			"Confirm Booking" => array(
 				"title" => "Confirm Booking",
-				"url" => APP_URL."/dashboard-social.php"
+				"url" => APP_URL."/bookingList-confirm.php"
 			)
 		)
 	),

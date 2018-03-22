@@ -4,6 +4,6 @@
 
 	if(!isset($_SESSION['LoginUserID']) || (trim($_SESSION['LoginUser']) == '')) {
 		header("location: login.php");
-
+		
 	}
 ?>

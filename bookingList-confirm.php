@@ -15,7 +15,7 @@
 		YOU CAN SET CONFIGURATION VARIABLES HERE BEFORE IT GOES TO NAV, RIBBON, ETC.
 	E.G. $page_title = "Custom Title" */
 	
-	$page_title = "User Management";
+	$page_title = "Confirm Booking";
 	
 	/* ---------------- END PHP Custom Scripts ------------- */
 	
@@ -27,58 +27,83 @@
 	
 	//include left panel (navigation)
 	//follow the tree in inc/config.ui.php
-	$page_nav["Setup"]["sub"]["User Management"]["active"] = true;
+	$page_nav["Booking"]["sub"]["Confirm Booking"]["active"] = true;
 	include ("inc/nav.php");
 ?>
 
 <style>
 	.header{
-		font-weight:bold !important;
+	font-weight:bold;
 	}
 	
 	.row{
-		margin-bottom:10px;
+	margin-bottom:10px;
 	}
 	
 	#dt_basic{
-		margin-top: 0px !important;
+	margin-top: 0px !important;
 	}
 	
-	.status span{
-		color:#fff;
-		border-radius: 4px;
-		border: 1px solid #ccc;
-		padding: 2px;
+	.filterbar{
+	// float: right;
+	margin-top: 20px;
+	text-align: center;
+	white-space: nowrap;
+	}
+	
+	.status label{
+	color:#fff;
+	margin-right: 20px;
+	border-radius: 4px;
+	border: 1px solid #ccc;
+	padding: 2px;
+	}
+	
+	label, .mr-20{
+	margin-right:	20px;
 	}
 	
 	.modal-header{
-		background-color: royalblue;
-		color: #fff;
+	background-color: royalblue;
+	color: #fff;
 	}
 	
 	.center{
-		text-align:	center;
+	text-align:	center;
 	}
 	
 	input[type=text], select, input[type=email], textarea{
-		width: 100%;
-		padding: 5px;
-		margin: 8px 0px;
-		border: 1px solid #ccc;
-		border-radius: 4px;
+	width: 100%;
+	padding: 5px;
+	margin: 8px 0px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 	}
 	
 	textarea{
-		resize:none;
+	resize:none;
 	}
-
+	
+	.sectionHead
+	{
+	width: 100%;
+	font-weight: bolder;
+	font-size: 15px;
+	margin-bottom: 11px;
+	}
+	
+	.madalContent{
+	border-left: 7px solid #3276b1;
+	border-radius: 5px;
+	display: flow-root;
+	background-color: #fafafa;
+	margin-bottom: 10px;
+	padding: 5px 0px;
+	box-shadow: 2px 2px #eee;
+	}
 	.error{
 		color: red;
 		font-weight: bold;
-	}
-
-	.required{
-		border-left: 7px solid #FF3333;
 	}
 	
 </style>
@@ -89,7 +114,7 @@
 	<?php
 		//configure ribbon (breadcrumbs) array("name"=>"url"), leave url empty if no url
 		//$breadcrumbs["New Crumb"] => "http://url.com"
-		$breadcrumbs["Setup"] = "";
+		$breadcrumbs["Booking"] = "";
 		include("inc/ribbon.php");
 	?>
 	
@@ -99,7 +124,7 @@
 		<div class="row">
 			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 				<h1 class="header">
-					USER
+					Wait for confirm
 				</h1>
 			</div>
 			<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
@@ -116,36 +141,25 @@
 				<!-- NEW WIDGET START -->
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					
-					<div class="row header">
-						<div class="col-sm-4 col-md-4 col-lg-4">
+					<!-- <div class="row header">
+						<div class="col-sm-4 col-md-4">
 							Keywoard<br/>
 							<input id="column3_search" type="text" name="googlesearch">
 						</div>
-						<div class="hidden-md col-lg-2">
-							<!-- Date<br/>
-							<input id="date_search" placeholder="DD/MM/YYYY" type="text" name="date_search"> -->
-						</div>
-						<div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 status smart-form" style="padding-top: 25px;">
-							<div class="checkbox">
-								<div class="col-xs-3 col-md-3">
-									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">Active</span></label>
-								</div>
-								<div class="col-xs-3 col-md-3">
-									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
-								</div>
-								<div class="col-xs-3 col-md-3">
-									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Cancel</span></label>
-								</div>
-								<div class="col-xs-3 col-sm-4 col-md-3">
-									<button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button>
-								</div>
+						<div class="col-xs-8 col-sm-4 col-md-6 status" style="padding-top: 5px;">
+							<div class="filterbar">
+								<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked >
+								<label for="StatusA" style="background-color: #5dc156;">Active</label>
+								<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked>
+								<label for="StatusI" style="background-color: #6dd0ca;">Inactive</label>
+								<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked>
+								<label for="StatusC" style="background-color: #ffba42;">Cancel</label>
 							</div>
 						</div>
-						
-					</div>
+						<div class="col-xs-4 col-sm-4 col-md-2 filterbar">
+							<button class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal">Add new</button>
+						</div>
+					</div> -->
 					
 					<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
 						<div>
@@ -156,17 +170,16 @@
 						        <table id="dt_basic" class="table table-striped table-bordered table-hover" style="margin-top:0px" width="100%">
 									<thead>			                
 										<tr class="header">
-											<th data-hide="phone">Username</th>
-											<th data-class="expand">Email</th>
+											<th data-hide="phone">Date</th>
+											<th data-class="expand">Product</th>
+											<th data-hide="phone">Agent</th>
+											<th data-hide="phone">Name</th>
 											<th data-hide="phone">Type</th>
 											<th>Status</th>
 											<th></th>
 										</tr>
 									</thead>
 									<tbody>
-										<script type="text/javascript">
-											var storeUsername = [];
-										</script>
 										<?PHP
 											$sql = "SELECT `userid`, `username`, `email`, `password`, `type`, `status`,
 											`createdatetime`, `createby`, `updatedatetime`, `updateby` FROM `user` ";
@@ -190,12 +203,11 @@
 														$typeUser = 'Admin';
 													}?>
 													<tr>
-														<script type="text/javascript">
-															storeUsername.push('<?=$row['username']?>');
-														</script>
 														<td><?=$row['username']?></td>
 														<td><?=$row['email']?></td>
 														<td><?=$typeUser?></td>
+														<td><?=$statusUser?></td>
+														<td><?=$statusUser?></td>
 														<td><?=$statusUser?></td>
 														<td class="center"><a class="btn btn-small btn-primary"
 															data-toggle="modal"
@@ -218,98 +230,105 @@
 	</div>
 </div>
 <!-- END MAIN PANEL -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" data-backdrop="static">
-	<div class="modal-dialog">
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-Adduser">
+		
+		<!-- Modal content-->
+		
 		<div class="modal-content">
+
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					<i class="icon-append fa fa-times"></i>
-				</button>
-				<h4 class="header">
-					General Info
-				</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="header">Booking Info</h4>
 			</div>
-			<div class="modal-body no-padding">
-
-				<form id="user-form" class="smart-form" method="POST">
-
+			<form action='user-management.php' method='post' class="smart-form">
+				<div class="modal-body">
 					<fieldset>
 						<section>
 							<div class="row">
-								<label class="label col col-2 header">Status</label>
-								<div class="col col-10">
-									<label class="input status">
-										<div class="inline-group">
-											<label class="radio">
-												<input type="radio" name="status" value="A" id="m_StatusA" checked=true>
-												<i></i><span style="background-color: #5dc156;">Active</span></label>
-											<label class="radio">
-												<input type="radio" name="status" value="I" id="m_StatusI">
-												<i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
-											<label class="radio">
-												<input type="radio" name="status" value="C" id="m_StatusC">
-												<i></i><span style="background-color: #ffba42;">Cancel</span></label>
-										</div>
-									</label>
+								<div class="col col-3 header">Supplier :</div>
+								<div class="col col-9">
+									xxxxxxxxxxxxxxxxx
 								</div>
 							</div>
 						</section>
 						<section>
 							<div class="row">
-								<label class="label col col-2 header">Type</label>
-								<div class="col col-10">
-									<label class="input">
-										<div class="inline-group">
-											<label class="radio">
-												<input type="radio" name="type" value="S" id="m_typeS" checked>
-												<i></i>Staf</label>
-											<label class="radio">
-												<input type="radio" name="type" value="M" id="m_typeM">
-												<i></i>Manager</label>
-											<label class="radio">
-												<input type="radio" name="type" value="A" id="m_typeA">
-												<i></i>Admin</label>
-										</div>
-									</label>
-								</div>
-							</div>
-						</section>	
-						<section>
-							<div class="row">
-								<label class="label col col-2 header">Username</label>
-								<div class="col col-10">
-									<label class="input required">
-										<input type="text" name="username" id="username">
-									</label>
-								</div>
-							</div>
-						</section>
-
-						<section>
-							<div class="row">
-								<label class="label col col-2 header">Password</label>
-								<div class="col col-10">
-									<label class="input required">
-										<input type="text" name="password" id="password">
-									</label>
-								</div>
-							</div>
-						</section>
-
-						<section>
-							<div class="row">
-								<label class="label col col-2 header">Email</label>
-								<div class="col col-10">
-									<label class="input required">
-										<input type="email" name="email" id="email">
-									</label>
+								<div class="col col-3 header">Reservation Tel :</div>
+								<div class="col col-9">
+									xxxxxxxxxxxxxxxxx
 								</div>
 							</div>
 						</section>
 						<section>
 							<div class="row">
-								<label class="label col col-2 header">Remark</label>
-								<div class="col col-10">
+								<div class="col col-3 header">Email :</div>
+								<div class="col col-9">
+									xxxxxxxxxxxxxxxxx
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<div class="col col-3 header">Address :</div>
+								<div class="col col-9">
+									xxxxxxxxxxxxxxxxx
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<div class="col col-3 header">Close Info :</div>
+								<div class="col col-9">
+									xxxxxxxxxxxxxxxxx
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<div class="col col-3 header">Finance :</div>
+								<div class="col col-9">
+									xxxxxxxxxxxxxxxxx
+								</div>
+							</div>
+						</section>
+						<section style="border-bottom: 2px solid;padding-bottom: 15px;">
+							<div class="row">
+								<div class="col col-3 header" style="white-space: nowrap;">Maximum Credit :</div>
+								<div class="col col-9">
+									xxxxxxxxxxxxxxxxx
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<div class="col col-3 header">Product :</div>
+								<div class="col col-9" style="color: green">
+									xxxxxxxxxxxxxxxxx
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<div class="col col-3 header">Show Time :</div>
+								<div class="col col-9" style="color: red">
+									xxxxxxxxxxxxxxxxx
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<div class="col col-3 header">QTY :</div>
+								<div class="col col-9" style="color: red">
+									xxxxxxxxxxxxxxxxx
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="col col-2 header">Remark</label>
+								<div class="input" style="padding: 25px 20px 0px 20px;">
 									<label class="input">
 										<textarea rows="4" name="remark" id="remark"></textarea>
 									</label>
@@ -317,19 +336,23 @@
 							</div>
 						</section>
 					</fieldset>
-					
-					<footer class="center">
-						<button type="submit" name="submitAddUser" onclick="return confirm('Do you want to save the data')" id="submitAddUser" class="btn btn-primary" style="float: unset;font-weight: 400;">
-							Save</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal" style="float: unset;font-weight: 400;">
-							Cancel</button>
-					</footer>
-				</form>						
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
+					<footer>		
+					<div class="row center">
+						<button type="submit" class="btn btn-primary" style="float: unset; font-weight: 400;">
+							Confirm
+						</button>
+						<button type="button" class="btn btn-default" style="float: unset; font-weight: 400;" data-dismiss="modal">
+							Cancel
+						</button>
+					</div>	
+					</footer>		
+				</div>
+			</form>
+		</div>
+		
+	</div>
+</div>
+<!-- ==========================CONTENT ENDS HERE ========================== -->
 
 
 <?php //include required scripts
@@ -404,7 +427,7 @@
 						$('#username').val(data.username);  
 						$('#email').val(data.email);  
 						$('#password').val(data.password);  
-						$('#remark').val(data.remark);   
+						$('#type').val(data.type);   
 						$('#user_id').val(data.userid);
 						$('#m_Status' + data.status).prop('checked',true);
 						$('#m_type' + data.type).prop('checked',true);
@@ -413,14 +436,14 @@
 						$('#username').val('');  
 						$('#email').val('');  
 						$('#password').val('');  
-						$('#remark').val('');   
+						$('#type').val('');    
 						$('#user_id').val('');
-						$('#m_StatusA').prop('checked',true);
-						/*$('#m_StatusI').prop('checked',false);
-						$('#m_StatusC').prop('checked',false);*/
-						$('#m_typeS').prop('checked',true);
-						/*$('#m_typeM').prop('checked',false);
-						$('#m_typeA').prop('checked',false);*/
+						$('#m_StatusA').prop('checked',false);
+						$('#m_StatusI').prop('checked',false);
+						$('#m_StatusC').prop('checked',false);
+						$('#m_typeS').prop('checked',false);
+						$('#m_typeM').prop('checked',false);
+						$('#m_typeA').prop('checked',false);
 						$('#submitAddUser').val("Insert");
 					}
 				},
@@ -431,79 +454,49 @@
 			});  
 		});
 
-		//// --------------------------- Validate------------------------------
-		var errorClass = 'invalid';
-		var errorElement = 'em';
+		//// Validate
+		//// set default 
+		$('p[for="username"]').hide();
+		$('p[for="password"]').hide();
+		$('p[for="status"]').hide();
+		$('p[for="type"]').hide();
+		$('p[for="email"]').hide();
 
-		var $contactForm = $("#user-form").validate({
-			errorClass		: errorClass,
-			errorElement	: errorElement,
-			highlight: function(element) {
-		        $(element).parent().removeClass('state-success').addClass('state-error');
-		        $(element).parent().addClass("required");
-		        $(element).removeClass('valid');
-		    },
-		    unhighlight: function(element) {
-		        $(element).parent().removeClass('state-error').addClass('state-success');
-		        $(element).parent().removeClass("required");
-		        $(element).addClass('valid');
-		    },
-			// Rules for form validation
-			rules : {
-				username : {
-					required : true,
-					minlength : 6,
-					notEqual: true
-				},
-				password :{
-					required : true,
-					minlength : 6,
-					haveNumber: true
-				},
-				email :{
-					required : true,
-					email : true
-				}
-			},
+		$( "#username" ).keyup(function() {
+			if($( "#username" ).val().length < 6){
+				//console.log('test' + $( "#username" ).val().length);
+				$('p[for="username"]').show();
+			}else{
+				//console.log('test' + $( "#username" ).val().length);
+				$('p[for="username"]').hide();
+			}
+			
+			
+		});
 
-			// Messages for form validation
-			messages : {
-				username : {
-					required : 'Please enter your Username',
-					minlength: 'Username must more than 6 character ',
-					notEqual: 'Username must not duplicate'
-				},
-				password : {
-					required : 'Please enter your Password',
-					minlength: 'Password must more than 6 character',
-					haveNumber: 'Password must more less than 1 number'
-				},
-				email : {
-					required : 'Please enter your email address',
-					email : 'Email format incorrect'
-				}
-			},
-
-			// Do not change code below
-			errorPlacement : function(error, element) {
-				error.insertAfter(element.parent());
+		$( "#password" ).keyup(function() {
+			if($( "#password" ).val().length < 6 ){
+				$('p[for="password"]').html("Password must more than 6 character");
+				$('p[for="password"]').show();
+			}else{
+				if($( "#password" ).val().match(/\d/))
+				{
+					$('p[for="password"]').hide();
+				}else{
+					$('p[for="password"]').html("Password must more less than 1 number");
+					$('p[for="password"]').show();
+				}	
 			}
 		});
 
-		$.validator.addMethod('haveNumber', function(value, element) {
-	        return value.match(/\d/)
-	    }, '');
-	    $.validator.addMethod("notEqual", function(value, element, param) {
-	    	var check = true;
-	    	for (var i = 0; i < storeUsername.length; i++) {
-	    		console.log(storeUsername[i]);
-	    		if(value == storeUsername[i])
-	    		{
-	    			check = false;
-	    		}
-	    	}
-		  return check;
-		}, "");		
+		$( "#email" ).keyup(function() {
+			if($( "#email" ).val().match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
+				$('p[for="email"]').hide();
+			}else{
+				$('p[for="email"]').show();
+			}
+		});
+		
 
 	});
 
@@ -517,15 +510,6 @@
 		//console.log(types);
 		otable.fnFilter(types, 3, true, false, false, false);
 	}
-
-	function resetModal(){
-		$( "#user-form" ).find( ".state-error" ).removeClass( "state-error" );
-		$( "#user-form" ).find( ".state-success" ).addClass( "required" );
-		$( "#user-form" ).find( ".state-success" ).removeClass( "state-success" );
-		$( "em" ).remove();
-	}
-
-
 	
 </script>
 

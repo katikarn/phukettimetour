@@ -3,13 +3,17 @@
 	if( isset($_POST['submitAddUser']) )
 	{
 		// echo " ok2<br>";
-		//Variable from the user	
-		$user_id = $_POST["user_id"];
+		//Variable from the user
+		if(isset($_POST["user_id"])){
+			$user_id = $_POST["user_id"];
+		}	
+		
 		$status = $_POST["status"];
 		$type = $_POST["type"];
 		$usernameR = $_POST["username"];
 		$passwordR = $_POST["password"];
 		$email = $_POST["email"];
+		$remark = $_POST["remark"];
 		$LoginByUser = trim($_SESSION['LoginUser']);
 		// $request = $_POST["Remark"]." 00:00:00";
 		
@@ -21,14 +25,14 @@
 		// //echo "request : ".$request."<br>";
 		
 		if($_POST['submitAddUser'] == 'Insert'){
-			$sql = "INSERT INTO `user` (`userid`, `username`, `email`, `password`, `type`, `status`,
+			$sql = "INSERT INTO `user` (`userid`, `username`, `email`, `password`, `type`, `status`,`remark`,
 			`createdatetime`, `createby`, `updatedatetime`, `updateby`)
 			VALUES (NULL,'$usernameR','$email', '$passwordR','$type',
-			'$status',NOW(),'$LoginByUser',NOW(),'$LoginByUser')";
+			'$status','$remark',NOW(),'$LoginByUser',NOW(),'$LoginByUser')";
 			
 		}else if($_POST['submitAddUser'] == 'Update'){
 			$sql = "UPDATE `user` SET `username`='$usernameR',`email`='$email',
-			`password`='$passwordR',`type`='$type',`status`='$status',
+			`password`='$passwordR',`type`='$type',`status`='$status',`remark`='$remark',
 			`updatedatetime`=NOW(),`updateby`='$LoginByUser' 
 			WHERE `userid` = '$user_id'";
 		}
@@ -39,9 +43,9 @@
 		
 		
 		if(!$result) {
-			 echo "<script>alert('Failed to added.This user is already used.!'); window.location='user-management.php'</script>";
+			 echo "<script>alert('Error: Can not save Username is duplicate')</script>";
 			}else{
-			 echo "<script>alert('User successfully added!'); window.location='user-management.php'</script>";
+			 echo "<script>window.location='user-management.php'</script>";
 		} 
 		
 		
