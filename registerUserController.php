@@ -43,9 +43,9 @@
 		
 		
 		if(!$result) {
-			 echo "<script>alert('Error: Can not save Username is duplicate')</script>";
+			 //echo "<script>alert('Error: Can not save Username is duplicate')</script>";
 			}else{
-			 echo "<script>window.location='user-management.php'</script>";
+			 // echo "<script>window.location='user-management.php'</script>";
 		} 
 		
 		

@@ -6,7 +6,7 @@
 		<meta charset="utf-8">
 		<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
 
-		<title> <?php echo $page_title != "" ? $page_title." - " : ""; ?>SmartAdmin </title>
+		<title> <?php echo $page_title != "" ? $page_title." - " : ""; ?>Phuket Tour</title>
 		<meta name="description" content="">
 		<meta name="author" content="">
 
@@ -98,13 +98,13 @@
 
 						<!-- Note: The activity badge color changes when clicked and resets the number to 0
 						Suggestion: You may want to set a flag when this happens to tick off all checked messages / notifications -->
-						<span id="activity" class="activity-dropdown"> <i class="fa fa-user"></i> <b class="badge"> 21 </b> </span>
+						<!-- <span id="activity" class="activity-dropdown"> <i class="fa fa-user"></i> <b class="badge"> 21 </b> </span> -->
 
 						<!-- AJAX-DROPDOWN : control this dropdown height, look and feel from the LESS variable file -->
-						<div class="ajax-dropdown">
+						<!-- <div class="ajax-dropdown"> -->
 
 							<!-- the ID links are fetched via AJAX to the ajax container "ajax-notifications" -->
-							<div class="btn-group btn-group-justified" data-toggle="buttons">
+							<!-- <div class="btn-group btn-group-justified" data-toggle="buttons">
 								<label class="btn btn-default">
 									<input type="radio" name="activity" id="<?php echo APP_URL; ?>/ajax/notify/mail.php">
 									Msgs (14) </label>
@@ -114,10 +114,10 @@
 								<label class="btn btn-default">
 									<input type="radio" name="activity" id="<?php echo APP_URL; ?>/ajax/notify/tasks.php">
 									Tasks (4) </label>
-							</div>
+							</div> -->
 
 							<!-- notification content -->
-							<div class="ajax-notifications custom-scroll">
+							<!-- <div class="ajax-notifications custom-scroll">
 
 								<div class="alert alert-transparent">
 									<h4>Click a button to show messages here</h4>
@@ -126,28 +126,28 @@
 
 								<i class="fa fa-lock fa-4x fa-border"></i>
 
-							</div>
+							</div> -->
 							<!-- end notification content -->
 
 							<!-- footer: refresh area -->
-							<span> Last updated on: 12/12/2013 9:43AM
+							<!-- <span> Last updated on: 12/12/2013 9:43AM
 								<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Loading..." class="btn btn-xs btn-default pull-right">
 									<i class="fa fa-refresh"></i>
-								</button> </span>
+								</button> </span> -->
 							<!-- end footer -->
 
-						</div>
+						<!-- </div> -->
 						<!-- END AJAX-DROPDOWN -->
 					</div>
 
 					<!-- projects dropdown -->
 					<div class="project-context hidden-xs">
 
-						<span class="label">Projects:</span>
-						<span id="project-selector" class="popover-trigger-element dropdown-toggle" data-toggle="dropdown">Recent projects <i class="fa fa-angle-down"></i></span>
+						<!-- <span class="label">Projects:</span>
+						<span id="project-selector" class="popover-trigger-element dropdown-toggle" data-toggle="dropdown">Recent projects <i class="fa fa-angle-down"></i></span> -->
 
 						<!-- Suggestion: populate this list with fetch and push technique -->
-						<ul class="dropdown-menu">
+						<!-- <ul class="dropdown-menu">
 							<li>
 								<a href="javascript:void(0);">Online e-merchant management system - attaching integration with the iOS</a>
 							</li>
@@ -161,7 +161,7 @@
 							<li>
 								<a href="javascript:void(0);"><i class="fa fa-power-off"></i> Clear</a>
 							</li>
-						</ul>
+						</ul> -->
 						<!-- end dropdown-menu-->
 
 					</div>
@@ -201,7 +201,7 @@
 									</li>
 									<li class="divider"></li>
 									<li>
-										<a href="login.php" class="padding-10 padding-top-5 padding-bottom-5" data-action="userLogout"><i class="fa fa-sign-out fa-lg"></i> <strong><u>L</u>ogout</strong></a>
+										<a href="logout.php" class="padding-10 padding-top-5 padding-bottom-5" data-action="userLogout"><i class="fa fa-sign-out fa-lg"></i> <strong><u>L</u>ogout</strong></a>
 									</li>
 								</ul>
 							</li>
@@ -209,7 +209,7 @@
 
 						<!-- logout button -->
 						<div id="logout" class="btn-header transparent pull-right">
-							<span> <a href="<?php echo APP_URL; ?>/login.php" title="Sign Out" data-action="userLogout" data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i class="fa fa-sign-out"></i></a> </span>
+							<span> <a href="<?php echo APP_URL; ?>/logout.php" title="Sign Out" data-action="userLogout" data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i class="fa fa-sign-out"></i></a> </span>
 						</div>
 						<!-- end logout button -->
 
@@ -220,13 +220,13 @@
 						<!-- end search mobile button -->
 
 						<!-- input: search field -->
-						<form action="<?php echo APP_URL; ?>/search.php" class="header-search pull-right">
+						<!-- <form action="<?php echo APP_URL; ?>/search.php" class="header-search pull-right">
 							<input type="text" name="param" placeholder="Find reports and more" id="search-fld">
 							<button type="submit">
 								<i class="fa fa-search"></i>
 							</button>
 							<a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
-						</form>
+						</form> -->
 						<!-- end input: search field -->
 
 						<!-- fullscreen button -->

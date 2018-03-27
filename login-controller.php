@@ -18,9 +18,7 @@
 				if(isset($_SESSION['LoginUserID']) || (trim($_SESSION['LoginUser']) != '')) {
 					//echo "LoginUserID ".$_SESSION["LoginUserID"]. "<br>";
 				    //echo "LoginUser ".$_SESSION["LoginUser"]. "<br>";
-
-				
-					}
+				}
 				
 				/*echo"ID:" .$row['userid'] . "<br>
 				|Name:" .$row['username'] .  "<br>
@@ -35,13 +33,14 @@
 				exit();
 			}
 		}else{
-				session_write_close();
-				//header("location: login.php");
-				exit();
-			}
+			session_write_close();
+			echo "<script>alert('Username or Password incorrect'); window.location='login.php'</script>";
+			//header("location: login.php");
+			//exit();
+		}
 		
 	}else{
-				//echo "isset false.";
-		};
-		ob_end_flush();
+			//echo "isset false.";
+	};
+	ob_end_flush();
 ?>

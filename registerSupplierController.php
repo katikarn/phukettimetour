@@ -20,8 +20,10 @@
 		$s_Accountcontact = $_POST["s_Accountcontact"];
 		$s_Accounttel = $_POST["s_Accounttel"];
 		$s_Accountemail = $_POST["s_Accountemail"];
-		$s_Closeinformation = $_POST["s_Closeinformation"];
-		$s_Note = $_POST["s_Note"];
+		// $s_Closeinformation = $_POST["s_Closeinformation"];
+		// $s_Note = $_POST["s_Note"];
+		$s_Closeinformation = '';
+		$s_Note = '';
 		$supplier_id = $_POST["supplier_id"];
 		$LoginByUser = trim($_SESSION['LoginUser']);
 		

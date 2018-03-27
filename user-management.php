@@ -70,6 +70,7 @@
 	
 	textarea{
 		resize:none;
+		border-radius: 0px !important;
 	}
 
 	.error{
@@ -79,6 +80,12 @@
 
 	.required{
 		border-left: 7px solid #FF3333;
+	}
+	
+	@media only screen and (max-width: 320px) {
+	    label.radio {
+	        margin-right: 15px !important;
+	    }
 	}
 	
 </style>
@@ -99,7 +106,7 @@
 		<div class="row">
 			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 				<h1 class="header">
-					USER
+					User
 				</h1>
 			</div>
 			<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
@@ -126,7 +133,7 @@
 							<input id="date_search" placeholder="DD/MM/YYYY" type="text" name="date_search"> -->
 						</div>
 						<div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 status smart-form" style="padding-top: 25px;">
-							<div class="checkbox">
+							<div class="checkbox"  style="padding-left: 0px;">
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
 										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">Active</span></label>
@@ -197,7 +204,7 @@
 														<td><?=$row['email']?></td>
 														<td><?=$typeUser?></td>
 														<td><?=$statusUser?></td>
-														<td class="center"><a class="btn btn-small btn-primary"
+														<td class="center"><a onclick="resetModal();" class="btn btn-small btn-primary"
 															data-toggle="modal"
 															data-target="#myModal"
 															data-whatever="<?=$row['userid']?>" >Edit</a>
@@ -226,18 +233,20 @@
 					<i class="icon-append fa fa-times"></i>
 				</button>
 				<h4 class="header">
-					General Info
+					User
 				</h4>
 			</div>
 			<div class="modal-body no-padding">
 
 				<form id="user-form" class="smart-form" method="POST">
-
+					<header>
+						General Info
+					</header>
 					<fieldset>
 						<section>
 							<div class="row">
-								<label class="label col col-2 header">Status</label>
-								<div class="col col-10">
+								<label class="label col col-3 header">Status</label>
+								<div class="col col-9">
 									<label class="input status">
 										<div class="inline-group">
 											<label class="radio">
@@ -256,8 +265,8 @@
 						</section>
 						<section>
 							<div class="row">
-								<label class="label col col-2 header">Type</label>
-								<div class="col col-10">
+								<label class="label col col-3 header">Type</label>
+								<div class="col col-9">
 									<label class="input">
 										<div class="inline-group">
 											<label class="radio">
@@ -276,8 +285,8 @@
 						</section>	
 						<section>
 							<div class="row">
-								<label class="label col col-2 header">Username</label>
-								<div class="col col-10">
+								<label class="label col col-3 header">Username</label>
+								<div class="col col-9">
 									<label class="input required">
 										<input type="text" name="username" id="username">
 									</label>
@@ -287,10 +296,10 @@
 
 						<section>
 							<div class="row">
-								<label class="label col col-2 header">Password</label>
-								<div class="col col-10">
+								<label class="label col col-3 header">Password</label>
+								<div class="col col-9">
 									<label class="input required">
-										<input type="text" name="password" id="password">
+										<input type="password" name="password" id="password">
 									</label>
 								</div>
 							</div>
@@ -298,8 +307,8 @@
 
 						<section>
 							<div class="row">
-								<label class="label col col-2 header">Email</label>
-								<div class="col col-10">
+								<label class="label col col-3 header">Email</label>
+								<div class="col col-9">
 									<label class="input required">
 										<input type="email" name="email" id="email">
 									</label>
@@ -308,8 +317,8 @@
 						</section>
 						<section>
 							<div class="row">
-								<label class="label col col-2 header">Remark</label>
-								<div class="col col-10">
+								<label class="label col col-3 header">Remark</label>
+								<div class="col col-9">
 									<label class="input">
 										<textarea rows="4" name="remark" id="remark"></textarea>
 									</label>
@@ -319,7 +328,8 @@
 					</fieldset>
 					
 					<footer class="center">
-						<button type="submit" name="submitAddUser" onclick="return confirm('Do you want to save the data')" id="submitAddUser" class="btn btn-primary" style="float: unset;font-weight: 400;">
+						<input type="hidden" name="user_id" id="user_id" />
+						<button type="submit" name="submitAddUser" onclick="" id="submitAddUser" class="btn btn-primary" style="float: unset;font-weight: 400;">
 							Save</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal" style="float: unset;font-weight: 400;">
 							Cancel</button>
@@ -440,13 +450,24 @@
 			errorElement	: errorElement,
 			highlight: function(element) {
 		        $(element).parent().removeClass('state-success').addClass('state-error');
-		        $(element).parent().addClass("required");
+		        //$(element).parent().addClass("required");
+		        if($(element).parent().hasClass( "required" )){
+		        	 $(element).parent().css("border-left", "7px solid #FF3333");
+		        }
 		        $(element).removeClass('valid');
 		    },
 		    unhighlight: function(element) {
 		        $(element).parent().removeClass('state-error').addClass('state-success');
-		        $(element).parent().removeClass("required");
+		        //$(element).parent().removeClass("required");
+		        if($(element).parent().hasClass( "required" )){
+		        	$(element).parent().css("border-left", "7px solid #047803");
+		        }
 		        $(element).addClass('valid');
+		    },
+		    submitHandler : function(form) {
+		      if (confirm("Do you want to save the data?")) {
+		        form.submit();
+		      }
 		    },
 			// Rules for form validation
 			rules : {
@@ -495,9 +516,10 @@
 	    }, '');
 	    $.validator.addMethod("notEqual", function(value, element, param) {
 	    	var check = true;
+	    	var isCheck = $('#submitAddUser').val(); 
 	    	for (var i = 0; i < storeUsername.length; i++) {
-	    		console.log(storeUsername[i]);
-	    		if(value == storeUsername[i])
+	    		//console.log(storeUsername[i]);
+	    		if(value == storeUsername[i] && isCheck == "Insert")
 	    		{
 	    			check = false;
 	    		}
@@ -520,16 +542,11 @@
 
 	function resetModal(){
 		$( "#user-form" ).find( ".state-error" ).removeClass( "state-error" );
-		$( "#user-form" ).find( ".state-success" ).addClass( "required" );
 		$( "#user-form" ).find( ".state-success" ).removeClass( "state-success" );
+		$( "#user-form" ).find( ".required" ).css("border-left", "7px solid #FF3333");
 		$( "em" ).remove();
 	}
 
 
 	
-</script>
-
-<?php
-	//include footer
-	include ("inc/google-analytics.php");
-?>																														
+</script>																												

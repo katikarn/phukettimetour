@@ -55,9 +55,9 @@
 					
 		}
 		
-		 echo $sql."<br>";
+		 //echo $sql."<br>";
 		$result = mysqli_query($_SESSION['conn'] ,$sql);
-		 echo $result."<br>";
+		// echo $result."<br>";
 		
 		
 		if(!$result) {

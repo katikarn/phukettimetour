@@ -2,7 +2,7 @@
 	
 	if( isset($_POST['submitAddProduct']) )
 	{
-		 //echo " ok2<br>";
+		 echo " ok2<br>";
 		//Variable from the user	
 		$productid = $_POST["productid"];
 		$status = $_POST["status"];
@@ -37,13 +37,14 @@
 		// //echo "request : ".$request."<br>";
 		$sql_supplier = "SELECT `supplierid`, `name`, `type`,`tel`,`status` FROM `supplier` WHERE `name`= '$productSupplier'";
 		$result_supplier = mysqli_query($conn ,$sql_supplier);
-		//echo $sql_supplier."<br>";
+		echo $sql_supplier."<br>";
 		if(mysqli_num_rows($result_supplier) > 0){
 		//show data for each row
 			while($row = mysqli_fetch_assoc($result_supplier)){
 				$productSupplier = $row['supplierid'];
+				echo $productSupplier ."<br>";
 			}
-//echo $_POST["submitAddProduct"] ."<br>";
+			echo $_POST["submitAddProduct"] ."<br>";
 			if($_POST["submitAddProduct"] == 'Insert'){
 				$sql = "INSERT INTO `product` (
 				`productid`, `supplierid`, `name`, `detail`, `status`,
@@ -55,9 +56,9 @@
 				'$Type', '$ConfirmClass', '$SeatType', '$TicketType', '$ShowTime', '$Freepickup',
 				'$Min', '$Max','$d_detail', '$CarTypeText', '$MaxSeat', '$CostPrice', '$NormalPrice',
 				'$SalesPrice1', '$SalesPrice2', '', NOW(),'$LoginByUser', 'NOW()', '$LoginByUser');";
-				//echo $sql."<br>";
+				echo $sql."<br>";
 			$result = mysqli_query($_SESSION['conn'] ,$sql);
-			//echo $result."<br>";
+			echo $result."<br>";
 			if(!$result) {
 					echo "<script>alert('Failed to added.'); window.location='product-setup.php'</script>";
 				}else{

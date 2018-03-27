@@ -32,8 +32,7 @@
 ?>
 <style>
 	.header{
-		font-weight:bold;
-		margin-top: 6px;
+		font-weight:bold !important;
 	}
 	
 	.row{
@@ -44,23 +43,11 @@
 		margin-top: 0px !important;
 	}
 	
-	.filterbar{
-		// float: right;
-		margin-top: 20px;
-		text-align: center;
-		white-space: nowrap;
-	}
-	
-	.status label{
+	.status span{
 		color:#fff;
-		margin-right: 20px;
 		border-radius: 4px;
 		border: 1px solid #ccc;
 		padding: 2px;
-	}
-	
-	label, .mr-20{
-		margin-right:	20px;
 	}
 	
 	.modal-header{
@@ -82,26 +69,23 @@
 	
 	textarea{
 		resize:none;
+		border-radius: 0px !important;
 	}
 
-	.sectionHead
-	{
-	    width: 100%;
-	    font-weight: bolder;
-	    font-size: 15px;
-	    margin-bottom: 11px;
+	.error{
+		color: red;
+		font-weight: bold;
 	}
 
-	.madalContent{
-		border-left: 7px solid #3276b1;
-	    border-radius: 5px;
-	    display: flow-root;
-	    background-color: #fafafa;
-	    margin-bottom: 10px;
-	    padding: 5px 0px;
-    	box-shadow: 2px 2px #eee;
+	.required{
+		border-left: 7px solid #FF3333;
 	}
-
+	
+	@media only screen and (max-width: 320px) {
+	    label.radio {
+	        margin-right: 15px !important;
+	    }
+	}
 	
 </style>
 <!-- ==========================CONTENT STARTS HERE ========================== -->
@@ -139,24 +123,36 @@
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
 					<div class="row header">
-						<div class="col-sm-4 col-md-4">
+						<div class="col-sm-4 col-md-4 col-lg-4">
 							Keywoard<br/>
 							<input id="column3_search" type="text" name="googlesearch">
 						</div>
-						<div class="col-xs-8 col-sm-4 col-md-6 status" style="padding-top: 5px;">
-							<div class="filterbar">
-							<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked >
-								<label for="StatusA" style="background-color: #5dc156;">Active</label>
-							<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked>
-								<label for="StatusI" style="background-color: #6dd0ca;">Inactive</label>
-							<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked>
-								<label for="StatusC" style="background-color: #ffba42;">Cancel</label>
+						<div class="hidden-md col-lg-2">
+							<!-- Date<br/>
+							<input id="date_search" placeholder="DD/MM/YYYY" type="text" name="date_search"> -->
+						</div>
+						<div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 status smart-form" style="padding-top: 25px;">
+							<div class="checkbox"  style="padding-left: 0px;">
+								<div class="col-xs-3 col-md-3">
+									<label class="checkbox">
+										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">Active</span></label>
+								</div>
+								<div class="col-xs-3 col-md-3">
+									<label class="checkbox">
+										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
+								</div>
+								<div class="col-xs-3 col-md-3">
+									<label class="checkbox">
+										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Cancel</span></label>
+								</div>
+								<div class="col-xs-3 col-sm-4 col-md-3">
+									<button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button>
+								</div>
 							</div>
 						</div>
-						<div class="col-xs-4 col-sm-4 col-md-2 filterbar">
-							<button class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal">Add new</button>
-						</div>
+						
 					</div>
+					
 
 					<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
 						<div>
@@ -204,13 +200,12 @@
 													}
 												 ?>
 												<tr>
-													 <td><?=$row['productid']?></td>
-													 <td><?=$row['pName']?></td>
-													 <td><?=$row['sName']?></td>
-													  <td><?=$typeUser?></td>
-													 <td><?=$statusUser?></td>
-													
-													<td><a class="btn btn-small btn-primary"
+													<td><?=$row['productid']?></td>
+													<td><?=$row['pName']?></td>
+													<td><?=$row['sName']?></td>
+													<td><?=$typeUser?></td>
+													<td><?=$statusUser?></td>
+													<td class="center"><a onclick="resetModal();" class="btn btn-small btn-primary"
 															data-toggle="modal"
 															data-target="#myModal"
 															data-whatever="<?=$row['productid']?>" >Edit</a>
@@ -232,191 +227,304 @@
 </div>
 <!-- END MAIN PANEL -->
 <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
+  <div class="modal fade" id="myModal" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-Adduser">
     
       <!-- Modal content-->
 	  
-      <div class="modal-content">
-	  <form action="product-setup.php" method='post' >
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="header">Product</h4>
+      	<div class="modal-content">
+	        <div class="modal-header">
+	          	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					<i class="icon-append fa fa-times"></i>
+				</button>
+	          	<h4 class="header">Product</h4>
+	        </div>
+	        <div class="modal-body no-padding">
+		  		<form action="product-setup.php" method='post' id="product-form" class="smart-form">
+		  			<header>
+		  				General Info
+		  			</header>
+		  			<fieldset>
+		  				<section>
+							<div class="row">
+								<label class="label col col-3 header">Status</label>
+								<div class="col col-9">
+									<label class="input status">
+										<div class="inline-group">
+											<label class="radio">
+												<input type="radio" name="status" value="A" id="m_StatusA" checked=true>
+												<i></i><span style="background-color: #5dc156;">Active</span></label>
+											<label class="radio">
+												<input type="radio" name="status" value="I" id="m_StatusI">
+												<i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
+											<label class="radio">
+												<input type="radio" name="status" value="C" id="m_StatusC">
+												<i></i><span style="background-color: #ffba42;">Cancel</span></label>
+										</div>
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Name</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="productName" id="productName">
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Supplier</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="productSupplier" id="productSupplier">
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Type</label>
+								<div class="col col-9">
+									<label class="input">
+										<div class="inline-group">
+											<label class="radio">
+												<input type="radio" name="Type" value="T" id="p_TypeT" checked>
+												<i></i>Ticket</label>
+											<label class="radio">
+												<input type="radio" name="Type" value="D" id="p_TypeD">
+												<i></i>Day Trip</label>
+											<label class="radio">
+												<input type="radio" name="Type" value="C" id="p_TypeC">
+												<i></i>Car</label>
+										</div>
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Detail</label>
+								<div class="col col-9">
+									<label class="input">
+										<textarea type="text" rows="5" name="Detail" id="Detail"></textarea>
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Confirm Class</label>
+								<div class="col col-9">
+									<label class="input">
+										<div class="inline-group">
+											<label class="radio">
+												<input type="radio" name="ConfirmClass" value="M" id="c_TypeM" checked>
+												<i></i>Manual</label>
+											<label class="radio">
+												<input type="radio" name="ConfirmClass" value="A" id="c_TypeA">
+												<i></i>Auto</label>
+										</div>
+									</label>
+								</div>
+							</div>
+						</section>
+		  				
+		  			</fieldset>
+		  			<header>
+		  				Finance
+		  			</header>
+		  			<fieldset>
+		  				<section>
+							<div class="row">
+								<label class="label col col-3 header">Cost Price</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="number" step=".01" name="CostPrice" id="CostPrice">
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Normal Price</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="number" step=".01" name="NormalPrice" id="NormalPrice">
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Sales Price1</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="number" step=".01" name="SalesPrice1" id="SalesPrice1">
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Sales Price2</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="number" step=".01" name="SalesPrice2" id="SalesPrice2">
+									</label>
+								</div>
+							</div>
+						</section>
+		  				
+		  			</fieldset>
+		  			<header>
+		  				Tricket Info
+		  			</header>
+		  			<fieldset>
+		  				<section>
+							<div class="row">
+								<label class="label col col-3 header">Seat Type</label>
+								<div class="col col-9">
+									<label class="input">
+										<div class="inline-group">
+											<label class="radio">
+												<input type="radio" name="SeatType" value="O" id="s_TypeO" checked>
+												<i></i>Open</label>
+											<label class="radio">
+												<input type="radio" name="SeatType" value="F" id="s_TypeF">
+												<i></i>Fixed Seat</label>
+										</div>
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Ticket Type</label>
+								<div class="col col-9">
+									<label class="input">
+										<div class="inline-group">
+											<label class="radio">
+												<input type="radio" name="TicketType" value="Z" id="t_TypeZ" checked>
+												<i></i>Same Price</label>
+											<label class="radio">
+												<input type="radio" name="TicketType" value="A" id="t_TypeA">
+												<i></i>Adult</label>
+											<label class="radio">
+												<input type="radio" name="TicketType" value="C" id="t_TypeC">
+												<i></i>Chident</label>
+											<label class="radio">
+												<input type="radio" name="TicketType" value="S" id="t_TypeS">
+												<i></i>Senier</label>
+										</div>
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Show Time</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="Time" name="ShowTime" id="ShowTime">
+									</label>
+								</div>
+							</div>
+						</section>
+		  				
+		  			</fieldset>
+		  			<header>
+		  				Day Trip Info
+		  			</header>
+		  			<fieldset>
+		  				<section>
+							<div class="row">
+								<label class="label col col-3 header">Free pickup</label>
+								<div class="col col-9">
+									<label class="input">
+										<div class="inline-group">
+											<label class="radio">
+												<input type="radio" name="Freepickup" value="Y" id="f_TypeY" checked>
+												<i></i>Yes</label>
+											<label class="radio">
+												<input type="radio" name="Freepickup" value="N" id="f_TypeN">
+												<i></i>No</label>
+										</div>
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Min</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="Min" id="Min" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Max</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="Max" id="Max" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Day Trip Info</label>
+								<div class="col col-9">
+									<label class="input required">
+										<textarea type="text" rows="5" name="d_detail" id="d_detail"></textarea>
+									</label>
+								</div>
+							</div>
+						</section>
+		  				
+		  			</fieldset>
+		  			<header>
+		  				Car Info
+		  			</header>
+		  			<fieldset>
+		  				<section>
+							<div class="row">
+								<label class="label col col-3 header">Car Type</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="CarTypeText" id="CarTypeText">
+									</label>
+								</div>
+							</div>
+						</section>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Max Seat</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="MaxSeat" id="MaxSeat" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+									</label>
+								</div>
+							</div>
+						</section>
+		  				
+		  			</fieldset>
+		  			<footer class="center">
+						<input type="hidden" name="productid" id="productid" />
+						<button type="submit" name="submitAddProduct" id="submitAddProduct" class="btn btn-primary" style="float: unset;font-weight: 400;">
+							Save</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" style="float: unset;font-weight: 400;">
+							Cancel</button>
+					</footer>
+			</form>
         </div>
-        <div class="modal-body">
-		<div class="row" style="margin">
-			<div class="sectionHead">General Info</div>
-			<div class="card-block madalContent">
-				<div class="col-sm-4 col-md-4 header">
-				Status <font color="red"> *</font>
-				</div>
-				<div class="col-sm-8 col-md-8 status">
-					<input type="radio" name="status" value="A" id="m_StatusA" required>
-						<label style="background-color: #5dc156;" for="m_StatusA">Active</label>
-					<input type="radio" name="status" value="I" id="m_StatusI">
-						<label style="background-color: #6dd0ca;" for="m_StatusI">Inactive</label>
-					<input type="radio" name="status" value="C" id="m_StatusC">
-						<label style="background-color: #ffba42;" for="m_StatusC">Cancel</label>
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-					Name <font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="productName" name="productName" value="" required>
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-					Supplier <font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="productSupplier" name="productSupplier" value="" required>
-				</div>
-				<div class="col-sm-4 col-md-4 header">
-					Type <font color="red">*</font>
-				</div>
-				<div class="col-sm-8 col-md-8">
-					<input type="radio" name="Type" value="T" id="p_TypeT" required>
-						<label for="Type">Ticket</label>
-					<input type="radio" name="Type" value="D" id="p_TypeD">
-						<label for="Type">Day Trip</label>
-					<input type="radio" name="Type" value="C" id="p_TypeC" >
-						<label for="Type">Car</label>
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-					Detail
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<textarea name="Detail" id="Detail" value="" cols="40" rows="5"></textarea>
-				</div>
-				<div class="col-xs-4 col-sm-4 col-md-4 header">
-					Confirm Class <font color="red">*</font>
-				</div>
-				<div class="col-xs-8 col-sm-8 col-md-8">
-					<input type="radio" name="ConfirmClass" value="M" id="c_TypeM" required>
-						<label for="c_TypeM">Manual</label>
-					<input type="radio" name="ConfirmClass" value="A" id="c_TypeA">
-						<label for="c_TypeA">Auto</label>
-				</div>	
-			</div>
-			<div class="sectionHead" >Finance</div>
-			<div class="card-block madalContent">
-				<div class="col-sm-12 col-md-4 header">
-					Cost Price <font color="red"> *</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="CostPrice" name="CostPrice" value="" required>
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-					Normal Price <font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="NormalPrice" name="NormalPrice" value="" required> 
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-					Sales Price1<font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="SalesPrice1" name="SalesPrice1" value="" required> 
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-					Sales Price2<font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="SalesPrice2" name="SalesPrice2" value="" required> 
-				</div>				
-			</div>
-			<div class="sectionHead">Tricket Info</div>
-			<div class="card-block madalContent">
-				<div class="col-xs-4 col-sm-4 col-md-4 header">
-					Seat Type <font color="red">*</font>
-				</div>
-				<div class="col-xs-8 col-sm-8 col-md-8">
-					<input type="radio" name="SeatType" value="O" id="s_TypeO" required>
-						<label for="s_TypeO">Open</label>
-					<input type="radio" name="SeatType" value="F" id="s_TypeF">
-						<label for="s_TypeF">Fixed Seat</label>
-				</div>
-				<div class="col-xs-4 col-sm-4 col-md-4 header">
-					Ticket Type <font color="red">*</font>
-				</div>
-				<div class="col-xs-8 col-sm-8 col-md-8">
-					<div>
-						<input type="radio" name="TicketType" value="Z" id="t_TypeZ" required>
-						<label for="t_TypeZ">Same Price</label>
-					</div>
-					<div>
-						<input type="radio" name="TicketType" value="A" id="t_TypeA">
-						<label for="t_TypeA">Adult</label>						
-					</div>
-					<div>
-						<input type="radio" name="TicketType" value="C" id="t_TypeC" >
-						<label for="t_TypeC">Chident</label>
-					</div>
-					<div>
-						<input type="radio" name="TicketType" value="S" id="t_TypeS">
-						<label for="t_TypeS">Senier</label>
-					</div>		
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-				Show Time <font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="ShowTime" name="ShowTime" value="">
-				</div>
-			</div>
-			<div class="sectionHead">Day Trip Info</div>
-			<div class="card-block madalContent">
-				<div class="col-xs-4 col-sm-4 col-md-4 header">
-					Free pickup <font color="red">*</font>
-				</div>
-				<div class="col-xs-8 col-sm-8 col-md-8">
-					<input type="radio" name="Freepickup" value="Y" id="f_TypeY" required>
-						<label for="f_TypeY">Yes</label>
-					<input type="radio" name="Freepickup" value="N" id="f_TypeN">
-						<label for="f_TypeN">No</label>
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-				Min <font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="Min" name="Min" value="">
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-				Max <font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="Max" name="Max" value="">
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-				Detail <font color="red">*</font>
-				</div>
-				<div class="col-sm-8 col-md-8">
-					<textarea id="d_detail" name="d_detail" value="" cols="40" rows="5"></textarea>
-				</div>
-			</div>
-			<div class="sectionHead">Car Info</div>
-			<div class="card-block madalContent">
-				<div class="col-sm-12 col-md-4 header">
-				Car Type <font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="CarTypeText" name="CarTypeText" value="">
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-				Max Seat <font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="MaxSeat" name="MaxSeat" value="">
-				</div>
-			</div>
-			
-			<div class="col-md-12 center">
-				<input type="hidden" name="productid" id="productid" />
-				<button type="submit" name="submitAddProduct" id="submitAddProduct" value="" 
-				class="btn btn-info mr-20" onclick="return confirm('Do you want to save the data Product')">Save</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div></div>
-        </div>
-	  </form>
+	  
       </div>
       
     </div>
@@ -439,22 +547,6 @@
 	// DO NOT REMOVE : GLOBAL FUNCTIONS!
 	var otable;
 	$(document).ready(function() {
-
-		/* // DOM Position key index //
-		
-		l - Length changing (dropdown)
-		f - Filtering input (search)
-		t - The Table! (datatable)
-		i - Information (records)
-		p - Pagination (paging)
-		r - pRocessing 
-		< and > - div elements
-		<"#id" and > - div with an id
-		<"class" and > - div with a class
-		<"#id.class" and > - div with an id and class
-		
-		Also see: http://legacy.datatables.net/usage/features
-		*/	
 		
 		/* BASIC ;*/
 		var responsiveHelper_dt_basic = undefined;
@@ -533,30 +625,30 @@
 						$('#submitAddProduct').val("Update");  
 					 }else{
 						$('#productid').val('');
-						$('#m_StatusA').prop('checked',false);
-						$('#m_StatusI').prop('checked',false);
-						$('#m_StatusC').prop('checked',false);
+						$('#m_StatusA').prop('checked',true);
+						// $('#m_StatusI').prop('checked',false);
+						// $('#m_StatusC').prop('checked',false);
 						$('#productName').val('');  
 						$('#productSupplier').val(''); 
-						$('#p_TypeT').prop('checked',false);
-						$('#p_TypeD').prop('checked',false);
-						$('#p_TypeC').prop('checked',false);
+						$('#p_TypeT').prop('checked',true);
+						// $('#p_TypeD').prop('checked',false);
+						// $('#p_TypeC').prop('checked',false);
 						$('#Detail').val('');   
-						$('#c_TypeM').prop('checked',false);
-						$('#c_TypeA').prop('checked',false);
+						$('#c_TypeM').prop('checked',true);
+						// $('#c_TypeA').prop('checked',false);
 						$('#CostPrice').val(''); 
 						$('#NormalPrice').val(''); 
 						$('#SalesPrice1').val(''); 
 						$('#SalesPrice2').val(''); 
-						$('#s_TypeO').prop('checked',false);
-						$('#s_TypeF').prop('checked',false);
-						$('#t_TypeZ').prop('checked',false);
-						$('#t_TypeA').prop('checked',false);
-						$('#t_TypeC').prop('checked',false);
-						$('#t_TypeS').prop('checked',false);
+						$('#s_TypeO').prop('checked',true);
+						// $('#s_TypeF').prop('checked',false);
+						$('#t_TypeZ').prop('checked',true);
+						// $('#t_TypeA').prop('checked',false);
+						// $('#t_TypeC').prop('checked',false);
+						// $('#t_TypeS').prop('checked',false);
 						$('#ShowTime').val(''); 
-						$('#f_TypeN').prop('checked',false);
-						$('#f_TypeY').prop('checked',false);
+						$('#f_TypeN').prop('checked',true);
+						// $('#f_TypeY').prop('checked',false);
 						$('#Min').val(''); 
 						$('#Max').val(''); 
 						$('#d_detail').val(''); 
@@ -572,6 +664,121 @@
 				}
 			});  
 		});
+		//// --------------------------- Validate------------------------------
+		var errorClass = 'invalid';
+		var errorElement = 'em';
+
+		var $contactForm = $("#product-form").validate({
+			errorClass		: errorClass,
+			errorElement	: errorElement,
+			highlight: function(element) {
+		        $(element).parent().removeClass('state-success').addClass('state-error');
+		        //$(element).parent().addClass("required");
+		        if($(element).parent().hasClass( "required" )){
+		        	 $(element).parent().css("border-left", "7px solid #FF3333");
+		        }
+		        $(element).removeClass('valid');
+		    },
+		    unhighlight: function(element) {
+		        $(element).parent().removeClass('state-error').addClass('state-success');
+		        //$(element).parent().removeClass("required");
+		        if($(element).parent().hasClass( "required" )){
+		        	$(element).parent().css("border-left", "7px solid #047803");
+		        }
+		        $(element).addClass('valid');
+		    },
+		    submitHandler : function(form) {
+		      if (confirm("Do you want to save the data?")) {
+		        form.submit();
+		      }
+		    },
+			// Rules for form validation
+			rules : {
+				productName : {
+					required : true
+				},
+				productSupplier : {
+					required : true
+				},
+				CostPrice : {
+					required : true
+				},
+				NormalPrice	: {
+					required : true
+				},	
+				SalesPrice1	: {
+					required : true
+				},
+				SalesPrice2 : {
+					required : true
+				},
+				ShowTime : {
+					required : true
+				},
+				Min : {
+					required : true
+				},
+				Max : {
+					required : true
+				},
+				d_detail : {
+					required : true
+				},	
+				CarTypeText : {
+					required : true
+				},	
+				MaxSeat : {
+					required : true
+				}			
+			},
+
+			// Messages for form validation
+			messages : {
+				productName : {
+					required : 'Please enter your Product Name'
+				},
+				productSupplier : {
+					required : 'Please enter your Supplier Name'
+				},
+				CostPrice : {
+					required : 'Please enter your Cost Price'
+				},
+				NormalPrice	: {
+					required : 'Please enter your Normal Price'
+				},	
+				SalesPrice1	: {
+					required : 'Please enter your Sales Price1'
+				},
+				SalesPrice2 : {
+					required : 'Please enter your Sales Price2'
+				},
+				ShowTime : {
+					required : 'Please enter your ShowTime'
+				},
+				Min : {
+					required : 'Please enter your Min'
+				},
+				Max : {
+					required : 'Please enter your Max'
+				},
+				d_detail : {
+					required : 'Please enter your Detail'
+				},
+				CarTypeText : {
+					required : 'Please enter your Car Type'
+				},
+				MaxSeat : {
+					required : 'Please enter your Max Seat'
+				}
+
+
+			},
+
+			// Do not change code below
+			errorPlacement : function(error, element) {
+				error.insertAfter(element.parent());
+			}
+		});
 	});
 
 	/* END BASIC */
@@ -585,9 +792,11 @@
 		  otable.fnFilter(types, 4, true, false, false, false);
 	}
 
-	</script>
+	function resetModal(){
+		$( "#product-form" ).find( ".state-error" ).removeClass( "state-error" );
+		$( "#product-form" ).find( ".state-success" ).removeClass( "state-success" );
+		$( "#product-form" ).find( ".required" ).css("border-left", "7px solid #FF3333");
+		$( "em" ).remove();
+	}
 
-	<?php
-	//include footer
-	include ("inc/google-analytics.php");
-	?>																														
+</script>																													

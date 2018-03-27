@@ -32,8 +32,7 @@
 ?>
 <style>
 	.header{
-		font-weight:bold;
-		margin-top: 6px;
+		font-weight:bold !important;
 	}
 	
 	.row{
@@ -44,23 +43,11 @@
 		margin-top: 0px !important;
 	}
 	
-	.filterbar{
-		// float: right;
-		margin-top: 20px;
-		text-align: center;
-		white-space: nowrap;
-	}
-	
-	.status label{
+	.status span{
 		color:#fff;
-		margin-right: 20px;
 		border-radius: 4px;
 		border: 1px solid #ccc;
 		padding: 2px;
-	}
-	
-	label, .mr-20{
-		margin-right:	20px;
 	}
 	
 	.modal-header{
@@ -82,26 +69,23 @@
 	
 	textarea{
 		resize:none;
+		border-radius: 0px !important;
 	}
 
-	.sectionHead
-	{
-	    width: 100%;
-	    font-weight: bolder;
-	    font-size: 15px;
-	    margin-bottom: 11px;
+	.error{
+		color: red;
+		font-weight: bold;
 	}
 
-	.madalContent{
-		border-left: 7px solid #3276b1;
-	    border-radius: 5px;
-	    display: flow-root;
-	    background-color: #fafafa;
-	    margin-bottom: 10px;
-	    padding: 5px 0px;
-    	box-shadow: 2px 2px #eee;
+	.required{
+		border-left: 7px solid #FF3333;
 	}
-}
+
+	@media only screen and (max-width: 320px) {
+	    label.radio {
+	        margin-right: 15px !important;
+	    }
+	}
 	
 </style>
 <!-- ==========================CONTENT STARTS HERE ========================== -->
@@ -139,23 +123,34 @@
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
 					<div class="row header">
-						<div class="col-sm-4 col-md-4">
+						<div class="col-sm-4 col-md-4 col-lg-4">
 							Keywoard<br/>
 							<input id="column3_search" type="text" name="googlesearch">
 						</div>
-						<div class="col-xs-8 col-sm-4 col-md-6 status" style="padding-top: 5px;">
-							<div class="filterbar">
-							<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked >
-								<label for="StatusA" style="background-color: #5dc156;">Active</label>
-							<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked>
-								<label for="StatusI" style="background-color: #6dd0ca;">Inactive</label>
-							<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked>
-								<label for="StatusC" style="background-color: #ffba42;">Cancel</label>
+						<div class="hidden-md col-lg-2">
+							<!-- Date<br/>
+							<input id="date_search" placeholder="DD/MM/YYYY" type="text" name="date_search"> -->
+						</div>
+						<div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 status smart-form" style="padding-top: 25px;">
+							<div class="checkbox" style="padding-left: 0px;">
+								<div class="col-xs-3 col-md-3">
+									<label class="checkbox">
+										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">Active</span></label>
+								</div>
+								<div class="col-xs-3 col-md-3">
+									<label class="checkbox">
+										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
+								</div>
+								<div class="col-xs-3 col-md-3">
+									<label class="checkbox">
+										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Cancel</span></label>
+								</div>
+								<div class="col-xs-3 col-sm-4 col-md-3">
+									<button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button>
+								</div>
 							</div>
 						</div>
-						<div class="col-xs-4 col-sm-4 col-md-2 filterbar">
-							<button class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal">Add new</button>
-						</div>
+						
 					</div>
 
 					<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
@@ -175,6 +170,9 @@
 										</tr>
 									</thead>
 									<tbody>
+										<script type="text/javascript">
+											var storeUsername = [];
+										</script>
 										<?PHP
 											$sql = "SELECT `agentid`, `username`, `email`, `password`, `agentname`, 
 													`agentaddress`, `agentcontactname`, `agentcontacttel`, `maximumcredit`, 
@@ -194,11 +192,14 @@
 													}
 													?>
 													<tr>
+														<script type="text/javascript">
+															storeUsername.push('<?=$row['username']?>');
+														</script>
 														<td><?=$row['agentname']?></td>
 														<td><?=$row['email']?></td>
 														<td><?=$row['username']?></td>
 														<td><?=$statusUser?></td>
-														<td><a class="btn btn-small btn-primary"
+														<td class="center"><a onclick="resetModal();" class="btn btn-small btn-primary"
 															data-toggle="modal"
 															data-target="#myModal"
 															data-whatever="<?=$row['agentid']?>" >Edit</a>
@@ -220,129 +221,204 @@
 </div>
 <!-- END MAIN PANEL -->
 <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
+  <div class="modal fade" id="myModal" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-Adduser">
     
       <!-- Modal content-->
 	  
       <div class="modal-content">
-	  <form action='agent-management.php' method='post' >
+	  
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="header">Agent Manager</h4>
+          	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+				<i class="icon-append fa fa-times"></i>
+			</button>
+          	<h4 class="header">Agent Manager</h4>
         </div>
-        <div class="modal-body">
-		<div class="row" style="margin">
-			<div class="sectionHead">General Info</div>
-			<div class="card-block madalContent">
-				<div class="col-sm-4 col-md-4 header">
-				Status <font color="red"> *</font>
-				</div>
-				<div class="col-sm-8 col-md-8 status">
-					<input type="radio" name="status" value="A" id="m_StatusA" required>
-						<label style="background-color: #5dc156;" for="m_StatusA">Active</label>
-					<input type="radio" name="status" value="I" id="m_StatusI">
-						<label style="background-color: #6dd0ca;" for="m_StatusI">Inactive</label>
-					<input type="radio" name="status" value="C" id="m_StatusC">
-						<label style="background-color: #ffba42;" for="m_StatusC">Cancel</label>
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-					Agent Name <font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="agentName" name="agentName" value="" required>
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-					Username <font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="username" name="username" value="" required>
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-					Password <font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="password" name="password" value="" required>
-				</div>
-				
-			</div>
-			<div class="sectionHead" >Finance</div>
-			<div class="card-block madalContent">
-				<div class="col-sm-12 col-md-4 header">
-				Maximum Credit <font color="red"> *</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="maxCredit" name="maxCredit" value="" required>
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-					Credit Term (Day)<font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="number" step="1" id="creditTerm" name="creditTerm"  value="" required> 
-				</div>
-				<div class="col-xs-4 col-sm-4 col-md-4 header">
-					Price Type <font color="red">*</font>
-				</div>
-				<div class="col-xs-8 col-sm-8 col-md-8">
-					<input type="radio" name="priceType" value="N" id="p_TypeN" required>
-						<label for="p_TypeN">Normat</label>
-					<input type="radio" name="priceType" value="S" id="p_TypeS">
-						<label for="p_TypeS">Special</label>
-				</div>
-				<div class="col-xs-4 col-sm-4 col-md-4 header">
-					Vat Type <font color="red">*</font>
-				</div>
-				<div class="col-xs-8 col-sm-8 col-md-8">
-					<input type="radio" name="varType" value="I" id="v_TypeI" required>
-						<label for="v_TypeI">Include</label>
-					<input type="radio" name="varType" value="E" id="v_TypeE">
-						<label for="v_TypeE">Exclude</label>
-				</div>
-				
-			</div>
-			<div class="sectionHead">Contact</div>
-			<div class="card-block madalContent">
-				<div class="col-sm-12 col-md-4 header">
-				Email <font color="red">*</font>
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="Email" id="email" name="email" value="" required>
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-				Contact Name
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="conatactName" name="conatactName" value="">
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-				Tel
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="tel" name="tel" value="">
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-				Address
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<input type="text" id="address" name="address" value="">
-				</div>
-				<div class="col-sm-12 col-md-4 header">
-				Remark
-				</div>
-				<div class="col-sm-12 col-md-8">
-					<textarea id="note" name="note" value="" cols="40" rows="5"></textarea>
-				</div>
-				
-			</div>
-			
-			<div class="col-md-12 center">
-				<input type="hidden" name="agent_id" id="agent_id" />
-				<button type="submit" name="submitAddAgent" id="submitAddAgent" value="" 
-				class="btn btn-info mr-20" onclick="return confirm('Do you want to save the data')">Save</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div></div>
+        <div class="modal-body no-padding">
+        	<form action='agent-management.php' method='post' class="smart-form" id="agent-form">
+        		<header>
+					General Info
+				</header>
+        		<fieldset>
+        			<section>
+						<div class="row">
+							<label class="label col col-3 header">Status</label>
+							<div class="col col-9">
+								<label class="input status">
+									<div class="inline-group">
+										<label class="radio">
+											<input type="radio" name="status" value="A" id="m_StatusA" checked=true>
+											<i></i><span style="background-color: #5dc156;">Active</span></label>
+										<label class="radio">
+											<input type="radio" name="status" value="I" id="m_StatusI">
+											<i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
+										<label class="radio">
+											<input type="radio" name="status" value="C" id="m_StatusC">
+											<i></i><span style="background-color: #ffba42;">Cancel</span></label>
+									</div>
+								</label>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<label class="label col col-3 header">Agent Name</label>
+							<div class="col col-9">
+								<label class="input required">
+									<input type="text" name="agentName" id="agentName">
+								</label>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<label class="label col col-3 header">Username</label>
+							<div class="col col-9">
+								<label class="input required">
+									<input type="text" name="username" id="username">
+								</label>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<label class="label col col-3 header">Password</label>
+							<div class="col col-9">
+								<label class="input required">
+									<input type="password" name="password" id="password">
+								</label>
+							</div>
+						</div>
+					</section>
+
+        		</fieldset>
+        		<header>
+					Finance
+				</header>
+        		<fieldset>
+					<section>
+						<div class="row">
+							<label class="label col col-3 header">Maximum Credit</label>
+							<div class="col col-9">
+								<label class="input required">
+									<input type="text" name="maxCredit" id="maxCredit">
+								</label>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<label class="label col col-3 header">Credit Term (Day)</label>
+							<div class="col col-9">
+								<label class="input required">
+									<input type="number" step="1" name="creditTerm" id="creditTerm">
+								</label>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<label class="label col col-3 header">Price Type</label>
+							<div class="col col-9">
+								<label class="input">
+									<div class="inline-group">
+										<label class="radio">
+											<input type="radio" name="priceType" value="N" id="p_TypeN" checked>
+											<i></i>Normal</label>
+										<label class="radio">
+											<input type="radio" name="priceType" value="S" id="p_TypeS">
+											<i></i>Special</label>
+										<label class="radio">
+											<input type="radio" name="priceType" value="O" id="p_TypeO">
+											<i></i>Oversea Agent</label>
+									</div>
+								</label>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<label class="label col col-3 header">Vat Type</label>
+							<div class="col col-9">
+								<label class="input">
+									<div class="inline-group">
+										<label class="radio">
+											<input type="radio" name="varType" value="I" id="v_TypeI" checked>
+											<i></i>Include</label>
+										<label class="radio">
+											<input type="radio" name="varType" value="E" id="v_TypeE">
+											<i></i>Exclude</label>
+									</div>
+								</label>
+							</div>
+						</div>
+					</section>		
+
+        		</fieldset>
+        		<header>
+					Contact
+				</header>
+        		<fieldset>
+					<section>
+						<div class="row">
+							<label class="label col col-3 header">Email</label>
+							<div class="col col-9">
+								<label class="input required">
+									<input type="email" name="email" id="email">
+								</label>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<label class="label col col-3 header">Contact Name</label>
+							<div class="col col-9">
+								<label class="input">
+									<input type="text" name="conatactName" id="conatactName">
+								</label>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<label class="label col col-3 header">Tel</label>
+							<div class="col col-9">
+								<label class="input">
+									<input type="text" name="tel" id="tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+								</label>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<label class="label col col-3 header">Address</label>
+							<div class="col col-9">
+								<label class="input">
+									<input type="text" name="address" id="address">
+								</label>
+							</div>
+						</div>
+					</section>	
+					<section>
+						<div class="row">
+							<label class="label col col-3 header">Remark</label>
+							<div class="col col-9">
+								<label class="input">
+									<textarea rows="4" name="note" id="note"></textarea>
+								</label>
+							</div>
+						</div>
+					</section>		
+
+        		</fieldset>
+				<footer class="center">
+					<input type="hidden" name="agent_id" id="agent_id" />
+						<button type="submit" name="submitAddAgent" id="submitAddAgent"	class="btn btn-primary" style="float: unset;font-weight: 400;">Save</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" style="float: unset;font-weight: 400;">Cancel</button>
+				</footer>
+			</form>
         </div>
-	  </form>
+	 
       </div>
       
     </div>
@@ -365,24 +441,6 @@
 	// DO NOT REMOVE : GLOBAL FUNCTIONS!
 	var otable;
 	$(document).ready(function() {
-
-		/* // DOM Position key index //
-		
-		l - Length changing (dropdown)
-		f - Filtering input (search)
-		t - The Table! (datatable)
-		i - Information (records)
-		p - Pagination (paging)
-		r - pRocessing 
-		< and > - div elements
-		<"#id" and > - div with an id
-		<"class" and > - div with a class
-		<"#id.class" and > - div with an id and class
-		
-		Also see: http://legacy.datatables.net/usage/features
-		*/	
-		
-		/* BASIC ;*/
 		var responsiveHelper_dt_basic = undefined;
 		
 		var breakpointDefinition = {
@@ -434,8 +492,7 @@
 					if(data != null){
 						$('#m_Status' + data.status).prop('checked',true);
 						$('#agentName').val(data.agentname);
-						$('#username').val(data.username);  
-						$('#email').val(data.email);  
+						$('#username').val(data.username);   
 						$('#password').val(data.password);  
 						$('#maxCredit').val(data.maximumcredit);   
 						//$('#creditTerm').val(data.creditterm);
@@ -450,20 +507,19 @@
 						
 						$('#submitAddAgent').val("Update");  
 					}else{
-						$('#m_StatusA').prop('checked',false);
-						$('#m_StatusI').prop('checked',false);
-						$('#m_StatusC').prop('checked',false);
+						$('#m_StatusA').prop('checked',true);
+						// $('#m_StatusI').prop('checked',false);
+						// $('#m_StatusC').prop('checked',false);
 						$('#agentname').val('');
 						$('#username').val('');  
 						$('#email').val('');  
 						$('#password').val('');  
 						$('#maxCredit').val('');   
-						//$('#creditTerm').val('');
-						$('#p_TypeN').prop('checked',false);
-						$('#p_TypeS').prop('checked',false);
-						$('#v_TypeI').prop('checked',false);
-						$('#v_TypeE').prop('checked',false);
-						$('#email').val('');
+						$('#creditTerm').val('');
+						$('#p_TypeN').prop('checked',true);
+						// $('#p_TypeS').prop('checked',false);
+						$('#v_TypeI').prop('checked',true);
+						// $('#v_TypeE').prop('checked',false);
 						$('#conatactName').val('');
 						$('#tel').val('');
 						$('#address').val('');
@@ -478,6 +534,107 @@
 				}
 			});  
 		});
+
+		var errorClass = 'invalid';
+		var errorElement = 'em';
+
+		var $contactForm = $("#agent-form").validate({
+			errorClass		: errorClass,
+			errorElement	: errorElement,
+			highlight: function(element) {
+		        $(element).parent().removeClass('state-success').addClass('state-error');
+		        if($(element).parent().hasClass( "required" )){
+		        	 $(element).parent().css("border-left", "7px solid #FF3333");
+		        }
+		        $(element).removeClass('valid');
+		    },
+		    unhighlight: function(element) {
+		        $(element).parent().removeClass('state-error').addClass('state-success');
+		        if($(element).parent().hasClass( "required" )){
+		        	$(element).parent().css("border-left", "7px solid #047803");
+		        }
+		        $(element).addClass('valid');
+		    },
+		    submitHandler : function(form) {
+		      if (confirm("Do you want to save the data?")) {
+		        form.submit();
+		      }
+		    },
+			// Rules for form validation
+			rules : {
+				agentName : {
+					required : true,
+				},
+				username : {
+					required : true,
+					minlength : 6,
+					notEqual: true
+				},
+				password :{
+					required : true,
+					minlength : 6,
+					haveNumber: true
+				},
+				email :{
+					required : true,
+					email : true
+				},
+				maxCredit :{
+					required : true,
+				},
+				creditTerm :{
+					required : true,
+				}
+			},
+
+			// Messages for form validation
+			messages : {
+				agentName : {
+					required : 'Please enter your AgentName',
+				},
+				username : {
+					required : 'Please enter your Username',
+					minlength: 'Username must more than 6 character ',
+					notEqual: 'Username must not duplicate'
+				},
+				password : {
+					required : 'Please enter your Password',
+					minlength: 'Password must more than 6 character',
+					haveNumber: 'Password must more less than 1 number'
+				},
+				email : {
+					required : 'Please enter your email address',
+					email : 'Email format incorrect'
+				},
+				maxCredit : {
+					required : 'Please enter your Max Credit',
+				},
+				creditTerm : {
+					required : 'Please enter your Credit Term',
+				},
+			},
+
+			// Do not change code below
+			errorPlacement : function(error, element) {
+				error.insertAfter(element.parent());
+			}
+		});
+
+		$.validator.addMethod('haveNumber', function(value, element) {
+	        return value.match(/\d/)
+	    }, '');
+	    $.validator.addMethod("notEqual", function(value, element, param) {
+	    	var check = true;
+	    	var isCheck = $('#submitAddAgent').val(); 
+	    	for (var i = 0; i < storeUsername.length; i++) {
+	    		//console.log(storeUsername[i]);
+	    		if(value == storeUsername[i] && isCheck == "Insert")
+	    		{
+	    			check = false;
+	    		}
+	    	}
+		  return check;
+		}, "");	
 	});
 
 	/* END BASIC */
@@ -489,6 +646,13 @@
 		  //filter in column 0, with an regex, no smart filtering, no inputbox,not case sensitive
 		  //console.log(types);
 		  otable.fnFilter(types, 3, true, false, false, false);
+	}
+
+	function resetModal(){
+		$( "#agent-form" ).find( ".state-error" ).removeClass( "state-error" );
+		$( "#agent-form" ).find( ".state-success" ).removeClass( "state-success" );
+		$( "#agent-form" ).find( ".required" ).css("border-left", "7px solid #FF3333");
+		$( "em" ).remove();
 	}
 
 

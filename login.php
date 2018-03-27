@@ -30,7 +30,7 @@ include("inc/header.php");
 
 ?>
 <style type="text/css">
-	#main{
+	#main, html{
 
 		background: #C33764 !important;  /* fallback for old browsers */
 		background: -webkit-linear-gradient(to right, #1D2671, #C33764) !important;  /* Chrome 10-25, Safari 5.1-6 */
@@ -46,19 +46,11 @@ include("inc/header.php");
 	    color: #D56161;
 	}
 </style>
-<!-- ==========================CONTENT STARTS HERE ========================== -->
-<!-- possible classes: minified, no-right-panel, fixed-ribbon, fixed-header, fixed-width-->
-<header id="header">
-	<!--<span id="logo"></span>-->
 
+<header id="header">
 	<div id="logo-group">
 		<span id="logo"> <img src="<?php echo ASSETS_URL; ?>/img/logo.png" alt="SmartAdmin"> </span>
-
-		<!-- END AJAX-DROPDOWN -->
 	</div>
-
-	<!-- <span id="extr-page-header-space"> <span class="hidden-mobile hiddex-xs">Need an account?</span> <a href="<?php echo APP_URL; ?>/register.php" class="btn btn-danger">Create account</a> </span> -->
-
 </header>
 
 <div id="main" role="main">
@@ -123,16 +115,9 @@ include("inc/header.php");
 	include("inc/scripts.php"); 
 ?>
 
-<!-- PAGE RELATED PLUGIN(S) 
-<script src="..."></script>-->
-
 <script type="text/javascript">
-	// runAllForms();
-
 	$(function() {
-		// Validation
 		$("#login-form").validate({
-			// Rules for form validation
 			rules : {
 				username : {
 					required : true,
@@ -159,8 +144,3 @@ include("inc/header.php");
 		});
 	});
 </script>
-
-<!-- <?php 
-	//include footer
-	// include("inc/google-analytics.php"); 
-?> -->
