@@ -2,7 +2,7 @@
 	session_start();
 	include('inc/auth.php');
 	include("inc/connectionToMysql.php");
-	include("registerUserController.php");
+	include("bookingList-controller.php");
 	/////////////////////////////////////////////////////////
 	//initilize the page
 	require_once ("inc/init.php");
@@ -85,50 +85,42 @@
 		$breadcrumbs["Booking"] = "";
 		include("inc/ribbon.php");
 	?>
-	
+
 	<!-- MAIN CONTENT -->
 	<div id="content">
-		
 		<div class="row">
 			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 				<h1 class="header">
 					Booking List
 				</h1>
 			</div>
-			<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
-				
-			</div>
 		</div>
-		
 		<!-- widget grid -->
 		<section id="widget-grid" class="">
-			
 			<!-- row -->
 			<div class="row">
-				
 				<!-- NEW WIDGET START -->
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					
 					<div class="row header">
 						<div class="col-sm-4 col-md-4">
 							Keywoard<br/>
 							<input id="column3_search" type="text" name="column3_search">
 						</div>
 						<div class="col-sm-2 col-md-2 hidden-xs">
-							Date<br/>
+							First Service Date<br/>
 							<input id="date_search" placeholder="DD/MM/YYYY" type="text" name="date_search">
 						</div>
 						<div class="col-xs-8 col-sm-4 col-md-4 status smart-form" style="padding-top: 25px;">
 							<div class=" checkbox">
-								<div class="col col-4">
+								<div class="col col-6">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">Active</span></label>
+										<input type="checkbox" name="status" id="StatusN" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">New</span></label>
+									<label class="checkbox">
+										<input type="checkbox" name="status" id="StatusW" value="Waiting" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #6dd0ca;">Wait for confirm</span></label>
 								</div>
 								<div class="col col-4">
-									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
-								</div>
-								<div class="col col-4">
+								<label class="checkbox">
+										<input type="checkbox" name="status" id="StatusF" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Confirm</span></label>
 									<label class="checkbox">
 										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Cancel</span></label>
 								</div>
@@ -141,54 +133,49 @@
 					
 					<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
 						<div>
-							
 							<!-- widget content -->
 							<div class="widget-body no-padding">
-								
 						        <table id="dt_basic" class="table table-striped table-bordered table-hover" style="margin-top:0px" width="100%">
-									<thead>			                
+									<thead>             
 										<tr class="header">
 											<th data-hide="phone">Booking ID</th>
-											<th data-class="expand">Date</th>
-											<th data-hide="phone">Booking Name</th>
+											<th>Booking Name</th>
+											<th>First Service Date</th>
 											<th>Agent Name</th>
-											<th>Status</th>
+											<th>Booking Status</th>
 											<th></th>
 										</tr>
 									</thead>
 									<tbody>
 										<?PHP
-											$sql = "SELECT `userid`, `username`, `email`, `password`, `type`, `status`,
-											`createdatetime`, `createby`, `updatedatetime`, `updateby` FROM `user` ";
+											$sql = "SELECT booking.booking_id, booking.booking_name, min(booking_detail.booking_detail_date) as booking_date, 
+											booking.agent_name, booking.booking_status
+											FROM booking, booking_detail 
+											WHERE booking.booking_id=booking_detail.booking_id 
+											GROUP BY booking.booking_id";
 											$result = mysqli_query($conn ,$sql);
 											if(mysqli_num_rows($result) > 0){
 												//show data for each row
 												while($row = mysqli_fetch_assoc($result)){
-													if($row['status'] == 'A'){
-														$statusUser = '<font color="green">Active</font>';
-														}else if($row['status'] == 'I'){
-														$statusUser = 'Inactive';
-														
-														}else if($row['status'] == 'C'){
-														$statusUser = '<font color="red">Cancel</font>';
-													}
-													if($row['type'] == 'S'){
-														$typeUser = 'Staf';
-														}else if($row['type'] == 'M'){
-														$typeUser = 'Manager';
-														}else if($row['type'] == 'A'){
-														$typeUser = 'Admin';
+													if($row['booking_status'] == 'N'){
+														$statusUser = '<font color="green">New</font>';
+													}else if($row['booking_status'] == 'W'){
+														$statusUser = 'Wait for Confirm';
+													}else if($row['booking_status'] == 'F'){
+														$statusUser = 'Confirm';
+													}else if($row['booking_status'] == 'C'){
+														$statusUser = '<font color="red">Concel</font>';
 													}?>
 													<tr>
-														<td><?=$row['username']?></td>
-														<td><?=$row['email']?></td>
-														<td><?=$typeUser?></td>
-														<td><?=$statusUser?></td>
+														<td><?=$row['booking_id']?></td>
+														<td><?=$row['booking_name']?></td>
+														<td><?=$row['booking_date']?></td>
+														<td><?=$row['agent_name']?></td>
 														<td><?=$statusUser?></td>
 														<td style="text-align: center;"><a class="btn btn-small btn-primary"
 															data-toggle="modal"
 															data-target="#myModal"
-															data-whatever="<?=$row['userid']?>" >Edit</a>
+															data-whatever="<?=$row['booking_id']?>" >Edit</a>
 														</td>
 													</tr>
 													<?PHP

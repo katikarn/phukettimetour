@@ -2,7 +2,7 @@
 	session_start();
 	include('inc/auth.php');
 	include("inc/connectionToMysql.php");
-	include("registerAgentController.php");
+	include("agent-controller.php");
 /////////////////////////////////////////////////////////
 	//initilize the page
 	require_once ("inc/init.php");
@@ -101,35 +101,23 @@
 	
 	<!-- MAIN CONTENT -->
 	<div id="content">
-		
 		<div class="row">
 			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 				<h1 class="header">
 					Agent
 				</h1>
 			</div>
-			<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
-				
-			</div>
 		</div>
-		
 		<!-- widget grid -->
 		<section id="widget-grid" class="">
-			
 			<!-- row -->
 			<div class="row">
-				
 				<!-- NEW WIDGET START -->
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
 					<div class="row header">
 						<div class="col-sm-4 col-md-4 col-lg-4">
-							Keywoard<br/>
+							Keyword<br/>
 							<input id="column3_search" type="text" name="googlesearch">
-						</div>
-						<div class="hidden-md col-lg-2">
-							<!-- Date<br/>
-							<input id="date_search" placeholder="DD/MM/YYYY" type="text" name="date_search"> -->
 						</div>
 						<div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 status smart-form" style="padding-top: 25px;">
 							<div class="checkbox" style="padding-left: 0px;">
@@ -150,15 +138,12 @@
 								</div>
 							</div>
 						</div>
-						
 					</div>
 
 					<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
 						<div>
-						
 							<!-- widget content -->
 							<div class="widget-body no-padding">
-								
 						        <table id="dt_basic" class="table table-striped table-bordered table-hover" style="margin-top:0px" width="100%">
 									<thead>			                
 										<tr class="header">
@@ -174,41 +159,39 @@
 											var storeUsername = [];
 										</script>
 										<?PHP
-											$sql = "SELECT `agentid`, `username`, `email`, `password`, `agentname`, 
-													`agentaddress`, `agentcontactname`, `agentcontacttel`, `maximumcredit`, 
-													`remaincredit`, `creditterm`, `pricetype`, `vattype`, `status`, `note`
+											$sql = "SELECT `agent_id`, `agent_username`, `agent_main_email`, `agent_password`, `agent_name`, 
+													`agent_address`, `agent_status`, `agent_remark`, `agent_tel`
 													FROM `agent` ";
 											$result = mysqli_query($conn ,$sql);
 											if(mysqli_num_rows($result) > 0){
 												//show data for each row
 												while($row = mysqli_fetch_assoc($result)){
-													if($row['status'] == 'A'){
+													if($row['agent_status'] == 'A'){
 														$statusUser = '<font color="green">Active</font>';
-														}else if($row['status'] == 'I'){
+													}else if($row['agent_status'] == 'I'){
 														$statusUser = 'Inactive';
-														
-														}else if($row['status'] == 'C'){
+													}else if($row['agent_status'] == 'C'){
 														$statusUser = '<font color="red">Cancel</font>';
 													}
 													?>
 													<tr>
 														<script type="text/javascript">
-															storeUsername.push('<?=$row['username']?>');
+															storeUsername.push('<?=$row['agent_username']?>');
 														</script>
-														<td><?=$row['agentname']?></td>
-														<td><?=$row['email']?></td>
-														<td><?=$row['username']?></td>
+														<td><?=$row['agent_name']?></td>
+														<td><?=$row['agent_main_email']?></td>
+														<td><?=$row['agent_tel']?></td>
 														<td><?=$statusUser?></td>
 														<td class="center"><a onclick="resetModal();" class="btn btn-small btn-primary"
 															data-toggle="modal"
 															data-target="#myModal"
-															data-whatever="<?=$row['agentid']?>" >Edit</a>
+															data-whatever="<?=$row['agent_id']?>" >Edit</a>
 														</td>
 													</tr>
 													<?PHP
-													}}
+												}
+											}
 										?>
-								
 									</tbody>
 								</table>								
 							</div>					
@@ -221,207 +204,334 @@
 </div>
 <!-- END MAIN PANEL -->
 <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog" data-backdrop="static">
+<div class="modal fade" id="myModal" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-Adduser">
-    
-      <!-- Modal content-->
-	  
-      <div class="modal-content">
-	  
-        <div class="modal-header">
-          	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-				<i class="icon-append fa fa-times"></i>
-			</button>
-          	<h4 class="header">Agent Manager</h4>
-        </div>
-        <div class="modal-body no-padding">
-        	<form action='agent-management.php' method='post' class="smart-form" id="agent-form">
-        		<header>
-					General Info
-				</header>
-        		<fieldset>
-        			<section>
-						<div class="row">
-							<label class="label col col-3 header">Status</label>
-							<div class="col col-9">
-								<label class="input status">
-									<div class="inline-group">
-										<label class="radio">
-											<input type="radio" name="status" value="A" id="m_StatusA" checked=true>
-											<i></i><span style="background-color: #5dc156;">Active</span></label>
-										<label class="radio">
-											<input type="radio" name="status" value="I" id="m_StatusI">
-											<i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
-										<label class="radio">
-											<input type="radio" name="status" value="C" id="m_StatusC">
-											<i></i><span style="background-color: #ffba42;">Cancel</span></label>
-									</div>
-								</label>
+      	<!-- Modal content-->
+      	<div class="modal-content">
+        	<div class="modal-header">	
+          		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					<i class="icon-append fa fa-times"></i>
+				</button>
+          		<h4 class="header">Agent Manager</h4>
+        	</div>
+        	<div class="modal-body no-padding">
+        		<form action='agent-management.php' method='post' class="smart-form" id="agent-form">
+        			<fieldset>
+        				<section>
+							<div class="row">
+								<label class="label col col-3 header">Status</label>
+								<div class="col col-9">
+									<label class="input status">
+										<div class="inline-group">
+											<label class="radio">
+												<input type="radio" name="chkagent_status" value="A" id="chkagent_status_A" checked=true>
+												<i></i><span style="background-color: #5dc156;">Active</span></label>
+											<label class="radio">
+												<input type="radio" name="chkagent_status" value="I" id="chkagent_status_I">
+												<i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
+											<label class="radio">
+												<input type="radio" name="chkagent_status" value="C" id="chkagent_status_C">
+												<i></i><span style="background-color: #ffba42;">Cancel</span></label>
+										</div>
+									</label>
+								</div>
 							</div>
-						</div>
-					</section>
-					<section>
-						<div class="row">
-							<label class="label col col-3 header">Agent Name</label>
-							<div class="col col-9">
-								<label class="input required">
-									<input type="text" name="agentName" id="agentName">
-								</label>
+							<div class="row">
+								<label class="label col col-3 header">Agent Name</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="txbagent_name" id="txbagent_name">
+									</label>
+								</div>
 							</div>
-						</div>
-					</section>
-					<section>
-						<div class="row">
+							<div class="row">
+								<label class="label col col-3 header">Accounting Name</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="txbagent_name_acc" id="txbagent_name_acc">
+									</label>
+								</div>
+							</div>
+							<div class="row">
+								<label class="label col col-3 header">Tel</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="txbagent_tel" id="txbagent_tel">
+									</label>
+								</div>
+							</div>
+							<div class="row">
+								<label class="label col col-3 header">Address</label>
+								<div class="col col-9">
+									<label class="input">
+										<input type="text" name="txbagent_address" id="txbagent_address">
+									</label>
+								</div>
+							</div>
+							<div class="row">
+								<label class="label col col-3 header">TAT License</label>
+								<div class="col col-9">
+									<label class="input">
+										<input type="text" name="txbagent_license" id="txbagent_license">
+									</label>
+								</div>
+							</div>
+							<div class="row">
+								<label class="label col col-3 header">Business Section</label>
+								<div class="col col-9">
+									<label class="input">
+										<select name="lsbagent_section" id="lsbagent_section">
+											<option value="" selected></option>
+    										<option value="D">Destination Management Company</option>
+    										<option value="T">Tour Counter</option>
+    										<option value="A">Travel Agent</option>
+											<option value="W">Wholesale Travel Company</option>
+											<option value="C">Corperate</option>
+											<option value="G">Goverment</option>
+  										</select>
+									</label>
+								</div>
+							</div>
+							<div class="input input-file">
+								<span class="button"><input type="file" name="txbagent_file" id="txbagent_file" onchange="this.parentNode.nextSibling.value = this.value">Browse</span><input type="text" placeholder="Include files" readonly="">
+							</div>
+						</section>
+					<header>
+						Login Information
+					</header>
+        			<fieldset>
+						<section>
+							<div class="row">
 							<label class="label col col-3 header">Username</label>
-							<div class="col col-9">
-								<label class="input required">
-									<input type="text" name="username" id="username">
-								</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="txbagent_username" id="txbagent_username">
+									</label>
+								</div>
 							</div>
-						</div>
-					</section>
-					<section>
-						<div class="row">
+							<div class="row">
 							<label class="label col col-3 header">Password</label>
-							<div class="col col-9">
-								<label class="input required">
-									<input type="password" name="password" id="password">
-								</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="password" name="txbagent_password" id="txbagent_password">
+									</label>
+								</div>
 							</div>
-						</div>
-					</section>
-
-        		</fieldset>
-        		<header>
-					Finance
-				</header>
-        		<fieldset>
-					<section>
+						</section>
+        			</fieldset>
+        			<header>
+						Finance
+					</header>
+        			<fieldset>
 						<div class="row">
-							<label class="label col col-3 header">Maximum Credit</label>
-							<div class="col col-9">
-								<label class="input required">
-									<input type="text" name="maxCredit" id="maxCredit">
-								</label>
-							</div>
-						</div>
-					</section>
-					<section>
-						<div class="row">
-							<label class="label col col-3 header">Credit Term (Day)</label>
-							<div class="col col-9">
-								<label class="input required">
-									<input type="number" step="1" name="creditTerm" id="creditTerm">
-								</label>
-							</div>
-						</div>
-					</section>
-					<section>
-						<div class="row">
-							<label class="label col col-3 header">Price Type</label>
+							<label class="label col col-3 header">Pay Type</label>
 							<div class="col col-9">
 								<label class="input">
 									<div class="inline-group">
 										<label class="radio">
-											<input type="radio" name="priceType" value="N" id="p_TypeN" checked>
-											<i></i>Normal</label>
+											<input type="radio" name="chkagent_pay_type" value="T" id="chkagent_pay_type_T" checked>
+											<i></i>Cash before service</label>
 										<label class="radio">
-											<input type="radio" name="priceType" value="S" id="p_TypeS">
-											<i></i>Special</label>
+											<input type="radio" name="chkagent_pay_type" value="D" id="chkagent_pay_type_D">
+											<i></i>Deposit</label>
 										<label class="radio">
-											<input type="radio" name="priceType" value="O" id="p_TypeO">
-											<i></i>Oversea Agent</label>
+											<input type="radio" name="chkagent_pay_type" value="C" id="chkagent_pay_type_C">
+											<i></i>Credit</label>											
 									</div>
 								</label>
 							</div>
 						</div>
-					</section>
-					<section>
+						<div class="row">
+							<label class="label col col-3 header">Amount</label>
+							<div class="col col-9">
+								<label class="input">
+									<input type="number" step="0.25" name="txbagent_amount" id="txbagent_amount">
+								</label>
+							</div>
+						</div>
+						<div class="row">
+							<label class="label col col-3 header">Credit Term (Day)</label>
+							<div class="col col-9">
+								<label class="input">
+									<input type="number" step="1" name="txbagent_creditterm" id="txbagent_creditterm">
+								</label>
+							</div>
+						</div>
 						<div class="row">
 							<label class="label col col-3 header">Vat Type</label>
 							<div class="col col-9">
 								<label class="input">
 									<div class="inline-group">
 										<label class="radio">
-											<input type="radio" name="varType" value="I" id="v_TypeI" checked>
+											<input type="radio" name="chkagent_vat_type" value="I" id="chkagent_vat_type_I" checked>
 											<i></i>Include</label>
 										<label class="radio">
-											<input type="radio" name="varType" value="E" id="v_TypeE">
+											<input type="radio" name="chkagent_vat_type" value="E" id="chkagent_vat_type_E">
 											<i></i>Exclude</label>
 									</div>
 								</label>
 							</div>
 						</div>
-					</section>		
-
-        		</fieldset>
-        		<header>
-					Contact
-				</header>
-        		<fieldset>
-					<section>
 						<div class="row">
-							<label class="label col col-3 header">Email</label>
-							<div class="col col-9">
-								<label class="input required">
-									<input type="email" name="email" id="email">
-								</label>
-							</div>
-						</div>
-					</section>
-					<section>
-						<div class="row">
-							<label class="label col col-3 header">Contact Name</label>
+							<label class="label col col-3 header">Price Type</label>
 							<div class="col col-9">
 								<label class="input">
-									<input type="text" name="conatactName" id="conatactName">
+									<div class="inline-group">
+										<label class="radio">
+											<input type="radio" name="chkagent_price_type" value="N" id="chkagent_price_type_N" checked>
+											<i></i>Normal</label>
+										<label class="radio">
+											<input type="radio" name="chkagent_price_type" value="S" id="chkagent_price_type_S">
+											<i></i>Special</label>
+										<label class="radio">
+											<input type="radio" name="chkagent_price_type" value="O" id="chkagent_price_type_O">
+											<i></i>Oversea Agent</label>
+									</div>
 								</label>
 							</div>
 						</div>
-					</section>
-					<section>
-						<div class="row">
-							<label class="label col col-3 header">Tel</label>
-							<div class="col col-9">
-								<label class="input">
-									<input type="text" name="tel" id="tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-								</label>
+        			</fieldset>
+					<header>
+						Contract - Main
+					</header>
+					<fieldset>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Name</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="txbagent_main_name" id="txbagent_main_name" maxlength="50">
+									</label>
+								</div>
+								<label class="label col col-3 header">Tel</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="txbagent_main_tel" id="txbagent_main_tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="15">
+									</label>
+								</div>
+								<label class="label col col-3 header">Email</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="txbagent_main_email" id="txbagent_main_email" maxlength="50">
+									</label>
+								</div>
+								<label class="label col col-3 header">Line or WhatApp</label>
+								<div class="col col-9">
+									<label class="input">
+										<input type="text" name="txbagent_main_line" id="txbagent_main_line" maxlength="50">
+									</label>
+								</div>
 							</div>
-						</div>
-					</section>
-					<section>
-						<div class="row">
-							<label class="label col col-3 header">Address</label>
-							<div class="col col-9">
-								<label class="input">
-									<input type="text" name="address" id="address">
-								</label>
+						</section>	
+					</fieldset>
+					<header>
+						Contract - Reservations/Operation
+					</header>
+					<fieldset>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Name</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="text" name="txbagent_reserv_name" id="txbagent_reserv_name" maxlength="50">
+									</label>
+								</div>
+								<label class="label col col-3 header">Tel</label>
+								<div class="col col-9">
+									<label class="input">
+										<input type="text" name="txbagent_reserv_tel" id="txbagent_reserv_tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="15">
+									</label>
+								</div>
+								<label class="label col col-3 header">Email</label>
+								<div class="col col-9">
+									<label class="input">
+										<input type="text" name="txbagent_reserv_email" id="txbagent_reserv_email" maxlength="50">
+									</label>
+								</div>
+								<label class="label col col-3 header">Line or WhatApp</label>
+								<div class="col col-9">
+									<label class="input">
+										<input type="text" name="txbagent_reserv_line" id="txbagent_reserv_line" maxlength="50">
+									</label>
+								</div>
+								<label class="label col col-3 header">Fax</label>
+								<div class="col col-9">
+									<label class="input">
+										<input type="text" name="txbagent_reserv_fax" id="txbagent_reserv_fax" maxlength="50">
+									</label>
+								</div>
+								<label class="label col col-3 header">Main Contract</label>
+								<div class="col col-9">
+									<label class="input">
+										<select name="lsbagent_reserv_main" id="lsbagent_reserv_main">
+											<option value="" selected></option>
+    										<option value="T">Tel</option>
+    										<option value="F">Fax</option>
+    										<option value="E">Email</option>
+											<option value="L">Line or WhatApp</option>
+  										</select>
+									</label>
+								</div>
 							</div>
-						</div>
-					</section>	
-					<section>
-						<div class="row">
-							<label class="label col col-3 header">Remark</label>
-							<div class="col col-9">
-								<label class="input">
-									<textarea rows="4" name="note" id="note"></textarea>
-								</label>
+						</section>	
+					</fieldset>
+					<header>
+						Contract - Account
+					</header>
+					<fieldset>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Name</label>
+								<div class="col col-9">
+									<label class="input">
+										<input type="text" name="txbagent_account_name" id="txbagent_account_name" maxlength="50">
+									</label>
+								</div>
 							</div>
-						</div>
-					</section>		
-
+							<div class="row">
+								<label class="label col col-3 header">Tel</label>
+								<div class="col col-9">
+									<label class="input">
+										<input type="text" name="txbagent_account_tel" id="txbagent_account_tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="15">
+									</label>
+								</div>
+							</div>								
+							<div class="row">
+								<label class="label col col-3 header">Email</label>
+								<div class="col col-9">
+									<label class="input">
+										<input type="text" name="txbagent_account_email" id="txbagent_account_email" maxlength="50">
+									</label>
+								</div>
+							</div>
+						</section>	
+					</fieldset>
+					<header>
+						Remark
+					</header>
+					<fieldset>
+						<section>
+							<div class="row">
+								<label class="label col col-3 header">Detail</label>
+								<div class="col col-9">
+									<label class="input">
+										<textarea type="text" rows="4" name="txbagent_remark" id="txbagent_remark" maxlength="500"></textarea>
+									</label>
+								</div>
+							</div>
+						</section>
+					</fieldset>
         		</fieldset>
 				<footer class="center">
 					<input type="hidden" name="agent_id" id="agent_id" />
 						<button type="submit" name="submitAddAgent" id="submitAddAgent"	class="btn btn-primary" style="float: unset;font-weight: 400;">Save</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal" style="float: unset;font-weight: 400;">Cancel</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" style="float: unset;font-weight: 400;">Send user email</button>
 				</footer>
 			</form>
         </div>
-	 
-      </div>
-      
-    </div>
+	</div>
+</div>
   </div>
 	<!-- ==========================CONTENT ENDS HERE ========================== -->
 
@@ -490,47 +600,80 @@
                 
                 success: function (data) {
 					if(data != null){
-						$('#m_Status' + data.status).prop('checked',true);
-						$('#agentName').val(data.agentname);
-						$('#username').val(data.username);   
-						$('#password').val(data.password);  
-						$('#maxCredit').val(data.maximumcredit);   
-						//$('#creditTerm').val(data.creditterm);
-						$('#p_Type' + data.pricetype).prop('checked',true);
-						$('#v_Type' + data.vattype).prop('checked',true);
-						$('#email').val(data.email);
-						$('#conatactName').val(data.agentcontactname);
-						$('#tel').val(data.agentcontacttel);
-						$('#address').val(data.agentaddress);
-						$('#note').val(data.note);
-						$('#agent_id').val(data.agentid);
-						
-						$('#submitAddAgent').val("Update");  
+						$('#agent_id').val(data.agent_id);
+						$('#chkagent_status_' + data.agent_status).prop('checked',true);
+						$('#txbagent_name').val(data.agent_name);
+						$('#txbagent_name_acc').val(data.agent_name_acc);
+						$('#txbagent_tel').val(data.agent_tel);
+						$('#txbagent_address').val(data.agent_address);
+						$('#txbagent_license').val(data.agent_license);
+						$('#lsbagent_section').val(data.agent_section);
+						$('#txbagent_file').val(data.agent_file);
+						$('#txbagent_username').val(data.agent_username);
+						$('#txbagent_password').val(data.agent_password);
+						$('#chkagent_pay_type_' + data.agent_pay_type).prop('checked',true);
+						$('#txbagent_amount').val(data.agent_amount);
+						$('#txbagent_creditterm').val(data.agent_creditterm);
+						$('#chkagent_vat_type_' + data.agent_vat_type).prop('checked',true);
+						$('#chkagent_price_type_' + data.agent_price_type).prop('checked',true);
+						$('#txbagent_main_name').val(data.agent_main_name);
+						$('#txbagent_main_tel').val(data.agent_main_tel);
+						$('#txbagent_main_email').val(data.agent_main_email);
+						$('#txbagent_main_line').val(data.agent_main_line);
+						$('#txbagent_reserv_name').val(data.agent_reserv_name);
+						$('#txbagent_reserv_tel').val(data.agent_reserv_tel);
+						$('#txbagent_reserv_email').val(data.agent_reserv_email);
+						$('#txbagent_reserv_line').val(data.agent_reserv_line);
+						$('#txbagent_reserv_fax').val(data.agent_reserv_fax);
+						$('#lsbagent_reserv_main').val(data.agent_reserv_main);
+						$('#txbagent_account_name').val(data.agent_account_name);
+						$('#txbagent_account_tel').val(data.agent_account_tel);
+						$('#txbagent_account_email').val(data.agent_account_email);
+						$('#txbagent_remark').val(data.agent_remark);
+						$('#submitAddAgent').val("Update");
 					}else{
-						$('#m_StatusA').prop('checked',true);
-						// $('#m_StatusI').prop('checked',false);
-						// $('#m_StatusC').prop('checked',false);
-						$('#agentname').val('');
-						$('#username').val('');  
-						$('#email').val('');  
-						$('#password').val('');  
-						$('#maxCredit').val('');   
-						$('#creditTerm').val('');
-						$('#p_TypeN').prop('checked',true);
-						// $('#p_TypeS').prop('checked',false);
-						$('#v_TypeI').prop('checked',true);
-						// $('#v_TypeE').prop('checked',false);
-						$('#conatactName').val('');
-						$('#tel').val('');
-						$('#address').val('');
-						$('#note').val('');
 						$('#agent_id').val('');
+						$('#chkagent_status_A').prop('checked',true);
+						//$('#chkagent_status_I').prop('checked',true);
+						//$('#chkagent_status_C').prop('checked',true);
+						$('#txbagent_name').val('');
+						$('#txbagent_name_acc').val('');
+						$('#txbagent_tel').val('');
+						$('#txbagent_address').val('');
+						$('#txbagent_license').val('');
+						$('#lsbagent_section').val('');
+						$('#txbagent_file').val('');
+						$('#txbagent_username').val('');
+						$('#txbagent_password').val('');
+						$('#chkagent_pay_type_T').prop('checked',true);
+						//$('#chkagent_pay_type_D').prop('checked',true);
+						//$('#chkagent_pay_type_C').prop('checked',true);
+						$('#txbagent_amount').val('');
+						$('#txbagent_creditterm').val('');
+						//$('#chkagent_vat_type_I').prop('checked',true);
+						$('#chkagent_vat_type_E').prop('checked',true);
+						$('#chkagent_price_type_N').prop('checked',true);
+						//$('#chkagent_price_type_S').prop('checked',true);
+						//$('#chkagent_price_type_O').prop('checked',true);
+						$('#txbagent_main_name').val('');
+						$('#txbagent_main_tel').val('');
+						$('#txbagent_main_email').val('');
+						$('#txbagent_main_line').val('');
+						$('#txbagent_reserv_name').val('');
+						$('#txbagent_reserv_tel').val('');
+						$('#txbagent_reserv_email').val('');
+						$('#txbagent_reserv_line').val('');
+						$('#txbagent_reserv_fax').val('');
+						$('#lsbagent_reserv_main').val('');
+						$('#txbagent_account_name').val('');
+						$('#txbagent_account_tel').val('');
+						$('#txbagent_account_email').val('');
+						$('#txbagent_remark').val('');
 						$('#submitAddAgent').val("Insert");
 					}
 				},
                 error: function(err) {
                     console.log('err : '+err);
-					
 				}
 			});  
 		});
@@ -562,58 +705,89 @@
 		    },
 			// Rules for form validation
 			rules : {
-				agentName : {
+				txbagent_name : {
 					required : true,
 				},
-				username : {
+				txbagent_name_acc : {
+					required : true,
+				},
+				txbagent_tel : {
+					required : true,
+					minlength : 9,
+				},
+				txbagent_username : {
 					required : true,
 					minlength : 6,
-					notEqual: true
+					notEqual: true,
 				},
-				password :{
+				txbagent_password : {
 					required : true,
 					minlength : 6,
-					haveNumber: true
+					haveNumber: true,
 				},
-				email :{
-					required : true,
-					email : true
-				},
-				maxCredit :{
+				txbagent_main_name : {
 					required : true,
 				},
-				creditTerm :{
+				txbagent_main_tel : {
 					required : true,
-				}
+					minlength : 9,
+				},
+				txbagent_main_email : {
+					required : true,
+					email : true,
+				},
+				txbagent_reserv_name : {
+					required : true,
+				},
+				txbagent_reserv_email : {
+					email : true,
+				},
+				txbagent_account_email : {
+					email : true,
+				},
 			},
-
 			// Messages for form validation
 			messages : {
-				agentName : {
-					required : 'Please enter your AgentName',
+				txbagent_name : {
+					required : 'Please fill Agent Name',
 				},
-				username : {
-					required : 'Please enter your Username',
-					minlength: 'Username must more than 6 character ',
-					notEqual: 'Username must not duplicate'
+				txbagent_name_acc : {
+					required : 'Please fill Agent Account Name',
 				},
-				password : {
-					required : 'Please enter your Password',
-					minlength: 'Password must more than 6 character',
+				txbagent_tel : {
+					required : 'Please fill Tel',
+				},
+				txbagent_username : {
+					required : 'Please fill Username',
+					minlength : 'Username must more than 5 charecter',
+					notEqual: 'Dupplicate Username'
+				},
+				txbagent_password : {
+					required : 'Please fill Password',
+					minlength : 'Password must more than 5 charecter',
 					haveNumber: 'Password must more less than 1 number'
 				},
-				email : {
-					required : 'Please enter your email address',
-					email : 'Email format incorrect'
+				lsbagent_main_name : {
+					required : 'Please select main contract',
 				},
-				maxCredit : {
-					required : 'Please enter your Max Credit',
+				txbagent_main_tel : {
+					required : 'Please fill Tel',
+					minlength : 'Tel incorrect'
 				},
-				creditTerm : {
-					required : 'Please enter your Credit Term',
+				txbagent_main_email : {
+					required : 'Please fill Email',
+					email : 'Email incorrect'
+				},
+				txbagent_reserv_name : {
+					required : 'Please fill reservation name',
+				},
+				txbagent_reserv_email : {
+					email : 'Email incorrect',
+				},
+				txbagent_account_email : {
+					email : 'Email incorrect',
 				},
 			},
-
 			// Do not change code below
 			errorPlacement : function(error, element) {
 				error.insertAfter(element.parent());
@@ -654,8 +828,6 @@
 		$( "#agent-form" ).find( ".required" ).css("border-left", "7px solid #FF3333");
 		$( "em" ).remove();
 	}
-
-
 	</script>
 
 	<?php

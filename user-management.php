@@ -2,7 +2,7 @@
 	session_start();
 	include('inc/auth.php');
 	include("inc/connectionToMysql.php");
-	include("registerUserController.php");
+	include("user-controller.php");
 	/////////////////////////////////////////////////////////
 	//initilize the page
 	require_once ("inc/init.php");
@@ -190,7 +190,7 @@
 														$statusUser = '<font color="red">Cancel</font>';
 													}
 													if($row['type'] == 'S'){
-														$typeUser = 'Staf';
+														$typeUser = 'Staff';
 														}else if($row['type'] == 'M'){
 														$typeUser = 'Manager';
 														}else if($row['type'] == 'A'){
@@ -271,7 +271,7 @@
 										<div class="inline-group">
 											<label class="radio">
 												<input type="radio" name="type" value="S" id="m_typeS" checked>
-												<i></i>Staf</label>
+												<i></i>Staff</label>
 											<label class="radio">
 												<input type="radio" name="type" value="M" id="m_typeM">
 												<i></i>Manager</label>

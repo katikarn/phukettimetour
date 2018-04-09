@@ -80,10 +80,10 @@ $page_nav = array(
 				"title" => "User Management",
 				"url" => APP_URL."/user-management.php"
 			),
-			"Audit Log" => array(
-				"title" => "Audit Log",
-				"url" => APP_URL."/jqgrid.php"
-			)
+			//"Audit Log" => array(
+			//	"title" => "Audit Log",
+			//	"url" => APP_URL."/jqgrid.php"
+			//)
 		)
 	)
 );

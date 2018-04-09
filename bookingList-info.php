@@ -2,7 +2,7 @@
 	session_start();
 	include('inc/auth.php');
 	include("inc/connectionToMysql.php");
-	include("registerUserController.php");
+	include("bookingList-info-controller.php");
 	/////////////////////////////////////////////////////////
 	//initilize the page
 	require_once ("inc/init.php");
@@ -123,13 +123,6 @@
 
 	<!-- MAIN CONTENT -->
 	<div id="content">
-
-
-		<!-- <div class="row">
-			<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-				<a data-toggle="modal" href="#myModal" class="btn btn-success btn-lg pull-right header-btn hidden-mobile"><i class="fa fa-circle-arrow-up fa-lg"></i> Launch form modal</a>
-			</div>
-		</div> -->
 		<div class="row">
 			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 				<h1 class="header">
@@ -137,225 +130,234 @@
 				</h1>
 			</div>
 			<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8" style="text-align: right;">
-				<a class="btn btn-primary" style="margin-right: 10px;"> 
-					<i style="margin-right: 5px;" class="icon-append fa fa-check"></i>Save</a>
 				<a href="bookingList.php" class="btn btn-default" style="margin-right: 10px;"> 
-					<i style="margin-right: 5px;" class="icon-append fa fa-times"></i>Cancel</a>
+					<i style="margin-right: 5px;" class="icon-append fa fa-send"></i>Send Mail</a>
 				<a class="btn btn-default" style="margin-right: 10px;">
-					<i style="margin-right: 5px;" class="icon-append fa fa-file-o"></i>Report </a>
+					<i style="margin-right: 5px;" class="icon-append fa fa-car"></i>Pickup Card</a>
+				<a class="btn btn-default" style="margin-right: 10px;">
+					<i style="margin-right: 5px;" class="icon-append fa fa-file-o"></i>Itinerary</a>
 			</div>
 		</div>
 		<!-- widget grid -->
 		<section id="widget-grid" class="">
-
-
 			<!-- START ROW -->
-
 			<div class="row">
-
 				<!-- NEW COL START -->
 				<article class="col-sm-12 col-md-12 col-lg-12">
-										
 					<!-- Widget ID (each widget will need unique ID)-->
 					<div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false" data-widget-custombutton="false">
-
 						<header>
 							<span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-							<h2>General Info</h2>				
-							
+							<h2>Booking No : <b>999999</b></h2>
 						</header>
-
 						<!-- widget div-->
 						<div>
-							
 							<!-- widget edit box -->
 							<div class="jarviswidget-editbox">
 								<!-- This area used as dropdown edit box -->
-								
 							</div>
 							<!-- end widget edit box -->
 							
 							<!-- widget content -->
 							<div class="widget-body no-padding">
-								
 								<form action="demo-contacts.php" method="post" id="contact-form" class="smart-form">
 									<!-- <header>Contacts form</header> -->
-									
 									<fieldset>
-										<div class="row">
-											<section class="col col-12">
-												<label class="label">Status</label>
-												<div class="inline-group">
-													<label class="radio">
-														<input type="radio" name="radio-inline" checked="">
-														<i></i>New</label>
-													<label class="radio">
-														<input type="radio" name="radio-inline">
-														<i></i>Complete</label>
-													<label class="radio">
-														<input type="radio" name="radio-inline">
-														<i></i>Cancel</label>
-												</div>
-											</section>
-										</div>
-
 										<section>
 											<label class="label">Agent</label>
 											<label class="input required">
-												<i class="icon-append fa fa-user"></i>
-												<input type="text" name="Agent" id="Agent">
+												<select name="lsbagent_id" id="lsbagent_id">
+													<option value="" selected></option>
+													<?php
+													$sql = "SELECT `agent_id`, `agent_name` FROM `agent` ORDER BY `agent_name` ";
+													$result = mysqli_query($conn ,$sql);
+													if(mysqli_num_rows($result) > 0)	{
+														//show data for each row
+														while($row = mysqli_fetch_assoc($result))	{?>
+															<option value="<?=$row['agent_id']; ?>"><?=$row['agent_name']; ?></option>
+														<?php } 
+													}?>
+												</select>
 											</label>
 										</section>
-
-										<section>
-											<label class="label">Name</label>
-											<label class="input required">
-												<i class="icon-append fa fa-user"></i>
-												<input type="text" name="name" id="name">
-											</label>
-										</section>
-
 										<div class="row">
-											<section class="col col-6">
-												<label class="label">Date</label>
+											<section class="col col-8">
+												<label class="label">Tour Leader Name</label>
 												<label class="input required">
 													<i class="icon-append fa fa-user"></i>
-													<input type="text" name="named" id="named">
+													<input type="text" name="txbbooking_name" id="txbbooking_name" maxlength="100">
 												</label>
-											</section>
-											<section class="col col-6">
-												<label class="label">Total Guest</label>
-												<label class="input">
-													<i class="icon-append fa fa-envelope-o"></i>
-													<input type="email" name="emaild" id="emaild">
+											</section>										
+											<section class="col col-4">
+												<label class="label">Pax</label>
+												<label class="input required">
+													<i class="icon-append fa  fa-group"></i>
+													<input type="number" step="1" name="txbbooking_pax" id="txbbooking_pax">
 												</label>
 											</section>
 										</div>
-										
-										<section>
-											<label class="label">Note</label>
-											<label class="textarea">
-												<i class="icon-append fa fa-comment"></i>
-												<textarea rows="4" name="message" id="message"></textarea>
+										<div class="row">
+										<section class="col col-4">
+											<label class="label">Nationality</label>
+											<label class="input">
+												<i class="icon-append fa fa-flag-checkered"></i>
+												<input type="text" name="txbbooking_nat" id="txbbooking_nat" maxlength="50">
 											</label>
 										</section>
-										
+										<section class="col col-4">
+											<label class="label">Tel</label>
+											<label class="input">
+												<i class="icon-append fa fa-phone"></i>
+												<input type="email" name="txbbooking_tel" id="txbbooking_tel" maxlength="50">
+											</label>
+										</section>
+										<section class="col col-4">
+											<label class="label">Whatapp or Line</label>
+											<label class="input">
+												<i class="icon-append fa fa-wechat"></i>
+												<input type="email" name="txbbooking_line" id="txbbooking_line" maxlength="50">
+											</label>
+											</section>
+										</div>
+										<section>
+											<label class="label">Note (Other Request)</label>
+											<label class="textarea">
+												<i class="icon-append fa fa-comment"></i>
+												<textarea rows="4" name="txbbooking_remark" id="txbbooking_remark" maxlength="500"></textarea>
+											</label>
+										</section>
 									</fieldset>
-<!-- 									
 									<footer>
-										<button type="submit" class="btn btn-primary">Validate Form</button>
-									</footer> -->
-								</form>						
-								
+									<section class="col col-6">
+										<label>Status</label>
+										<div class="inline-group">
+											<label class="radio">
+												<input type="radio" name="chkbooking_status" id="chkbooking_status_N" checked="">
+												<i></i>New</label>
+											<label class="radio">
+												<input type="radio" name="chkbooking_status" id="chkbooking_status_F">
+												<i></i>Confrim</label>
+											<label class="radio">
+												<input type="radio" name="chkbooking_status" id="chkbooking_status_C">
+												<i></i>Cancel</label>
+										</div>
+									</section>
+									<section class="col col-6">
+										<button type="submit" class="btn btn-primary">Save</button>
+									</section>
+									</footer>
+								</form>
 							</div>
 							<!-- end widget content -->
-							
 						</div>
 						<!-- end widget div -->
-						
 					</div>
 					<!-- end widget -->								
-
-
 				</article>
 				<!-- END COL -->		
-
 			</div>
-
 			<!-- END ROW -->
-
 		</section>
 		<!-- end widget grid -->
 
 		<!-- widget grid -->
 		<section id="widget-grid" class="">
-
-
 			<!-- START ROW -->
-
 			<div class="row">
-
 				<!-- NEW COL START -->
 				<article class="col-sm-12 col-md-12 col-lg-12">
-										
 					<!-- Widget ID (each widget will need unique ID)-->
 					<div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false" data-widget-custombutton="false">
-
 						<header>
 							<span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-							<h2>Booking Detail</h2>				
-							
+							<h2>Booking Detail</h2>
 						</header>
-
 						<!-- widget div-->
-						<div>	
+						<div>
+							
+						<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
+						<div>
 							<!-- widget content -->
 							<div class="widget-body no-padding">
-								<div class="row" style="margin: 10px 20px 10px 0px;float: right;">
-									<button class="btn btn-primary"  data-whatever="" data-toggle="modal" data-target="#myModal" >
-										<i style="margin-right: 10px;" class="icon-append fa fa-plus"></i>Add </button>
-								</div>
-								<table id="dt_basic" class="table table-striped table-bordered table-hover" style="margin-top:0px" width="100%">
+						        <table id="dt_basic" class="table table-striped table-bordered table-hover" style="margin-top:0px" width="100%">
 									<thead>			                
 										<tr class="header">
-											<th data-hide="phone">No</th>
-											<th data-class="expand">Date</th>
+											<th data-hide="phone">Service Date</th>
 											<th data-hide="phone">Product Name</th>
-											<th>Type</th>
+											<th>Price x Pax</th>
+											<th>Amount</th>											
 											<th>Status</th>
-											<th>QTY x UNIT</th>
-											<th>Amount</th>
-											<th></th>
+											<th>
+												<div style="text-align: right">
+													<button class="btn btn-primary bg-color-green"  data-whatever="" data-toggle="modal" data-target="#myModal" >
+													<i style="margin-right: 10px;" class="icon-append fa fa-plus"></i>Add</button>
+												</div>
+											</th>
 										</tr>
 									</thead>
 									<tbody>
 										<?PHP
-											$sql = "SELECT `userid`, `username`, `email`, `password`, `type`, `status`,
-											`createdatetime`, `createby`, `updatedatetime`, `updateby` FROM `user` ";
+											$sql = "SELECT 	`booking_detail_id`, `booking_detail_status`, `booking_detail_date`, 
+											`booking_detail_time`, `booking_detail_net_price`, `booking_detail_qty`, `booking_detail_total_amount`,
+											`product_name`, `product_desc`, `product_seat`,	`product_for`, `product_showtime`, `product_duration`, 
+											`product_car_type`, `product_meal_type`, `supplier_name`
+											FROM `booking_detail` WHERE 1
+											ORDER BY `booking_detail_date`, `booking_detail_time`";
 											$result = mysqli_query($conn ,$sql);
+											
 											if(mysqli_num_rows($result) > 0){
-												//show data for each row
+											//show data for each row
 												while($row = mysqli_fetch_assoc($result)){
-													if($row['status'] == 'A'){
-														$statusUser = '<font color="green">Active</font>';
-														}else if($row['status'] == 'I'){
-														$statusUser = 'Inactive';
-														
-														}else if($row['status'] == 'C'){
-														$statusUser = '<font color="red">Cancel</font>';
+													if($row['product_for'] == 'A'){
+														$product_for = 'Adult';
+													}else if($row['product_for'] == 'I'){
+														$product_for = 'Chident';
+													}else if($row['product_for'] == 'C'){
+														$product_for = 'Senier';
+													}else{
+														$product_for = 'All';
 													}
-													if($row['type'] == 'S'){
-														$typeUser = 'Staf';
-														}else if($row['type'] == 'M'){
-														$typeUser = 'Manager';
-														}else if($row['type'] == 'A'){
-														$typeUser = 'Admin';
-													}?>
-													<tr>
-														<td><?=$row['username']?></td>
-														<td><?=$row['email']?></td>
-														<td><?=$typeUser?></td>
-														<td><?=$statusUser?></td>
-														<td><?=$statusUser?></td>
-														<td><?=$statusUser?></td>
-														<td><?=$statusUser?></td>
-														<td style="width:12%;text-align: center;"><a class="btn btn-small btn-primary"
+
+													$product_sum = $row['product_name']." ".$row['product_showtime']." ".$product_for." <br>(".$row['supplier_name'].")";
+													$pricepax = $row['booking_detail_net_price']." x ".$row['booking_detail_qty'];
+													$booking_detail_total_amount = $row['booking_detail_total_amount'];
+
+													if($row['booking_detail_status'] == 'N'){
+														$statusUser = '<font color="green">New</font>';
+													}else if($row['booking_detail_status'] == 'W'){
+														$statusUser = 'Waiting';
+													}else if($row['booking_detail_status'] == 'F'){
+														$statusUser = 'Confirm';
+													}else if($row['booking_detail_status'] == 'C'){
+														$statusUser = '<font color="red">Cancel</font>';
+													}else{
+														$statusUser = '';
+													}
+												 ?>
+												<tr>
+													<td><?=$row['booking_detail_date']." ".$row['booking_detail_time']?></td>
+													<td><?=$product_sum?></td>
+													<td><?=$pricepax?></td>
+													<td><?=$booking_detail_total_amount?></td>
+													<td><?=$statusUser?></td>
+													<td class="center"><a onclick="resetModal();" class="btn btn-small btn-primary bg-color-green"
 															data-toggle="modal"
 															data-target="#myModal"
-															data-whatever="<?=$row['userid']?>" >Edit</a>
-															<a class="btn btn-small btn-primary"
+															data-whatever="<?=$row['booking_detail_id']?>">Edit</a>
+															<a onclick="resetModal();" class="btn btn-small bg-color-orange txt-color-white"
 															data-toggle="modal"
 															data-target="#myModal"
-															data-whatever="<?=$row['userid']?>" >Delete</a>
-														</td>
-													</tr>
-													<?PHP
-													}}
+															data-whatever="<?=$row['booking_detail_id']?>">Del</a>
+													</td>
+												</tr>
+												<?PHP
+												}} 
 										?>
-										
 									</tbody>
-								</table>		
-							</div>
+								</table>								
+							</div>					
+						</div>
+					</div>
 							<!-- end widget content -->
 						</div>						
 					</div>
@@ -386,9 +388,7 @@
 						</h4>
 					</div>
 					<div class="modal-body no-padding">
-
 						<form id="login-form" class="smart-form">
-
 									<fieldset>
 										<section>
 											<div class="row">
@@ -531,30 +531,29 @@ $(document).ready(function() {
 	    },
 		// Rules for form validation
 		rules : {
-			name : {
-				required : true
-			},
-			email : {
+			lsbagent_id : {
 				required : true,
-				email : true
 			},
-			message : {
+			txbbooking_name : {
 				required : true,
-				minlength : 10
+			},
+			txbbooking_pax : {
+				required : true,
+				minlength : 1
 			}
 		},
 
 		// Messages for form validation
 		messages : {
-			name : {
-				required : 'Please enter your name',
+			lsbagent_id : {
+				required : 'Please select agent',
 			},
-			email : {
-				required : 'Please enter your email address',
-				email : 'Please enter a VALID email address'
+			txbbooking_name : {
+				required : 'Please fill Tour Leader Name',
 			},
-			message : {
-				required : 'Please enter your message'
+			txbbooking_pax : {
+				required : 'Please fill PAX',
+				minlength : 'Pax incorrect'
 			}
 		},
 

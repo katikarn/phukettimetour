@@ -2,7 +2,7 @@
 	session_start();
 	include('inc/auth.php');
 	include("inc/connectionToMysql.php");
-	include("registerSupplierController.php");
+	include("supplier-controller.php");
 	/////////////////////////////////////////////////////////
 	//initilize the page
 	require_once ("inc/init.php");
@@ -18,7 +18,6 @@
 	$page_title = "Supplier Management";
 	
 	/* ---------------- END PHP Custom Scripts ------------- */
-	
 	//include header
 	//you can add your custom css in $page_css array.
 	//Note: all css files are inside css/ folder
@@ -91,79 +90,64 @@
 <!-- ==========================CONTENT STARTS HERE ========================== -->
 <!-- MAIN PANEL -->
 <div id="main" role="main">
-	
 	<?php
 		//configure ribbon (breadcrumbs) array("name"=>"url"), leave url empty if no url
 		//$breadcrumbs["New Crumb"] => "http://url.com"
 		$breadcrumbs["Setup"] = "";
 		include("inc/ribbon.php");
 	?>
-	
 	<!-- MAIN CONTENT -->
 	<div id="content">
-		
 		<div class="row">
 			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 				<h1 class="header">
 					Supplier
 				</h1>
 			</div>
-			<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
-				
-			</div>
 		</div>
-		
 		<!-- widget grid -->
 		<section id="widget-grid" class="">
-			
 			<!-- row -->
 			<div class="row">
-				
 				<!-- NEW WIDGET START -->
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					
 					<div class="row header">
 						<div class="col-sm-4 col-md-4 col-lg-4">
-							Keywoard<br/>
+							Keyword<br/>
 							<input id="column3_search" type="text" name="googlesearch">
-						</div>
-						<div class="hidden-md col-lg-2">
-							<!-- Date<br/>
-							<input id="date_search" placeholder="DD/MM/YYYY" type="text" name="date_search"> -->
 						</div>
 						<div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 status smart-form" style="padding-top: 25px;">
 							<div class="checkbox"  style="padding-left: 0px;">
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">Active</span></label>
+										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">Active</span>
+									</label>
 								</div>
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
+										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #6dd0ca;">Inactive</span>
+									</label>
 								</div>
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Cancel</span></label>
+										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Cancel</span>
+									</label>
 								</div>
 								<div class="col-xs-3 col-sm-4 col-md-3">
 									<button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button>
 								</div>
 							</div>
 						</div>
-						
 					</div>
-					
 					<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
 						<div>
-							
 							<!-- widget content -->
 							<div class="widget-body no-padding">
-								
 						        <table id="dt_basic" class="table table-striped table-bordered table-hover" style="margin-top:0px" width="100%">
 									<thead>			                
 										<tr class="header">
 											<th data-hide="phone">Supplier name</th>
-											<th data-class="expand">Product Type</th>
+											<th data-class="expand">Type</th>
 											<th data-hide="phone">Tel</th>
 											<th>Status</th>
 											<th></th>
@@ -171,41 +155,48 @@
 									</thead>
 									<tbody>
 										<?PHP
-											$sql = "SELECT `supplierid`, `name`, `type`,`tel`,`status` FROM `supplier` ";
+											$sql = "SELECT supplier_id, supplier_name, supplier_type, supplier_tel, supplier_status FROM supplier";
 											$result = mysqli_query($conn ,$sql);
 											if(mysqli_num_rows($result) > 0){
 												//show data for each row
 												while($row = mysqli_fetch_assoc($result)){
-													$supplierName = $row['name'];
-													if($row['status'] == 'A'){
-														$statusSupplier = '<font color="green">Active</font>';
-														}else if($row['status'] == 'I'){
-														$statusSupplier = 'Inactive';
-														}else if($row['status'] == 'C'){
-														$statusSupplier = '<font color="red">Cancel</font>';
+													$SupplierName = $row['supplier_name'];
+													if($row['supplier_status'] == 'A'){
+														$SupplierStatus = '<font color="green">Active</font>';
+													}else if($row['supplier_status'] == 'I'){
+														$SupplierStatus = 'Inactive';
+													}else if($row['supplier_status'] == 'C'){
+														$SupplierStatus = '<font color="red">Cancel</font>';
+													}else {
+														$SupplierStatus = '';
 													}
-													if($row['type'] == 'T'){
-														$typeSupplier = 'Ticket';
-														}else if($row['type'] == 'D'){
-														$typeSupplier = 'Day Trip';
-														}else if($row['type'] == 'C'){
-														$typeSupplier = 'Car';
+													if($row['supplier_type'] == 'A'){
+														$SupplierType = 'Adventure';
+													}else if($row['supplier_type'] == 'S'){
+														$SupplierType = 'Show';
+													}else if($row['supplier_type'] == 'D'){
+														$SupplierType = 'Day Trip';
+													}else if($row['supplier_type'] == 'T'){
+														$SupplierType = 'Transport';
+													}else if($row['supplier_type'] == 'M'){
+														$SupplierType = 'Meal';
+													}else {
+														$SupplierType = ''; 
 													}?>
 													<tr>
-														<td><?=$supplierName?></td>
-														<td><?=$typeSupplier?></td>
-														<td><?=$row['tel']?></td>
-														<td><?=$statusSupplier?></td>
+														<td><?=$SupplierName?></td>
+														<td><?=$SupplierType?></td>
+														<td><?=$row['supplier_tel']?></td>
+														<td><?=$SupplierStatus?></td>
 														<td class="center"><a onclick="resetModal();" class="btn btn-small btn-primary"
 															data-toggle="modal"
 															data-target="#myModal"
-															data-whatever="<?=$row['supplierid']?>" >Edit</a>
+															data-whatever="<?=$row['supplier_id']?>" >Edit</a>
 														</td>
 													</tr>
 													<?PHP
-													}}
+												}}
 										?>
-										
 									</tbody>
 								</table>								
 							</div>					
@@ -220,11 +211,8 @@
 <!-- Modal -->
 <div class="modal fade" id="myModal" role="dialog" data-backdrop="static">
 	<div class="modal-dialog modal-Adduser">
-		
 		<!-- Modal content-->
-		
 		<div class="modal-content">
-			
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 						<i class="icon-append fa fa-times"></i>
@@ -244,92 +232,105 @@
 										<label class="input status">
 											<div class="inline-group">
 												<label class="radio">
-													<input type="radio" name="status" value="A" id="m_StatusA" checked=true>
+													<input type="radio" name="rdosupplier_status" value="A" id="id_supplier_status_A" checked=true>
 													<i></i><span style="background-color: #5dc156;">Active</span></label>
 												<label class="radio">
-													<input type="radio" name="status" value="I" id="m_StatusI">
+													<input type="radio" name="rdosupplier_status" value="I" id="id_supplier_status_I">
 													<i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
 												<label class="radio">
-													<input type="radio" name="status" value="C" id="m_StatusC">
+													<input type="radio" name="rdosupplier_status" value="C" id="id_supplier_status_C">
 													<i></i><span style="background-color: #ffba42;">Cancel</span></label>
 											</div>
 										</label>
 									</div>
 								</div>
-							</section>
-							<section>
 								<div class="row">
 									<label class="label col col-3 header">Type</label>
 									<div class="col col-9">
-										<label class="input">
-											<div class="inline-group">
-												<label class="radio">
-													<input type="radio" name="type" value="T" id="m_TypeT" checked>
-													<i></i>Ticket</label>
-												<label class="radio">
-													<input type="radio" name="type" value="D" id="m_TypeD">
-													<i></i>Day Tip</label>
-												<label class="radio">
-													<input type="radio" name="type" value="C" id="m_TypeC">
-													<i></i>Transport</label>
-												<label class="radio">
-													<input type="radio" name="type" value="M" id="m_TypeM">
-													<i></i>Meal</label>
-											</div>
+										<label class="input required">
+											<select name="lsbsupplier_type" id="lsbsupplier_type">
+												<option value="" selected></option>
+    											<option value="A">Adventure</option>
+    											<option value="S">Show</option>
+    											<option value="D">Day Tip</option>
+												<option value="T">Transport</option>
+												<option value="M">Meal</option>
+												<option value="O">Other</option>
+  											</select>
 										</label>
 									</div>
 								</div>
-							</section>
-							<section>
 								<div class="row">
 									<label class="label col col-3 header">Destination</label>
 									<div class="col col-9">
 										<label class="input required">
-											<input type="text" name="s_Destination" id="s_Destination">
+											<select name="lsbsupplier_destination" id="lsbsupplier_destination">
+												<option value="" selected></option>
+    											<option value="Phuket">Phuket</option>
+    											<option value="Krabi">Krabi</option>
+    											<option value="Samui">Samui</option>
+  											</select>
 										</label>
 									</div>
 								</div>
-							</section>	
-							<section>
 								<div class="row">
-									<label class="label col col-3 header">Supplier Name</label>
+									<label class="label col col-3 header">Company Name</label>
 									<div class="col col-9">
 										<label class="input required">
-											<input type="text" name="s_Name" id="s_Name">
+											<input type="text" name="txbsupplier_name" id="txbsupplier_name" maxlength="100">
 										</label>
 									</div>
 								</div>
-							</section>	
-							<section>
 								<div class="row">
-									<label class="label col col-3 header">Detail</label>
+									<label class="label col col-3 header">Accounting Name</label>
 									<div class="col col-9">
 										<label class="input required">
-											<textarea type="text" rows="5" name="s_Detail" id="s_Detail"></textarea>
+											<input type="text" name="txbsupplier_name_acc" id="txbsupplier_name_acc" maxlength="100">
 										</label>
 									</div>
 								</div>
-							</section>
-							<section>
 								<div class="row">
 									<label class="label col col-3 header">Address</label>
 									<div class="col col-9">
 										<label class="input">
-											<input type="text" name="s_Address" id="s_Address">
+											<input type="text" name="txbsupplier_address" id="txbsupplier_address" maxlength="250">
 										</label>
 									</div>
 								</div>
-							</section>
-							<section>
 								<div class="row">
 									<label class="label col col-3 header">Tel</label>
 									<div class="col col-9">
 										<label class="input">
-											<input type="text" name="s_Tel" id="s_Tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+											<input type="text" name="txbsupplier_tel" id="txbsupplier_tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
 										</label>
 									</div>
 								</div>
-							</section>	
+								<div class="row">
+									<label class="label col col-3 header">Website</label>
+									<div class="col col-9">
+										<label class="input">
+											<input type="text" name="txbsupplier_website" id="txbsupplier_website"  maxlength="250">
+										</label>
+									</div>
+								</div>
+								<div class="row">
+									<label class="label col col-3 header">Google Map</label>
+									<div class="col col-9">
+										<label class="input">
+											<input type="text" name="txbsupplier_googlemap" id="txbsupplier_googlemap"  maxlength="250">
+										</label>
+									</div>
+								</div>
+								<div class="row">
+								<label class="label col col-3 header">Attachment File</label>
+								</div>
+								<div class="input input-file">
+									<span class="button"><input type="file" id="txbsupplier_contract_file" name="txbsupplier_contract_file" onchange="this.parentNode.nextSibling.value = this.value">Browse</span><input type="text" placeholder="contract files" readonly="">
+								</div>
+								<div class="input input-file">
+									<span class="button"><input type="file" id="txbsupplier_contract_file" name="txbsupplier_contract_file" onchange="this.parentNode.nextSibling.value = this.value">Browse</span><input type="text" placeholder="Other files" readonly="">
+								</div>
+							</section>
 						</fieldset>
 						<header>
 							Finance
@@ -342,36 +343,68 @@
 										<label class="input">
 											<div class="inline-group">
 												<label class="radio">
-													<input type="radio" name="PayType" value="C" id="p_TypeC" checked>
-													<i></i>Credit</label>
-												<label class="radio">
-													<input type="radio" name="PayType" value="D" id="p_TypeD">
+													<input type="radio" name="lsbsupplier_paytype" value="T" id="id_supplier_paytype_T" checked>
 													<i></i>Cash transfer</label>
+												<label class="radio">
+													<input type="radio" name="lsbsupplier_paytype" value="C" id="id_supplier_paytype_C">
+													<i></i>Credit</label>													
+												<label class="radio">
+													<input type="radio" name="lsbsupplier_paytype" value="D" id="id_supplier_paytype_D">
+													<i></i>Deposit</label>
 											</div>
 										</label>
 									</div>
 								</div>
-							</section>
-							<section>
 								<div class="row">
 									<label class="label col col-3 header">Credit Term</label>
 									<div class="col col-9">
+										<label class="input">
+											<input type="number" step="1" name="txbsupplier_max_credit" id="txbsupplier_max_credit">
+										</label>
+									</div>
+								</div>
+								<div class="row">
+									<label class="label col col-3 header">Credit Amount</label>
+									<div class="col col-9">
+										<label class="input">
+											<input type="number" step=".25" name="txbsupplier_credit_term" id="txbsupplier_credit_term">
+										</label>
+									</div>
+								</div>
+							</section>
+						</fieldset>
+						<header>
+							Contract - Sales
+						</header>
+						<fieldset>
+							<section>
+								<div class="row">
+									<label class="label col col-3 header">Name</label>
+									<div class="col col-9">
 										<label class="input required">
-											<input type="number" step=".01" name="s_MaximumCredit" id="s_MaximumCredit">
+											<input type="text" name="txbsupplier_sales_name" id="txbsupplier_sales_name" maxlength="50">
+										</label>
+									</div>
+									<label class="label col col-3 header">Tel</label>
+									<div class="col col-9">
+										<label class="input required">
+											<input type="text" name="txbsupplier_sales_tel" id="txbsupplier_sales_tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="15">
+										</label>
+									</div>
+									<label class="label col col-3 header">Email</label>
+									<div class="col col-9">
+										<label class="input">
+											<input type="text" name="txbsupplier_sales_email" id="txbsupplier_sales_email" maxlength="50">
+										</label>
+									</div>
+									<label class="label col col-3 header">Line or WhatApp</label>
+									<div class="col col-9">
+										<label class="input">
+											<input type="text" name="txbsupplier_sales_line" id="txbsupplier_sales_line" maxlength="50">
 										</label>
 									</div>
 								</div>
 							</section>	
-							<!-- <section>
-								<div class="row">
-									<label class="label col col-3 header">Deposit Amount</label>
-									<div class="col col-9">
-										<label class="input required">
-											<input type="number" step=".01" name="s_DepositAmount" id="s_DepositAmount">
-										</label>
-									</div>
-								</div>
-							</section> -->
 						</fieldset>
 						<header>
 							Contract - Resevation
@@ -381,28 +414,44 @@
 								<div class="row">
 									<label class="label col col-3 header">Name</label>
 									<div class="col col-9">
-										<label class="input required">
-											<input type="text" name="s_Bookingcontact" id="s_Bookingcontact">
+										<label class="input">
+											<input type="text" name="txbsupplier_reserv_name" id="txbsupplier_reserv_name" maxlength="50">
 										</label>
 									</div>
-								</div>
-							</section>	
-							<section>
-								<div class="row">
 									<label class="label col col-3 header">Tel</label>
 									<div class="col col-9">
 										<label class="input">
-											<input type="text" name="s_Bookingtel" id="s_Bookingtel" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+											<input type="text" name="txbsupplier_reserv_tel" id="txbsupplier_reserv_tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="15">
 										</label>
 									</div>
-								</div>
-							</section>	
-							<section>
-								<div class="row">
 									<label class="label col col-3 header">Email</label>
 									<div class="col col-9">
 										<label class="input">
-											<input type="text" name="s_Bookingemail" id="s_Bookingemail">
+											<input type="text" name="txbsupplier_reserv_email" id="txbsupplier_reserv_email" maxlength="50">
+										</label>
+									</div>
+									<label class="label col col-3 header">Line or WhatApp</label>
+									<div class="col col-9">
+										<label class="input">
+											<input type="text" name="txbsupplier_reserv_line" id="txbsupplier_reserv_line" maxlength="50">
+										</label>
+									</div>
+									<label class="label col col-3 header">Fax</label>
+									<div class="col col-9">
+										<label class="input">
+											<input type="text" name="txbsupplier_reserv_fax" id="txbsupplier_reserv_fax" maxlength="50">
+										</label>
+									</div>
+									<label class="label col col-3 header">Main Contract</label>
+									<div class="col col-9">
+										<label class="input">
+											<select name="lsbsupplier_reserv_main" id="lsbsupplier_reserv_main">
+												<option value="" selected></option>
+    											<option value="T">Tel</option>
+    											<option value="F">Fax</option>
+    											<option value="E">Email</option>
+												<option value="L">Line or WhatApp</option>
+  											</select>
 										</label>
 									</div>
 								</div>
@@ -416,93 +465,44 @@
 								<div class="row">
 									<label class="label col col-3 header">Name</label>
 									<div class="col col-9">
-										<label class="input required">
-											<input type="text" name="s_Accountcontact" id="s_Accountcontact">
+										<label class="input">
+											<input type="text" name="txbsupplier_account_name" id="txbsupplier_account_name" maxlength="50">
 										</label>
 									</div>
 								</div>
-							</section>	
-							<section>
 								<div class="row">
 									<label class="label col col-3 header">Tel</label>
 									<div class="col col-9">
 										<label class="input">
-											<input type="text" name="s_Accounttel" id="s_Accounttel" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+											<input type="text" name="txbsupplier_account_tel" id="txbsupplier_account_tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="15">
 										</label>
 									</div>
-								</div>
-							</section>	
-							<section>
+								</div>								
 								<div class="row">
 									<label class="label col col-3 header">Email</label>
 									<div class="col col-9">
 										<label class="input">
-											<input type="text" name="s_Accountemail" id="s_Accountemail">
+											<input type="text" name="txbsupplier_account_email" id="txbsupplier_account_email" maxlength="50">
 										</label>
 									</div>
 								</div>
 							</section>	
 						</fieldset>
-						<!-- <header>
-							Contract - Salse
+						<header>
+							Remark
 						</header>
 						<fieldset>
 							<section>
 								<div class="row">
-									<label class="label col col-3 header">Name</label>
-									<div class="col col-9">
-										<label class="input required">
-											<input type="text" name="s_salseContact" id="s_salseContact">
-										</label>
-									</div>
-								</div>
-							</section>	
-							<section>
-								<div class="row">
-									<label class="label col col-3 header">Tel</label>
+									<label class="label col col-3 header">Detail</label>
 									<div class="col col-9">
 										<label class="input">
-											<input type="text" name="s_salseTel" id="s_salseTel" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+											<textarea type="text" rows="4" name="txbsupplier_remark" id="txbsupplier_remark" maxlength="250"></textarea>
 										</label>
 									</div>
 								</div>
-							</section>	
-							<section>
-								<div class="row">
-									<label class="label col col-3 header">Email</label>
-									<div class="col col-9">
-										<label class="input">
-											<input type="text" name="s_salseEmail" id="s_salseEmail">
-										</label>
-									</div>
-								</div>
-							</section>	
-						</fieldset> -->
-						<!-- <header>
-							Other
-						</header>
-						<fieldset>
-							<section>
-								<div class="row">
-									<label class="label col col-3 header">Close Information</label>
-									<div class="col col-9">
-										<label class="input">
-											<input type="text" name="s_Closeinformation" id="s_Closeinformation">
-										</label>
-									</div>
-								</div>
-							</section>	
-							<section>
-								<div class="row">
-									<label class="label col col-3 header">Note</label>
-									<div class="col col-9">
-										<label class="input">
-											<textarea rows="4" name="s_Note" id="s_Note"></textarea>
-										</label>
-									</div>
-								</div>
-							</section>	
-						</fieldset> -->
+							</section>
+						</fieldset>
 						<footer class="center">
 							<input type="hidden" name="supplier_id" id="supplier_id" />
 							<button type="submit" name="submitAddSupplier" id="submitAddSupplier" class="btn btn-primary" style="float: unset;font-weight: 400;">
@@ -511,9 +511,8 @@
 								Cancel</button>
 						</footer>
 				</form>
-				</div>
+			</div>
 		</div>
-		
 	</div>
 </div>
 <!-- ==========================CONTENT ENDS HERE ========================== -->
@@ -537,7 +536,6 @@
 		
 		/* BASIC ;*/
 		var responsiveHelper_dt_basic = undefined;
-		
 		var breakpointDefinition = {
 			tablet : 1024,
 			phone : 480
@@ -584,57 +582,69 @@
                 
                 success: function (data) {
 					if(data != null){
-						$('#m_Status' + data.status).prop('checked',true);
-						$('#m_Type' + data.type).prop('checked',true);
-						$('#p_Type' + data.paytype).prop('checked',true);
-						$('#s_Destination').val(data.destination);  
-						$('#s_Name').val(data.name);  
-						$('#s_Detail').val(data.detail);  
-						$('#s_Address').val(data.address);   
-						$('#s_Tel').val(data.tel);
-						$('#s_MaximumCredit').val(data.maximumcredit);
-						//$('#s_DepositAmount').val();
-						$('#s_Bookingcontact').val(data.bookingcontact);
-						$('#s_Bookingtel').val(data.bookingtel);
-						$('#s_Bookingemail').val(data.bookingemail);
-						$('#s_Accountcontact').val(data.accountcontact);
-						$('#s_Accounttel').val(data.accounttel);
-						$('#s_Accountemail').val(data.accountemail);
-						// $('#s_salseContact').val(data.accountcontact);
-						// $('#s_salseTel').val(data.accounttel);
-						// $('#s_salseEmail').val(data.accountemail);
-						// $('#s_Closeinformation').val(data.closeinformation);
-						// $('#s_Note').val(data.note);
-						$('#supplier_id').val(data.supplierid);
-						$('#submitAddSupplier').val("Update");  
+						$('#id_supplier_status_' + data.supplier_status).prop('checked',true);
+						$('#lsbsupplier_type').val(data.supplier_type);
+						$('#lsbsupplier_destination').val(data.supplier_destination);
+						$('#txbsupplier_name').val(data.supplier_name);
+						$('#txbsupplier_name_acc').val(data.supplier_name_acc);
+						$('#txbsupplier_address').val(data.supplier_address);
+						$('#txbsupplier_tel').val(data.supplier_tel);
+						$('#txbsupplier_website').val(data.supplier_website);
+						$('#txbsupplier_googlemap').val(data.supplier_googlemap);
+						$('#txbsupplier_contract_file').val(data.supplier_contract_file);
+						$('#txbsupplier_other_file').val(data.supplier_other_file);
+						$('#id_supplier_paytype_' + data.status).prop('checked',true);
+						$('#txbsupplier_max_credit').val(data.supplier_max_credit);
+						$('#txbsupplier_credit_term').val(data.supplier_credit_term);
+						$('#txbsupplier_sales_name').val(data.supplier_sales_name);
+						$('#txbsupplier_sales_tel').val(data.supplier_sales_tel);	
+						$('#txbsupplier_sales_email').val(data.supplier_sales_email);
+						$('#txbsupplier_sales_line').val(data.supplier_sales_line);	
+						$('#txbsupplier_reserv_name').val(data.supplier_reserv_name);
+						$('#txbsupplier_reserv_tel').val(data.supplier_reserv_tel);
+						$('#txbsupplier_reserv_email').val(data.supplier_reserv_email);
+						$('#txbsupplier_reserv_line').val(data.supplier_reserv_line);
+						$('#txbsupplier_reserv_fax').val(data.supplier_reserv_fax);
+						$('#txbsupplier_reserv_main').val(data.supplier_reserv_main);
+						$('#txbsupplier_account_name').val(data.supplier_account_name);
+						$('#txbsupplier_account_tel').val(data.supplier_account_tel);
+						$('#txbsupplier_account_email').val(data.supplier_account_email);
+						$('#txbsupplier_remark').val(data.supplier_remark);
+						$('#supplier_id').val(data.supplier_id);
+						$('#submitAddSupplier').val("Update");
 					}else{
-					
-						$('#m_StatusA').prop('checked',true);
-						// $('#m_StatusI').prop('checked',false);
-						// $('#m_StatusC').prop('checked',false);
-						$('#m_TypeT').prop('checked',true);
-						// $('#m_TypeD').prop('checked',false);
-						// $('#m_TypeC').prop('checked',false);
-						$('#p_TypeC').prop('checked',true);
-						// $('#p_TypeD').prop('checked',false);
-						$('#s_Destination').val('');
-						$('#s_Name').val(''); 
-						$('#s_Detail').val('');  
-						$('#s_Address').val('');
-						$('#s_Tel').val('');
-						$('#s_MaximumCredit').val('');
-						//$('#s_DepositAmount').val();
-						$('#s_Bookingcontact').val('');
-						$('#s_Bookingtel').val('');
-						$('#s_Bookingemail').val('');
-						$('#s_Accountcontact').val('');
-						$('#s_Accounttel').val('');
-						$('#s_Accountemail').val('');
-						// $('#s_salseContact').val('');
-						// $('#s_salseTel').val('');
-						// $('#s_salseEmail').val('');
-						// $('#s_Closeinformation').val('');
-						// $('#s_Note').val('');
+						$('#id_supplier_status_A').prop('checked',true);
+						//$('#id_supplier_status_I').prop('checked',true);
+						//$('#id_supplier_status_C').prop('checked',true);
+						$('#lsbsupplier_type').val('');
+						$('#lsbsupplier_destination').val('');				
+						$('#txbsupplier_name').val('');
+						$('#txbsupplier_name_acc').val('');
+						$('#txbsupplier_address').val('');
+						$('#txbsupplier_tel').val('');
+						$('#txbsupplier_website').val('');
+						$('#txbsupplier_googlemap').val('');
+						$('#txbsupplier_contract_file').val('');
+						$('#txbsupplier_other_file').val('');
+						$('#id_supplier_paytype_T').prop('checked',true);
+						//$('#id_supplier_paytype_C' + data.status).prop('checked',true);
+						//$('#id_supplier_paytype_D' + data.status).prop('checked',true);
+						$('#txbsupplier_max_credit').val('');
+						$('#txbsupplier_credit_term').val('');
+						$('#txbsupplier_sales_name').val('');
+						$('#txbsupplier_sales_tel').val('');	
+						$('#txbsupplier_sales_email').val('');
+						$('#txbsupplier_sales_line').val('');	
+						$('#txbsupplier_reserv_name').val('');
+						$('#txbsupplier_reserv_tel').val('');
+						$('#txbsupplier_reserv_email').val('');
+						$('#txbsupplier_reserv_line').val('');
+						$('#txbsupplier_reserv_fax').val('');
+						$('#txbsupplier_reserv_main').val('');
+						$('#txbsupplier_account_name').val('');
+						$('#txbsupplier_account_tel').val('');
+						$('#txbsupplier_account_email').val('');
+						$('#txbsupplier_remark').val('');
 						$('#supplier_id').val('');
 						$('#submitAddSupplier').val("Insert");
 					}
@@ -648,7 +658,6 @@
 	//// --------------------------- Validate------------------------------
 		var errorClass = 'invalid';
 		var errorElement = 'em';
-
 		var $contactForm = $("#supplier-form").validate({
 			errorClass		: errorClass,
 			errorElement	: errorElement,
@@ -675,76 +684,64 @@
 		    },
 			// Rules for form validation
 			rules : {
-				s_Destination : {
+				lsbsupplier_type : {
 					required : true
 				},
-				s_Name : {
+				lsbsupplier_destination : {
 					required : true
 				},
-				s_Detail : {
+				txbsupplier_name : {
 					required : true
 				},
-				s_MaximumCredit	: {
-					required : true
-				},	
-				// s_DepositAmount	: {
-				// 	required : true
-				// },
-				s_Bookingcontact : {
+				txbsupplier_name_acc : {
 					required : true
 				},
-				s_Bookingemail : {
+				txbsupplier_sales_name	: {
+					required : true
+				},
+				txbsupplier_sales_tel	: {
+					required : true
+				},
+				txbsupplier_sales_email : {
 					email : true
 				},
-				s_Accountcontact : {
-					required : true
+				txbsupplier_reserv_email : {
+					email : true
 				},
-				s_Accountemail : {
+				txbsupplier_account_email : {
 					email : true
 				}
-				// s_salseContact : {
-				// 	required : true
-				// },
-				// s_salseEmail : {
-				// 	email : true
-				// }	
 			},
 
 			// Messages for form validation
 			messages : {
-				s_Destination : {
-					required : 'Please enter your Destination'
+				lsbsupplier_type : {
+					required : 'Please select Type'
 				},
-				s_Name : {
-					required : 'Please enter your Supplier Name'
+				lsbsupplier_destination : {
+					required : 'Please select Destination'
 				},
-				s_Detail : {
-					required : 'Please enter your Detail'
+				txbsupplier_name : {
+					required : 'Please fill Company Name'
 				},
-				s_MaximumCredit	: {
-					required : 'Please enter your Maximum Credit'
-				},	
-				// s_DepositAmount	: {
-				// 	required : 'Please enter your Deposit Amount'
-				// },
-				s_Bookingcontact : {
-					required : 'Please enter your Resevation Name'
+				txbsupplier_name_acc : {
+					required : 'Please fill Company Account Name'
 				},
-				s_Bookingemail : {
-					email : 'Email format incorrect'
+				txbsupplier_sales_name : {
+					required : 'Please fill Sales contract name'
 				},
-				s_Accountcontact : {
-					required : 'Please enter your Account Name'
+				txbsupplier_sales_tel : {
+					required : 'Please fill Sales contract Tel'
 				},
-				s_Accountemail : {
-					email : 'Email format incorrect'
+				txbsupplier_sales_email : {
+					email : 'Sales Email format incorrect'
+				},
+				txbsupplier_reserv_email : {
+					email : 'Reservation Email format incorrect'
+				},
+				txbsupplier_account_email : {
+					email : 'Account Email format incorrect'
 				}
-				// s_salseContact : {
-				// 	required : 'Please enter your Sale Name'
-				// },
-				// s_salseEmail : {
-				// 	email : 'Email format incorrect'
-				// }
 			},
 
 			// Do not change code below
@@ -772,6 +769,5 @@
 		$( "#supplier-form" ).find( ".required" ).css("border-left", "7px solid #FF3333");
 		$( "em" ).remove();
 	}
-	
-	
-</script>																																					
+
+</script>
