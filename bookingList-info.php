@@ -2,7 +2,7 @@
 	session_start();
 	include('inc/auth.php');
 	include("inc/connectionToMysql.php");
-	include("bookingList-info-controller.php");
+	//include("bookingList-info-controller.php");
 	/////////////////////////////////////////////////////////
 	//initilize the page
 	require_once ("inc/init.php");
@@ -29,6 +29,46 @@
 	//follow the tree in inc/config.ui.php
 	$page_nav["Booking"]["sub"]["Booking List"]["active"] = true;
 	include ("inc/nav.php");
+
+	//Get data from database
+
+	if( isset($_GET['id']) )	{
+		$sql = "SELECT booking_id, booking_status, agent_id, booking_name, booking_pax, booking_nat, booking_tel, booking_line, 
+		booking_remark, createdatetime, createby, updatedatetime, updateby
+		FROM booking
+		WHERE booking_id = '".$_GET['id']."'";
+		$result = mysqli_query($conn ,$sql);
+		$row = mysqli_fetch_assoc($result);
+		if (mysqli_num_rows($result) > 0)	{
+			$_booking_id = $row['booking_id'];
+			$_booking_status = $row['booking_status'];
+			$_agent_id = $row['agent_id'];
+			$_booking_name = $row['booking_name'];
+			$_booking_pax = $row['booking_pax'];
+			$_booking_nat = $row['booking_nat'];
+			$_booking_tel = $row['booking_tel'];
+			$_booking_line = $row['booking_line'];
+			$_booking_remark = $row['booking_remark'];
+			$_createdatetime = $row['createdatetime'];
+			$_createby = $row['createby'];
+			$_updatedatetime = $row['updatedatetime'];
+			$_updateby = $row['updateby'];
+		}
+	}else{
+		$_booking_id = "";
+		$_booking_status = "";
+		$_agent_id = "";
+		$_booking_name = "";
+		$_booking_pax = "";
+		$_booking_nat = "";
+		$_booking_tel = "";
+		$_booking_line = "";
+		$_booking_remark = "";
+		$_createdatetime = "";
+		$_createby = "";
+		$_updatedatetime = "";
+		$_updateby = "";
+	}
 ?>
 
 <style>
@@ -120,7 +160,6 @@
 		$breadcrumbs["Booking"] = "";
 		include("inc/ribbon.php");
 	?>
-
 	<!-- MAIN CONTENT -->
 	<div id="content">
 		<div class="row">
@@ -148,7 +187,14 @@
 					<div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false" data-widget-custombutton="false">
 						<header>
 							<span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-							<h2>Booking No : <b>999999</b></h2>
+							<h2>Booking No : <?php
+							if ($_booking_id<>"")	{
+								echo "<b>".substr("00000000",1,6-strlen($_booking_id));
+								echo $_booking_id."</b>";
+								echo " (Last update : ".$_updateby." ".$_updatedatetime.")";
+							}else{
+								echo "<< New booking >>";
+							} ?></h2>
 						</header>
 						<!-- widget div-->
 						<div>
@@ -157,10 +203,9 @@
 								<!-- This area used as dropdown edit box -->
 							</div>
 							<!-- end widget edit box -->
-							
 							<!-- widget content -->
 							<div class="widget-body no-padding">
-								<form action="demo-contacts.php" method="post" id="contact-form" class="smart-form">
+								<form action="bookingList-info-controller-main.php" method="post" id="contact-form" class="smart-form">
 									<!-- <header>Contacts form</header> -->
 									<fieldset>
 										<section>
@@ -173,9 +218,13 @@
 													$result = mysqli_query($conn ,$sql);
 													if(mysqli_num_rows($result) > 0)	{
 														//show data for each row
-														while($row = mysqli_fetch_assoc($result))	{?>
-															<option value="<?=$row['agent_id']; ?>"><?=$row['agent_name']; ?></option>
-														<?php } 
+														while($row = mysqli_fetch_assoc($result))	{
+															echo "<option value='".$row['agent_id']."'"; 
+															if ($row['agent_id']==$_agent_id)	{ 
+																echo " selected ";
+															}
+															echo ">".$row['agent_name']."</option>";
+														}
 													}?>
 												</select>
 											</label>
@@ -185,14 +234,14 @@
 												<label class="label">Tour Leader Name</label>
 												<label class="input required">
 													<i class="icon-append fa fa-user"></i>
-													<input type="text" name="txbbooking_name" id="txbbooking_name" maxlength="100">
+													<input type="text" name="txbbooking_name" id="txbbooking_name" maxlength="100" value="<?=$_booking_name;?>">
 												</label>
 											</section>										
 											<section class="col col-4">
 												<label class="label">Pax</label>
 												<label class="input required">
 													<i class="icon-append fa  fa-group"></i>
-													<input type="number" step="1" name="txbbooking_pax" id="txbbooking_pax">
+													<input type="number" step="1" name="txbbooking_pax" id="txbbooking_pax" value="<?=$_booking_pax;?>">
 												</label>
 											</section>
 										</div>
@@ -201,50 +250,55 @@
 											<label class="label">Nationality</label>
 											<label class="input">
 												<i class="icon-append fa fa-flag-checkered"></i>
-												<input type="text" name="txbbooking_nat" id="txbbooking_nat" maxlength="50">
+												<input type="text" name="txbbooking_nat" id="txbbooking_nat" maxlength="50" value="<?=$_booking_nat;?>">
 											</label>
 										</section>
 										<section class="col col-4">
 											<label class="label">Tel</label>
 											<label class="input">
 												<i class="icon-append fa fa-phone"></i>
-												<input type="email" name="txbbooking_tel" id="txbbooking_tel" maxlength="50">
+												<input type="text" name="txbbooking_tel" id="txbbooking_tel" maxlength="50" value="<?=$_booking_tel;?>">
 											</label>
 										</section>
 										<section class="col col-4">
 											<label class="label">Whatapp or Line</label>
 											<label class="input">
 												<i class="icon-append fa fa-wechat"></i>
-												<input type="email" name="txbbooking_line" id="txbbooking_line" maxlength="50">
+												<input type="text" name="txbbooking_line" id="txbbooking_line" maxlength="50" value="<?=$_booking_line;?>">
 											</label>
 											</section>
 										</div>
 										<section>
-											<label class="label">Note (Other Request)</label>
+											<label class="label">Note (Special Request)</label>
 											<label class="textarea">
 												<i class="icon-append fa fa-comment"></i>
-												<textarea rows="4" name="txbbooking_remark" id="txbbooking_remark" maxlength="500"></textarea>
+												<textarea rows="2" name="txbbooking_remark" id="txbbooking_remark" maxlength="500"><?=$_booking_remark;?></textarea>
 											</label>
 										</section>
+										
 									</fieldset>
 									<footer>
-									<section class="col col-6">
-										<label>Status</label>
-										<div class="inline-group">
-											<label class="radio">
-												<input type="radio" name="chkbooking_status" id="chkbooking_status_N" checked="">
-												<i></i>New</label>
-											<label class="radio">
-												<input type="radio" name="chkbooking_status" id="chkbooking_status_F">
-												<i></i>Confrim</label>
-											<label class="radio">
-												<input type="radio" name="chkbooking_status" id="chkbooking_status_C">
-												<i></i>Cancel</label>
-										</div>
-									</section>
-									<section class="col col-6">
-										<button type="submit" class="btn btn-primary">Save</button>
-									</section>
+										<section class="col col-8">
+											<label>Status</label>
+											<div class="inline-group">
+												<label class="radio">
+													<input type="radio" name="chkbooking_status" id="chkbooking_status_N" value="N" checked>
+													<i></i>New</label>
+												<label class="radio">
+													<input type="radio" name="chkbooking_status" id="chkbooking_status_W" value="W" <?php if ($_booking_status=="W")	{ echo " checked "; }?>>
+													<i></i>Waiting</label>
+												<label class="radio">
+													<input type="radio" name="chkbooking_status" id="chkbooking_status_F" value="F" <?php if ($_booking_status=="F")	{ echo " checked "; }?>>
+													<i></i>Confrim</label>
+												<label class="radio">
+													<input type="radio" name="chkbooking_status" id="chkbooking_status_C" value="C" <?php if ($_booking_status=="C")	{ echo " checked "; }?>>
+													<i></i>Cancel</label>
+											</div>
+										</section>
+										<section class="col col-4">
+											<button type="submit" class="btn btn-primary" name="submitAddBooking" id="submitAddBooking">Save</button>
+											<input type="hidden" name="id" id="id" value="<?=$_booking_id;?>" />
+										</section>
 									</footer>
 								</form>
 							</div>
@@ -274,71 +328,74 @@
 						</header>
 						<!-- widget div-->
 						<div>
-							
-						<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
-						<div>
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-						        <table id="dt_basic" class="table table-striped table-bordered table-hover" style="margin-top:0px" width="100%">
-									<thead>			                
-										<tr class="header">
-											<th data-hide="phone">Service Date</th>
-											<th data-hide="phone">Product Name</th>
-											<th>Price x Pax</th>
-											<th>Amount</th>											
-											<th>Status</th>
-											<th>
-												<div style="text-align: right">
-													<button class="btn btn-primary bg-color-green"  data-whatever="" data-toggle="modal" data-target="#myModal" >
-													<i style="margin-right: 10px;" class="icon-append fa fa-plus"></i>Add</button>
-												</div>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<?PHP
-											$sql = "SELECT 	`booking_detail_id`, `booking_detail_status`, `booking_detail_date`, 
-											`booking_detail_time`, `booking_detail_net_price`, `booking_detail_qty`, `booking_detail_total_amount`,
-											`product_name`, `product_desc`, `product_seat`,	`product_for`, `product_showtime`, `product_duration`, 
-											`product_car_type`, `product_meal_type`, `supplier_name`
-											FROM `booking_detail` WHERE 1
-											ORDER BY `booking_detail_date`, `booking_detail_time`";
-											$result = mysqli_query($conn ,$sql);
-											
-											if(mysqli_num_rows($result) > 0){
-											//show data for each row
-												while($row = mysqli_fetch_assoc($result)){
-													if($row['product_for'] == 'A'){
-														$product_for = 'Adult';
-													}else if($row['product_for'] == 'I'){
-														$product_for = 'Chident';
-													}else if($row['product_for'] == 'C'){
-														$product_for = 'Senier';
-													}else{
-														$product_for = 'All';
-													}
+							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
+								<div>
+									<!-- widget content -->
+									<div class="widget-body no-padding">
+						        		<table id="dt_basic" class="table table-striped table-bordered table-hover" style="margin-top:0px" width="100%">
+											<thead>			                
+												<tr class="header">
+													<th>No</th>
+													<th>Service DateTime</th>
+													<th>Product Name</th>
+													<th>Price x Pax</th>
+													<th>Amount</th>											
+													<th>Status</th>
+													<th>
+														<div style="text-align: center">
+															<button class="btn btn-primary bg-color-green"  data-whatever="" data-toggle="modal" data-target="#myModal" >
+															<i style="margin-right: 10px;" class="icon-append fa fa-plus"></i>Add new</button>
+														</div>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<?PHP
+												$sql = "SELECT 	booking_detail_id, booking_detail_status, booking_detail_date, booking_detail_time, 
+												booking_detail_price, booking_detail_vat, booking_detail_qty, booking_detail_total_amount, 
+												product_name, product_desc, product_seat,	product_for, product_showtime, product_duration, 
+												product_car_type, product_meal_type, supplier_name
+												FROM booking_detail 
+												WHERE booking_id = '$_booking_id'
+												ORDER BY booking_detail_date, booking_detail_time";
+												$result = mysqli_query($conn ,$sql);
+												
+												if(mysqli_num_rows($result) > 0){
+												//show data for each row
+													$numRow=0;
+													while($row = mysqli_fetch_assoc($result)){
+														$numRow++;
+														if($row['product_for'] == 'A'){
+															$product_for = 'Adult';
+														}else if($row['product_for'] == 'I'){
+															$product_for = 'Chident';
+														}else if($row['product_for'] == 'C'){
+															$product_for = 'Senier';
+														}else{
+															$product_for = 'All';
+														}
+														$product_sum = $row['product_name']." ".$row['product_showtime']." ".$product_for." <br>(".$row['supplier_name'].")";
+														$pricepax = number_format(($row['booking_detail_price']+$row['booking_detail_vat']),2)." x ".number_format($row['booking_detail_qty'],0);
+														$booking_detail_total_amount = ($row['booking_detail_price']+$row['booking_detail_vat'])*$row['booking_detail_qty'];
 
-													$product_sum = $row['product_name']." ".$row['product_showtime']." ".$product_for." <br>(".$row['supplier_name'].")";
-													$pricepax = $row['booking_detail_net_price']." x ".$row['booking_detail_qty'];
-													$booking_detail_total_amount = $row['booking_detail_total_amount'];
-
-													if($row['booking_detail_status'] == 'N'){
-														$statusUser = '<font color="green">New</font>';
-													}else if($row['booking_detail_status'] == 'W'){
-														$statusUser = 'Waiting';
-													}else if($row['booking_detail_status'] == 'F'){
-														$statusUser = 'Confirm';
-													}else if($row['booking_detail_status'] == 'C'){
-														$statusUser = '<font color="red">Cancel</font>';
-													}else{
-														$statusUser = '';
-													}
-												 ?>
+														if($row['booking_detail_status'] == 'N'){
+															$statusUser = '<font color="green">New</font>';
+														}else if($row['booking_detail_status'] == 'W'){
+															$statusUser = 'Waiting';
+														}else if($row['booking_detail_status'] == 'F'){
+															$statusUser = 'Confirm';
+														}else if($row['booking_detail_status'] == 'C'){
+															$statusUser = '<font color="red">Cancel</font>';
+														}else{
+															$statusUser = '';
+														}
+												?>
 												<tr>
-													<td><?=$row['booking_detail_date']." ".$row['booking_detail_time']?></td>
+													<td><?=$numRow;?>.</td>
+													<td><?=date("d/m/Y", strtotime($row['booking_detail_date']))." ".date("H:i", strtotime($row['booking_detail_time']))?></td>
 													<td><?=$product_sum?></td>
 													<td><?=$pricepax?></td>
-													<td><?=$booking_detail_total_amount?></td>
+													<td><?=number_format($booking_detail_total_amount,2)?></td>
 													<td><?=$statusUser?></td>
 													<td class="center"><a onclick="resetModal();" class="btn btn-small btn-primary bg-color-green"
 															data-toggle="modal"
@@ -350,27 +407,20 @@
 															data-whatever="<?=$row['booking_detail_id']?>">Del</a>
 													</td>
 												</tr>
-												<?PHP
-												}} 
-										?>
-									</tbody>
-								</table>								
-							</div>					
-						</div>
-					</div>
+												<?PHP }}?>
+											</tbody>
+										</table>								
+									</div>					
+								</div>
+							</div>
 							<!-- end widget content -->
 						</div>						
 					</div>
 					<!-- end widget -->								
-
-
 				</article>
 				<!-- END COL -->		
-
 			</div>
-
 			<!-- END ROW -->
-
 		</section>
 		<!-- end widget grid -->
 
@@ -388,107 +438,170 @@
 						</h4>
 					</div>
 					<div class="modal-body no-padding">
-						<form id="login-form" class="smart-form">
-									<fieldset>
-										<section>
-											<div class="row">
-												<label class="label col col-2">Supplier</label>
-												<div class="col col-10">
-													<label class="input required">
-														<input type="supplier" name="supplier">
-													</label>
-												</div>
-											</div>
-										</section>
+						<form id="detail-form" class="smart-form">
+							<fieldset>
+								<section>
+									<div class="row">
+										<label class="label col col-2">Supplier</label>
+										<div class="col col-10">
+											<label class="input required">
+												<select name="lsbsupplier_id" id="lsbsupplier_id">
+													<option value="" selected></option>
+													<?php
+													$sql = "SELECT supplier_id, supplier_name, supplier_destination FROM supplier ORDER BY supplier_destination,supplier_name";
+													$result = mysqli_query($conn ,$sql);
+													if(mysqli_num_rows($result) > 0)	{
+														//show data for each row
+														while($row = mysqli_fetch_assoc($result))	{
+															echo "<option value='".$row['supplier_id']."'"; 
+															//if ($row['supplier_id']==$_supplier_id)	{ 
+															//	echo " selected ";
+															//}
+															echo ">".$row['supplier_destination']." : ".$row['supplier_name']."</option>";
+														}
+													}?>
+												</select>
+											</label>
+										</div>
+									</div>
+								</section>
 
-										<section>
-											<div class="row">
-												<label class="label col col-2">Product</label>
-												<div class="col col-10">
-													<label class="input required">
-														<input type="product" name="product">
-													</label>
-												</div>
-											</div>
-										</section>
-
-										<section>
-											<div class="row">
-												<label class="label col col-2">Show Time</label>
-												<div class="col col-10">
-													<label class="input required">
-														<input type="showTime" name="showTime">
-													</label>
-												</div>
-											</div>
-										</section>
-										<section>
-											<div class="row">
-												<label class="label col col-2">QTY</label>
-												<div class="col col-10">
-													<label class="input required">
-														<input type="QTY" name="QTY">
-													</label>
-												</div>
-											</div>
-										</section>
-										<section>
-											<div class="row">
-												<label class="label col col-2">Remark</label>
-												<div class="col col-10">
-													<label class="input">
-														<textarea rows="4" name="remark" id="remark"></textarea>
-													</label>
-												</div>
-											</div>
-										</section>
-										<section>
-											<div class="row">
-												<label class="label col col-2">Status</label>
-												<div class="col col-10">
-													<label class="input">
-														<div class="inline-group">
-															<label class="radio">
-																<input type="radio" name="radio-inline" checked="">
-																<i></i>New</label>
-															<label class="radio">
-																<input type="radio" name="radio-inline">
-																<i></i>Complete</label>
-															<label class="radio">
-																<input type="radio" name="radio-inline">
-																<i></i>Modify</label>
-															<label class="radio">
-																<input type="radio" name="radio-inline">
-																<i></i>Cancel</label>
-														</div>
-													</label>
-												</div>
-											</div>
-										</section>
-									</fieldset>
-									
-									<footer class="center">
-										<button type="submit" class="btn btn-primary" style="float: unset;font-weight: 400;">
-											Save
-										</button>
-										<button type="button" class="btn btn-default" data-dismiss="modal" style="float: unset;font-weight: 400;">
-											Cancel
-										</button>
-
-									</footer>
-								</form>						
+								<section>
+									<div class="row">
+										<label class="label col col-2">Product</label>
+										<div class="col col-10">
+											<label class="input required">
+											<select name="lsbproduct_id" id="lsbproduct_id" >
+												<option value="" selected></option>
+													<?php
+													$sql = "SELECT product_id, product_name, product_for, product_showtime, product_car_type, 
+															product_meal_type, product_normal_price, product_oversea_price, product_price_l1, 
+															product_price_l2 from product order by supplier_id, product_name";
+													$result = mysqli_query($conn ,$sql);
+													if(mysqli_num_rows($result) > 0)	{
+														//show data for each row
+														while($row = mysqli_fetch_assoc($result))	{
+															echo "<option value='".$row['product_id']."'"; 
+															//if ($row['supplier_id']==$_supplier_id)	{ 
+															//	echo " selected ";
+															//}
+															echo "><strong>".$row['product_name']."</strong>  (";
+															if ($row['product_for']<>"")	{
+																echo "For:".$row['product_for']." ";
+															}
+															if ($row['product_showtime']<>"")	{
+																echo "Time:".$row['product_showtime']." ";
+															}
+															if ($row['product_car_type']<>"")	{
+																echo "Car Type:".$row['product_car_type']." ";
+															}
+															if ($row['product_meal_type']<>"")	{
+																echo "Meal Type:".$row['product_meal_type']." ";
+															}
+															echo") </option>";
+														}
+													}?>
+												</select>
+											</label>
+										</div>
+									</div>
+								</section>
+								<section>
+									<div class="row">
+										<label class="label col col-2" type="number">QTY</label>
+										<div class="col col-10">
+											<label class="input required">
+												<input type="number" step="1" name="txbbooking_detail_qty" id="txbbooking_detail_qty">
+											</label>
+										</div>
+									</div>
+								</section>
+								<section>
+									<div class="row">
+										<label class="label col col-2">Unit Price</label>
+										<div class="col col-3">
+											<label class="input required">
+												<input type="number" step="0.25" name="txbbooking_detail_price" id="txbbooking_detail_price">
+											</label>
+										</div>
+										<label class="label col col-1">VAT</label>
+										<div class="col col-2">
+											<label class="input required">
+												<input type="number" step="0.25" name="txbbooking_detail_vat" id="txbbooking_detail_vat">
+											</label>
+										</div>
+										<label class="label col col-1">Total</label>
+										<div class="col col-3">
+											<label class="input required">
+												<input type="number" step="0.25" name="txbbooking_detail_total_amount" id="txbbooking_detail_total_amount">
+											</label>
+										</div>										
+									</div>
+								</section>
+								<section>
+									<div class="row">
+										<label class="label col col-2" type="number">Date</label>
+										<div class="col col-5">
+											<label class="input required">
+												<input type="date" name="txbbooking_detail_date" id="txbbooking_detail_date">
+											</label>
+										</div>
+										<label class="label col col-1" type="number">Time</label>
+										<div class="col col-4">
+											<label class="input">
+												<input type="time" name="txbbooking_detail_time" id="txbbooking_detail_time">
+											</label>
+										</div>
+									</div>
+								</section>
 								
-
+								<section>
+									<div class="row">
+										<label class="label col col-2">Remark</label>
+										<div class="col col-10">
+											<label class="input">
+												<textarea rows="3" name="txbbooking_detail_note" id="txbbooking_detail_note"></textarea>
+											</label>
+										</div>
+									</div>
+								</section>
+								
+								<section>
+									<div class="row">
+										<label class="label col col-2">Status</label>
+										<div class="col col-10">
+											<label class="input">
+												<div class="inline-group">
+													<label class="radio">
+														<input type="radio" name="chkbooking_detail_status" value="N" checked=""><i></i>New
+													</label>
+													<label class="radio">
+														<input type="radio" name="chkbooking_detail_status" value="W"><i></i>Waiting
+													</label>
+													<label class="radio">
+														<input type="radio" name="chkbooking_detail_status" value="F"><i></i>Confirm
+													</label>
+													<label class="radio">
+														<input type="radio" name="chkbooking_detail_status" value="C"><i></i>Cancel
+													</label>
+												</div>
+											</label>
+										</div>
+									</div>
+								</section>
+							</fieldset>
+									
+							<footer class="center">
+								<button type="submit" class="btn btn-primary" style="float: unset;font-weight: 400;">Save</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" style="float: unset;font-weight: 400;">Cancel</button>
+							</footer>
+						</form>
 					</div>
-
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
-
-
 	</div>
 	<!-- END MAIN CONTENT -->
-
 </div>
 <!-- END MAIN PANEL -->
 <!-- ==========================CONTENT ENDS HERE ========================== -->
@@ -507,16 +620,13 @@
 
 <!-- PAGE RELATED PLUGIN(S) -->
 <script src="<?php echo ASSETS_URL; ?>/js/plugin/jquery-form/jquery-form.min.js"></script>
-
-
 <script type="text/javascript">
-		
 // DO NOT REMOVE : GLOBAL FUNCTIONS!
-
 $(document).ready(function() {
 
 	var errorClass = 'invalid';
 	var errorElement = 'em';
+	var re_v;
 
 	var $contactForm = $("#contact-form").validate({
 		errorClass		: errorClass,
@@ -528,7 +638,7 @@ $(document).ready(function() {
 	    unhighlight: function(element) {
 	        $(element).parent().removeClass("state-error").addClass('state-success');
 	        $(element).addClass('valid');
-	    },
+	    },		
 		// Rules for form validation
 		rules : {
 			lsbagent_id : {
@@ -539,10 +649,8 @@ $(document).ready(function() {
 			},
 			txbbooking_pax : {
 				required : true,
-				minlength : 1
 			}
 		},
-
 		// Messages for form validation
 		messages : {
 			lsbagent_id : {
@@ -553,17 +661,20 @@ $(document).ready(function() {
 			},
 			txbbooking_pax : {
 				required : 'Please fill PAX',
-				minlength : 'Pax incorrect'
 			}
 		},
-
+		
 		// Ajax form submition
 		submitHandler : function(form) {
-			$(form).ajaxSubmit({
-				success : function() {
-					$("#contact-form").addClass('submited');
-				}
-			});
+			if (confirm("Do you want to save the data?")) {
+			   	form.submit();
+			}			
+			//$(form).ajaxSubmit({
+				//success : function() {
+					//document.getElementById('txtBookingId').innerHTML = 'your tip has been submitted!'
+					//$("#contact-form").addClass('submited');
+			//	}
+			//});
 		},
 
 		// Do not change code below
@@ -572,7 +683,9 @@ $(document).ready(function() {
 		}
 	});
 
-	var $loginForm = $("#login-form").validate({
+
+
+	var $loginForm = $("#detail-form").validate({
 		errorClass		: errorClass,
 		errorElement	: errorElement,
 		highlight: function(element) {
@@ -585,25 +698,50 @@ $(document).ready(function() {
 	    },
 		// Rules for form validation
 		rules : {
-			email : {
+			lsbsupplier_id : {
 				required : true,
-				email : true
 			},
-			password : {
+			lsbproduct_id : {
 				required : true,
-				minlength : 3,
-				maxlength : 20
+			},
+			txbbooking_detail_qty : {
+				required : true,
+			},
+			txbbooking_detail_price : {
+				required : true,
+			},
+			txbbooking_detail_vat : {
+				required : true,
+			},
+			txbbooking_detail_total_amount : {
+				required : true,
+			},
+			txbbooking_detail_date : {
+				required : true,
 			}
 		},
-
 		// Messages for form validation
 		messages : {
-			email : {
-				required : 'Please enter your email address',
-				email : 'Please enter a VALID email address'
+			lsbsupplier_id : {
+				required : 'Please select supplier',
 			},
-			password : {
-				required : 'Please enter your password'
+			lsbproduct_id : {
+				required : 'Please select product',
+			},
+			txbbooking_detail_qty : {
+				required : 'Please fill QTY',
+			},
+			txbbooking_detail_price : {
+				required : 'Please fill price',
+			},
+			txbbooking_detail_vat : {
+				required : 'Please fill VAT',
+			},
+			txbbooking_detail_total_amount : {
+				required : 'Please fill total amount',
+			},
+			txbbooking_detail_date : {
+				required : 'Please fill date',
 			}
 		},
 

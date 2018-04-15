@@ -29,6 +29,13 @@
 	//follow the tree in inc/config.ui.php
 	$page_nav["Booking"]["sub"]["Confirm Booking"]["active"] = true;
 	include ("inc/nav.php");
+
+	if( isset($_GET['id']) )	{
+		echo "id value";
+	}else{
+		echo "no";
+	}
+		
 ?>
 
 <style>

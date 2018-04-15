@@ -32,4 +32,12 @@
 		$row = mysqli_fetch_array($result);  
 		echo json_encode($row);
 	}
+
+	if(isset($_POST["booking_id"]))  
+	{  
+		$query = "SELECT * FROM `booking` WHERE `booking_id` = '".$_POST["booking_id"]."'";
+		$result = mysqli_query($_SESSION['conn'], $query);  
+		$row = mysqli_fetch_array($result);  
+		echo json_encode($row);
+	}
 ?>

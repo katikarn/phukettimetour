@@ -26,7 +26,7 @@
 	
 	//include left panel (navigation)
 	//follow the tree in inc/config.ui.php
-	$page_nav["Setup"]["sub"]["Product Setup"]["active"] = true;
+	$page_nav["Setup"]["sub"]["Supplier Management"]["sub"]["Product Setup"]["active"] = true;
 	include ("inc/nav.php");
 ?>
 <style>
@@ -146,23 +146,27 @@
 						        <table id="dt_basic" class="table table-striped table-bordered table-hover" style="margin-top:0px" width="100%">
 									<thead>			                
 										<tr class="header">
-											<th data-hide="phone">ID</th>
-											<th data-class="expand">Name</th>
-											<th data-hide="phone">Supplier</th>
-											<th data-hide="phone">Type</th>
+											<th>Product ID</th>
+											<th>Product Name</th>
+											<th>Supplier Name</th>
+											<th>Supplier Type</th>
 											<th>Status</th>
 											<th></th>
 										</tr>
 									</thead>
 									<tbody>
 										<?PHP
-											$sql = "SELECT `product_id`, `product_status`, `product_name`, `product_for`, `supplier_name` 
-											FROM `product`,`supplier` 
-											where `supplier`.`supplier_id` = `product`.`supplier_id`";
+											$sql = "SELECT product_id, product_status, product_name, product_seat, product_desc,
+											product_for, TIME_FORMAT(product_showtime, '%H:%i') as product_showtime,
+											TIME_FORMAT(product_endtime, '%H:%i') as product_endtime, supplier_name , 
+											supplier_type, product_car_type
+											FROM product,supplier 
+											where supplier.supplier_id = product.supplier_id";
 												$result = mysqli_query($conn ,$sql);
 												if(mysqli_num_rows($result) > 0){
 													//show data for each row
 												while($row = mysqli_fetch_assoc($result)){
+													
 													if($row['product_status'] == 'A'){
 														$statusUser = '<font color="green">Active</font>';
 													}else if($row['product_status'] == 'I'){
@@ -172,22 +176,51 @@
 													}else{
 														$statusUser = '';
 													}
-
-													if($row['product_for'] == 'A'){
-														$product_for = 'Adult';
-													}else if($row['product_for'] == 'I'){
-														$product_for = 'Chident';
-													}else if($row['product_for'] == 'C'){
-														$product_for = 'Senier';
-													}else{
-														$product_for = 'All';
+													// Production Option wording
+													$ProductOption = "";
+													if($row['supplier_type'] == 'A'){
+														$SupplierType = 'Adventure';
+													}else if($row['supplier_type'] == 'S'){
+														$SupplierType = 'Show';
+														$ProductOption = "(Show Time:".$row['product_showtime'];
+														if($row['product_for'] == 'S'){
+															$ProductOption = $ProductOption.", Senier";
+														}else if($row['product_for'] == 'A'){
+															$ProductOption = $ProductOption.", Adult";
+														}else if($row['product_for'] == 'C'){
+															$ProductOption = $ProductOption.", Child";
+														}else if($row['product_for'] == 'I'){
+															$ProductOption = $ProductOption.", Infant";
+														}
+														$ProductOption = $ProductOption.")";
+													}else if($row['supplier_type'] == 'D'){
+														$SupplierType = 'Day Trip';
+														$ProductOption = "(".$row['product_desc'].", Trip Time:".$row['product_showtime']."-".$row['product_endtime'].")";
+													}else if($row['supplier_type'] == 'T'){
+														$SupplierType = 'Transport';
+														$ProductOption = "(".$row['product_desc'];
+														if ($row['product_car_type']=='T'){
+															$ProductOption = $ProductOption."Car (Max passenger 4)";
+														}else if($row['product_car_type']=='F'){
+															$ProductOption = $ProductOption."Van (Max passenger 10)";
+														}else if($row['product_car_type']=='E'){
+															$ProductOption = $ProductOption."Bus (Max passenger 35)";
+														}
+														$ProductOption = $ProductOption.")";
+													}else if($row['supplier_type'] == 'M'){
+														$SupplierType = 'Meal';
+														$ProductOption = "(".$row['product_desc'].")";
+													}else if($row['supplier_type'] == 'O'){
+														$SupplierType = 'Other';
+														$ProductOption = "(".$row['product_desc'].")";
 													}
+
 												 ?>
 												<tr>
-													<td><?=$row['product_id']?></td>
-													<td><?=$row['product_name']?></td>
+													<td><?=substr("00000000",1,4-strlen($row['product_id'])).$row['product_id'];?></td>
+													<td><?="<b>".$row['product_name']."</b>  ".$ProductOption?></td>
 													<td><?=$row['supplier_name']?></td>
-													<td><?=$product_for?></td>
+													<td><?=$SupplierType?></td>
 													<td><?=$statusUser?></td>
 													<td class="center"><a onclick="resetModal();" class="btn btn-small btn-primary"
 															data-toggle="modal"
@@ -249,12 +282,27 @@
 										<select name="lsbsupplier_id" id="lsbsupplier_id">
 											<option value="" selected></option>
 											<?php
-												$sql = "SELECT `supplier_id`, `supplier_name` FROM `supplier`	WHERE `supplier_status` <> 'C' ORDER BY `supplier_name` ";
+												$sql = "SELECT `supplier_id`, `supplier_name`, `supplier_type` FROM `supplier`	ORDER BY `supplier_type`,`supplier_name` ";
 												$result = mysqli_query($conn ,$sql);
 												if(mysqli_num_rows($result) > 0)	{
 													//show data for each row
 													while($row = mysqli_fetch_assoc($result))	{?>
-														<option value="<?=$row['supplier_id']; ?>"><?=$row['supplier_name']; ?></option>
+														<option value="<?=$row['supplier_id'];?>"><?php
+														
+														if($row['supplier_type'] == 'A'){
+															echo '[Adventure] : ';
+														}else if($row['supplier_type'] == 'S'){
+															echo '[Show] : ';
+														}else if($row['supplier_type'] == 'D'){
+															echo '[Day Trip] : ';
+														}else if($row['supplier_type'] == 'T'){
+															echo '[Transport] : ';
+														}else if($row['supplier_type'] == 'M'){
+															echo '[Meal] : ';
+														}else if($row['supplier_type'] == 'O'){
+															echo '[Other] : ';
+														}?>
+														<?=$row['supplier_name']; ?></option>
 													<?php } 
 												}?>
 										</select>
@@ -337,28 +385,37 @@
 									<label class="input">
 										<div class="inline-group">
 											<label class="radio">
-												<input type="radio" name="chkproduct_for" value="Z" id="chkproduct_for_Z" checked>
+												<input type="radio" name="chkproduct_for" value="" id="chkproduct_for_" checked>
 												<i></i>All</label>
-											<label class="radio">
-												<input type="radio" name="chkproduct_for" value="A" id="chkproduct_for_A">
-												<i></i>Adult</label>
-											<label class="radio">
-												<input type="radio" name="chkproduct_for" value="C" id="chkproduct_for_C">
-												<i></i>Chident</label>
-											<label class="radio">
+											<label class="radio" title="60 or older">
 												<input type="radio" name="chkproduct_for" value="S" id="chkproduct_for_S">
 												<i></i>Senier</label>
+											<label class="radio" title="12 or older">
+												<input type="radio" name="chkproduct_for" value="A" id="chkproduct_for_A">
+												<i></i>Adult</label>
+											<label class="radio" title="6 through 11">
+												<input type="radio" name="chkproduct_for" value="C" id="chkproduct_for_C">
+												<i></i>Child</label>
+											<label class="radio" title="1 through 5">
+												<input type="radio" name="chkproduct_for" value="I" id="chkproduct_for_I">
+												<i></i>Infant</label>
 										</div>
 									</label>
 								</div>
 							</div>
 							<div class="row">
-								<label class="label col col-3 header">Show Time</label>
-								<div class="col col-9">
+								<label class="label col col-3 header">Start Time</label>
+								<div class="col col-4">
 									<label class="input">
 										<input type="Time" name="txbproduct_showtime" id="txbproduct_showtime">
 									</label>
 								</div>
+								<label class="label col col-1 header"> To </label>
+								<div class="col col-4">
+									<label class="input">
+										<input type="Time" name="txbproduct_endtime" id="txbproduct_endtime">
+									</label>
+								</div>								
 							</div>
 							<div class="row">
 								<label class="label col col-3 header">Duration</label>
@@ -479,15 +536,15 @@ include ("inc/scripts.php");
 	// DO NOT REMOVE : GLOBAL FUNCTIONS!
 	var otable;
 	$(document).ready(function() {
-			
+
 		/* BASIC ;*/
 		var responsiveHelper_dt_basic = undefined;
-			
+
 		var breakpointDefinition = {
 			tablet : 1024,
 			phone : 480
 		};
-			
+
 		$('#dt_basic').dataTable({
 			"sDom": 
 			"t"+
@@ -529,7 +586,7 @@ include ("inc/scripts.php");
 					
 				success: function (data) {
 					if(data != null){
-						console.log(data);
+						//console.log(data);
 						//console.log('data.product.product_id :'+data.product_id);
 						//console.log('data.status :'+data.product_status);
 						$('#chkproduct_status_' + data.product_status).prop('checked',true);
@@ -544,6 +601,7 @@ include ("inc/scripts.php");
 						$('#chkproduct_seat_' + data.product_seat).prop('checked',true);
 						$('#chkproduct_for_' + data.product_for).prop('checked',true);
 						$('#txbproduct_showtime').val(data.product_showtime);
+						$('#txbproduct_endtime').val(data.product_endtime);
 						$('#txbproduct_duration').val(data.product_duration);
 						$('#lsbproduct_car_type').val(data.product_car_type);
 						$('#lsbproduct_meal_type').val(data.product_meal_type);
@@ -575,6 +633,7 @@ include ("inc/scripts.php");
 						//$('#chkproduct_for_C' + data.chkproduct_for).prop('checked',true);
 						//$('#chkproduct_for_S' + data.chkproduct_for).prop('checked',true);
 						$('#txbproduct_showtime').val('');
+						$('#txbproduct_endtime').val('');
 						$('#txbproduct_duration').val('');
 						$('#lsbproduct_car_type').val('');
 						$('#lsbproduct_meal_type').val('');
@@ -680,7 +739,6 @@ include ("inc/scripts.php");
 
 		/* END BASIC */
 		function filterCheckbox(){
-
 			var types = $('input:checkbox[name="status"]:checked').map(function() {
 				return '^' + this.value + '\$';
 			}).get().join('|');
@@ -695,5 +753,9 @@ include ("inc/scripts.php");
 			$( "#product-form" ).find( ".required" ).css("border-left", "7px solid #FF3333");
 			$( "em" ).remove();
 		}
+	</script>
 
-</script>
+	<?php
+	//include footer
+	include ("inc/google-analytics.php");
+	?>

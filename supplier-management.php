@@ -26,7 +26,7 @@
 	
 	//include left panel (navigation)
 	//follow the tree in inc/config.ui.php
-	$page_nav["Setup"]["sub"]["Supplier Management"]["active"] = true;
+	$page_nav["Setup"]["sub"]["Supplier Management"]["sub"]["Supplier Setup"]["active"] = true;
 	include ("inc/nav.php");
 ?>
 <style>
@@ -328,7 +328,7 @@
 									<span class="button"><input type="file" id="txbsupplier_contract_file" name="txbsupplier_contract_file" onchange="this.parentNode.nextSibling.value = this.value">Browse</span><input type="text" placeholder="contract files" readonly="">
 								</div>
 								<div class="input input-file">
-									<span class="button"><input type="file" id="txbsupplier_contract_file" name="txbsupplier_contract_file" onchange="this.parentNode.nextSibling.value = this.value">Browse</span><input type="text" placeholder="Other files" readonly="">
+									<span class="button"><input type="file" id="txbsupplier_other_file" name="txbsupplier_other_file" onchange="this.parentNode.nextSibling.value = this.value">Browse</span><input type="text" placeholder="Other files" readonly="">
 								</div>
 							</section>
 						</fieldset>
@@ -407,7 +407,7 @@
 							</section>	
 						</fieldset>
 						<header>
-							Contract - Resevation
+							Contract - Reservation
 						</header>
 						<fieldset>
 							<section>
@@ -439,7 +439,7 @@
 									<label class="label col col-3 header">Fax</label>
 									<div class="col col-9">
 										<label class="input">
-											<input type="text" name="txbsupplier_reserv_fax" id="txbsupplier_reserv_fax" maxlength="50">
+											<input type="text" name="txbsupplier_reserv_fax" id="txbsupplier_reserv_fax" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="15">
 										</label>
 									</div>
 									<label class="label col col-3 header">Main Contract</label>

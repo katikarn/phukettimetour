@@ -72,7 +72,10 @@
             $sql = "";
         }
         if ($sql<>"")   {
-		    $result = mysqli_query($_SESSION['conn'] ,$sql);
+            $result = mysqli_query($_SESSION['conn'] ,$sql);
+            if($_POST["submitAddSupplier"] == "Insert"){
+                header("location: supplier-management.php");
+            }
 		    //echo "result : ".$result."<br>";
 		    if(!$result) {
 			    //echo "<script>alert('Failed to added.This user is already used.!'); window.location='supplier-management.php'</script>";

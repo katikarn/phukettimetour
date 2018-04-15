@@ -114,15 +114,15 @@
 							<div class=" checkbox">
 								<div class="col col-6">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusN" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">New</span></label>
+										<input type="checkbox" name="status" id="StatusN" value="New" onclick="filterCheckbox();" checked ><i></i><span style="background-color: green;">New</span></label>
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusW" value="Waiting" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #6dd0ca;">Wait for confirm</span></label>
+										<input type="checkbox" name="status" id="StatusW" value="Waiting" onclick="filterCheckbox();" checked ><i></i><span style="background-color: orange;">Waiting</span></label>
 								</div>
 								<div class="col col-4">
 								<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusF" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Confirm</span></label>
+										<input type="checkbox" name="status" id="StatusF" value="Confirm" onclick="filterCheckbox();" checked ><i></i><span style="background-color: blue;">Confirm</span></label>
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Cancel</span></label>
+										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: red;">Cancel</span></label>
 								</div>
 							</div>
 						</div>
@@ -149,9 +149,9 @@
 									<tbody>
 										<?PHP
 											$sql = "SELECT booking.booking_id, booking.booking_name, min(booking_detail.booking_detail_date) as booking_date, 
-											booking.agent_name, booking.booking_status
-											FROM booking, booking_detail 
-											WHERE booking.booking_id=booking_detail.booking_id 
+											agent.agent_name, booking.booking_status
+											FROM booking, booking_detail, agent
+											WHERE booking.booking_id>=booking_detail.booking_id and booking.agent_id=agent.agent_id
 											GROUP BY booking.booking_id";
 											$result = mysqli_query($conn ,$sql);
 											if(mysqli_num_rows($result) > 0){
@@ -160,22 +160,20 @@
 													if($row['booking_status'] == 'N'){
 														$statusUser = '<font color="green">New</font>';
 													}else if($row['booking_status'] == 'W'){
-														$statusUser = 'Wait for Confirm';
+														$statusUser = '<font color="orange">Waiting</font>';
 													}else if($row['booking_status'] == 'F'){
-														$statusUser = 'Confirm';
+														$statusUser = '<font color="blue">Confirm</font>';
 													}else if($row['booking_status'] == 'C'){
-														$statusUser = '<font color="red">Concel</font>';
+														$statusUser = '<font color="red">Cancel</font>';
 													}?>
 													<tr>
-														<td><?=$row['booking_id']?></td>
+														<td><?=substr("00000000",1,6-strlen($row['booking_id'])).$row['booking_id'];?></td>
 														<td><?=$row['booking_name']?></td>
-														<td><?=$row['booking_date']?></td>
+														<td><?=date("d/m/Y", strtotime($row['booking_date']));?></td>
 														<td><?=$row['agent_name']?></td>
 														<td><?=$statusUser?></td>
-														<td style="text-align: center;"><a class="btn btn-small btn-primary"
-															data-toggle="modal"
-															data-target="#myModal"
-															data-whatever="<?=$row['booking_id']?>" >Edit</a>
+														<td style="text-align: center;">
+														<a class="btn btn-small btn-primary" id="m1s" href="bookingList-info.php?id=<?=$row['booking_id']?>">Edit</a>
 														</td>
 													</tr>
 													<?PHP
@@ -249,7 +247,7 @@
 
 		$( "#date_search" ).keyup(function() {
 			//alert( "Handler for .keyup() called." );
-			table_dtbasic.columns( 1 ).search( this.value ).draw();
+			table_dtbasic.columns( 2 ).search( this.value ).draw();
 		});
 		$('#myModal').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget) // Button that triggered the modal
@@ -352,8 +350,8 @@
     		return '^' + this.value + '\$';
 		}).get().join('|');
 		//filter in column 0, with an regex, no smart filtering, no inputbox,not case sensitive
-		//console.log(types);
-		otable.fnFilter(types, 3, true, false, false, false);
+		console.log(types);
+		otable.fnFilter(types, 4, true, false, false, false);
 	}
 	
 </script>

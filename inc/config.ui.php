@@ -64,18 +64,24 @@ $page_nav = array(
 		"title" => "Setup",
 		"icon" => "fa-cog",
 		"sub" => array(
-			"Product Setup" => array(
-				"title" => "Product Setup",
-				"url" => APP_URL."/product-setup.php"
-			),
 			"Agent Management" => array(
 				"title" => "Agent Management",
 				"url" => APP_URL."/agent-management.php"
 			),
 			"Supplier Management" => array(
 				"title" => "Supplier Management",
-				"url" => APP_URL."/supplier-management.php"
-			),
+				"sub" => array(
+					"Supplier Setup" => array(
+						"title" => "Supplier Setup",
+						"url" => APP_URL."/supplier-management.php"						
+					),
+					"Product Setup" => array(
+						"title" => "Product Setup",
+						"url" => APP_URL."/product-setup.php"
+					)
+				)
+			
+			),			
 			"User Management" => array(
 				"title" => "User Management",
 				"url" => APP_URL."/user-management.php"
