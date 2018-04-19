@@ -116,25 +116,26 @@
 							Keyword<br/>
 							<input id="column3_search" type="text" name="googlesearch">
 						</div>
+						<div class="hidden-md col-lg-2">
+							<!-- Date<br/>
+							<input id="date_search" placeholder="DD/MM/YYYY" type="text" name="date_search"> -->
+						</div>
 						<div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 status smart-form" style="padding-top: 25px;">
 							<div class="checkbox"  style="padding-left: 0px;">
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">Active</span>
+										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: green">Active</span>
 									</label>
 								</div>
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #6dd0ca;">Inactive</span>
+										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: red">Inactive</span>
 									</label>
 								</div>
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Cancel</span>
+										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: orange">Cancel</span>
 									</label>
-								</div>
-								<div class="col-xs-3 col-sm-4 col-md-3">
-									<button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button>
 								</div>
 							</div>
 						</div>
@@ -146,12 +147,13 @@
 						        <table id="dt_basic" class="table table-striped table-bordered table-hover" style="margin-top:0px" width="100%">
 									<thead>			                
 										<tr class="header">
-											<th>Product ID</th>
-											<th>Product Name</th>
-											<th>Supplier Name</th>
-											<th>Supplier Type</th>
-											<th>Status</th>
-											<th></th>
+											<th data-hide="phone">Product ID</th>
+											<th data-class="expand">Product Name</th>
+											<th data-hide="phone">Supplier Name</th>
+											<th data-hide="phone">Supplier Type</th>
+											<th data-hide="phone">Status</th>
+											<th class="center"><button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button>
+</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -170,9 +172,9 @@
 													if($row['product_status'] == 'A'){
 														$statusUser = '<font color="green">Active</font>';
 													}else if($row['product_status'] == 'I'){
-														$statusUser = 'Inactive';
+														$statusUser = '<font color="red">Inactive</font>';
 													}else if($row['product_status'] == 'C'){
-														$statusUser = '<font color="red">Cancel</font>';
+														$statusUser = '<font color="orange">Cancel</font>';
 													}else{
 														$statusUser = '';
 													}
@@ -222,10 +224,11 @@
 													<td><?=$row['supplier_name']?></td>
 													<td><?=$SupplierType?></td>
 													<td><?=$statusUser?></td>
-													<td class="center"><a onclick="resetModal();" class="btn btn-small btn-primary"
+													<td class="center"><a onclick="resetModal();" class="btn btn-small btn-success"
 															data-toggle="modal"
 															data-target="#myModal"
 															data-whatever="<?=$row['product_id']?>">Edit</a>
+															<a href="product-setup.php?id=<?=$row['product_id']?>&hAction=Delete" class="btn btn-small btn-danger">Del</a>
 													</td>
 												</tr>
 												<?PHP
@@ -264,13 +267,13 @@
 										<div class="inline-group">
 											<label class="radio">
 												<input type="radio" name="chkproduct_status" value="A" id="chkproduct_status_A" checked=true>
-												<i></i><span style="background-color: #5dc156;">Active</span></label>
+												<i></i><span style="background-color: green">Active</span></label>
 											<label class="radio">
 												<input type="radio" name="chkproduct_status" value="I" id="chkproduct_status_I">
-												<i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
+												<i></i><span style="background-color: red">Inactive</span></label>
 											<label class="radio">
 												<input type="radio" name="chkproduct_status" value="C" id="chkproduct_status_C">
-												<i></i><span style="background-color: #ffba42;">Cancel</span></label>
+												<i></i><span style="background-color: orange">Cancel</span></label>
 										</div>
 									</label>
 								</div>

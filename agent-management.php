@@ -119,22 +119,23 @@
 							Keyword<br/>
 							<input id="column3_search" type="text" name="googlesearch">
 						</div>
+						<div class="hidden-md col-lg-2">
+							<!-- Date<br/>
+							<input id="date_search" placeholder="DD/MM/YYYY" type="text" name="date_search"> -->
+						</div>
 						<div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 status smart-form" style="padding-top: 25px;">
 							<div class="checkbox" style="padding-left: 0px;">
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">Active</span></label>
+										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: green">Active</span></label>
 								</div>
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
+										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: red">Inactive</span></label>
 								</div>
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Cancel</span></label>
-								</div>
-								<div class="col-xs-3 col-sm-4 col-md-3">
-									<button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button>
+										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: orange">Cancel</span></label>
 								</div>
 							</div>
 						</div>
@@ -147,11 +148,13 @@
 						        <table id="dt_basic" class="table table-striped table-bordered table-hover" style="margin-top:0px" width="100%">
 									<thead>			                
 										<tr class="header">
-											<th data-hide="phone">Agent name</th>
-											<th data-class="expand">Email</th>
-											<th data-hide="phone">Username</th>
-											<th>Status</th>
-											<th></th>
+											<th data-hide="phone">Agent ID</th>
+											<th data-class="expand">Agent name</th>
+											<th data-hide="phone">Email</th>
+											<th data-hide="phone">Tel</th>
+											<th data-hide="phone">Status</th>
+											<th class="center"><button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button>
+</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -161,7 +164,8 @@
 										<?PHP
 											$sql = "SELECT `agent_id`, `agent_username`, `agent_main_email`, `agent_password`, `agent_name`, 
 													`agent_address`, `agent_status`, `agent_remark`, `agent_tel`
-													FROM `agent` ";
+													FROM `agent`
+													ORDER BY `agent_name`";
 											$result = mysqli_query($conn ,$sql);
 											if(mysqli_num_rows($result) > 0){
 												//show data for each row
@@ -169,7 +173,7 @@
 													if($row['agent_status'] == 'A'){
 														$statusUser = '<font color="green">Active</font>';
 													}else if($row['agent_status'] == 'I'){
-														$statusUser = 'Inactive';
+														$statusUser = '<font color="red">Inactive</font>';
 													}else if($row['agent_status'] == 'C'){
 														$statusUser = '<font color="red">Cancel</font>';
 													}
@@ -178,14 +182,16 @@
 														<script type="text/javascript">
 															storeUsername.push('<?=$row['agent_username']?>');
 														</script>
+														<td><?=substr("00000000",1,4-strlen($row['agent_id'])).$row['agent_id']?></td>
 														<td><?=$row['agent_name']?></td>
 														<td><?=$row['agent_main_email']?></td>
 														<td><?=$row['agent_tel']?></td>
 														<td><?=$statusUser?></td>
-														<td class="center"><a onclick="resetModal();" class="btn btn-small btn-primary"
+														<td class="center"><a onclick="resetModal();" class="btn btn-small btn-success"
 															data-toggle="modal"
 															data-target="#myModal"
 															data-whatever="<?=$row['agent_id']?>" >Edit</a>
+															<a href="agent-management.php?id=<?=$row['agent_id']?>&hAction=Delete" class="btn btn-small btn-danger">Del</a>
 														</td>
 													</tr>
 													<?PHP
@@ -225,13 +231,13 @@
 										<div class="inline-group">
 											<label class="radio">
 												<input type="radio" name="chkagent_status" value="A" id="chkagent_status_A" checked=true>
-												<i></i><span style="background-color: #5dc156;">Active</span></label>
+												<i></i><span style="background-color: green">Active</span></label>
 											<label class="radio">
 												<input type="radio" name="chkagent_status" value="I" id="chkagent_status_I">
-												<i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
+												<i></i><span style="background-color: red">Inactive</span></label>
 											<label class="radio">
 												<input type="radio" name="chkagent_status" value="C" id="chkagent_status_C">
-												<i></i><span style="background-color: #ffba42;">Cancel</span></label>
+												<i></i><span style="background-color: orange">Cancel</span></label>
 										</div>
 									</label>
 								</div>

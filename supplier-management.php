@@ -116,25 +116,26 @@
 							Keyword<br/>
 							<input id="column3_search" type="text" name="googlesearch">
 						</div>
+						<div class="hidden-md col-lg-2">
+							<!-- Date<br/>
+							<input id="date_search" placeholder="DD/MM/YYYY" type="text" name="date_search"> -->
+						</div>
 						<div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 status smart-form" style="padding-top: 25px;">
 							<div class="checkbox"  style="padding-left: 0px;">
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">Active</span>
+										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: green">Active</span>
 									</label>
 								</div>
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #6dd0ca;">Inactive</span>
+										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: red">Inactive</span>
 									</label>
 								</div>
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Cancel</span>
+										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: orange">Cancel</span>
 									</label>
-								</div>
-								<div class="col-xs-3 col-sm-4 col-md-3">
-									<button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button>
 								</div>
 							</div>
 						</div>
@@ -147,15 +148,15 @@
 									<thead>			                
 										<tr class="header">
 											<th data-hide="phone">Supplier name</th>
-											<th data-class="expand">Type</th>
-											<th data-hide="phone">Tel</th>
+											<th data-class="expand">Service Type</th>
+											<th data-hide="phone">Destination</th>
 											<th>Status</th>
-											<th></th>
+											<th class="center"><button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button></th>
 										</tr>
 									</thead>
 									<tbody>
 										<?PHP
-											$sql = "SELECT supplier_id, supplier_name, supplier_type, supplier_tel, supplier_status FROM supplier";
+											$sql = "SELECT supplier_id, supplier_name, supplier_type, supplier_destination, supplier_status FROM supplier";
 											$result = mysqli_query($conn ,$sql);
 											if(mysqli_num_rows($result) > 0){
 												//show data for each row
@@ -164,9 +165,9 @@
 													if($row['supplier_status'] == 'A'){
 														$SupplierStatus = '<font color="green">Active</font>';
 													}else if($row['supplier_status'] == 'I'){
-														$SupplierStatus = 'Inactive';
+														$SupplierStatus = '<font color="red">Inactive</font>';
 													}else if($row['supplier_status'] == 'C'){
-														$SupplierStatus = '<font color="red">Cancel</font>';
+														$SupplierStatus = '<font color="orange">Cancel</font>';
 													}else {
 														$SupplierStatus = '';
 													}
@@ -180,18 +181,21 @@
 														$SupplierType = 'Transport';
 													}else if($row['supplier_type'] == 'M'){
 														$SupplierType = 'Meal';
+													}else if($row['supplier_type'] == 'O'){
+														$SupplierType = 'Other';
 													}else {
 														$SupplierType = ''; 
 													}?>
 													<tr>
 														<td><?=$SupplierName?></td>
 														<td><?=$SupplierType?></td>
-														<td><?=$row['supplier_tel']?></td>
+														<td><?=$row['supplier_destination']?></td>
 														<td><?=$SupplierStatus?></td>
-														<td class="center"><a onclick="resetModal();" class="btn btn-small btn-primary"
+														<td class="center"><a onclick="resetModal();" class="btn btn-small btn-success"
 															data-toggle="modal"
 															data-target="#myModal"
 															data-whatever="<?=$row['supplier_id']?>" >Edit</a>
+															<a href="supplier-management.php?id=<?=$row['supplier_id']?>&hAction=Delete" class="btn btn-small btn-danger">Del</a>
 														</td>
 													</tr>
 													<?PHP
@@ -233,13 +237,13 @@
 											<div class="inline-group">
 												<label class="radio">
 													<input type="radio" name="rdosupplier_status" value="A" id="id_supplier_status_A" checked=true>
-													<i></i><span style="background-color: #5dc156;">Active</span></label>
+													<i></i><span style="background-color: green">Active</span></label>
 												<label class="radio">
 													<input type="radio" name="rdosupplier_status" value="I" id="id_supplier_status_I">
-													<i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
+													<i></i><span style="background-color: red">Inactive</span></label>
 												<label class="radio">
 													<input type="radio" name="rdosupplier_status" value="C" id="id_supplier_status_C">
-													<i></i><span style="background-color: #ffba42;">Cancel</span></label>
+													<i></i><span style="background-color: orange">Cancel</span></label>
 											</div>
 										</label>
 									</div>
@@ -605,7 +609,7 @@
 						$('#txbsupplier_reserv_email').val(data.supplier_reserv_email);
 						$('#txbsupplier_reserv_line').val(data.supplier_reserv_line);
 						$('#txbsupplier_reserv_fax').val(data.supplier_reserv_fax);
-						$('#txbsupplier_reserv_main').val(data.supplier_reserv_main);
+						$('#lsbsupplier_reserv_main').val(data.supplier_reserv_main);
 						$('#txbsupplier_account_name').val(data.supplier_account_name);
 						$('#txbsupplier_account_tel').val(data.supplier_account_tel);
 						$('#txbsupplier_account_email').val(data.supplier_account_email);
@@ -640,7 +644,7 @@
 						$('#txbsupplier_reserv_email').val('');
 						$('#txbsupplier_reserv_line').val('');
 						$('#txbsupplier_reserv_fax').val('');
-						$('#txbsupplier_reserv_main').val('');
+						$('#lsbsupplier_reserv_main').val('');
 						$('#txbsupplier_account_name').val('');
 						$('#txbsupplier_account_tel').val('');
 						$('#txbsupplier_account_email').val('');

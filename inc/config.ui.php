@@ -1,4 +1,11 @@
 <?php
+//Get num row
+$sql = "SELECT count(*) AS nrow FROM booking_detail WHERE booking_detail_status='N'";
+$result = mysqli_query($conn ,$sql);
+if(mysqli_num_rows($result) > 0) {
+	$row = mysqli_fetch_assoc($result);
+	$TicketWaiting = $row['nrow'];
+}
 
 //CONFIGURATION for SmartAdmin UI
 
@@ -31,33 +38,106 @@ $page_nav = array(
 		"title" => "Booking",
 		"icon" => "fa-book",
 		"sub" => array(
+			"Create New Booking" => array(
+				"title" => "Create New Booking",
+				"url" => APP_URL."/bookingList-info.php"
+			),
 			"Booking List" => array(
 				"title" => "Booking List",
 				"url" => APP_URL."/bookingList.php"
-			),
-			"Confirm Booking" => array(
-				"title" => "Confirm Booking",
-				"url" => APP_URL."/bookingList-confirm.php"
 			)
 		)
 	),
-	"Finance" => array(
-		"title" => "Finance",
+	"Tour Operation" => array(
+		"title" => "Tour Operation",
+		"icon" => "fa-ra",
+		"sub" => array(
+			"Ticket Waiting" => array(
+				"title" => "Ticket Waiting ($TicketWaiting)",
+				"url" => APP_URL."/bookingList-confirm.php"
+			),
+			"Daily Transport" => array(
+				"title" => "Daily Transport",
+				"url" => APP_URL."#"
+			),
+			"Re-confirm Ticket" => array(
+				"title" => "Re-confirm Ticket",
+				"url" => APP_URL."#"
+			),
+			"Report" => array(
+				"title" => "Report",
+				"sub" => array(
+					"Supplier Setup" => array(
+						"title" => "Itinerary Report",
+						"url" => APP_URL."#"						
+					),
+					"Product Setup" => array(
+						"title" => "Pickup Card",
+						"url" => APP_URL."#"
+					)
+				)
+			)
+		)
+	),
+	"Accounting" => array(
+		"title" => "Accounting",
 		"icon" => "fa-bar-chart",
 		"sub" => array(
-			"Invoice" => array(
-				"title" => "Invoice",
-				"url" => APP_URL
+			"Agent" => array(
+				"title" => "Agent",
+				"sub" => array(
+					"Product Setup" => array(
+						"title" => "Invoice List",
+						"url" => APP_URL."#"
+					),					
+						"Supplier Setup" => array(
+						"title" => "Submit Invoice",
+						"url" => APP_URL."#"						
+					),
+					"Payment Approve" => array(
+						"title" => "Payment Approve",
+						"url" => APP_URL."#"
+					),
+					"Invoice Over Due" => array(
+						"title" => "Invoice Over Due (99)",
+						"url" => APP_URL."#"
+					),
+					"Agent statement card" => array(
+						"title" => "Agent statement",
+						"url" => APP_URL."#"
+					)
+				)
 			),
-			"Agent: Payment Approve" => array(
-				"title" => "Agent: Payment Approve",
-				"url" => APP_URL."/dashboard-social.php"
-			)
-			,
-			"Supplier: Paid Status" => array(
-				"title" => "Supplier: Paid Status",
-				"url" => APP_URL."/dashboard-social.php"
-			)
+			"Supplier" => array(
+				"title" => "Supplier",
+				"sub" => array(
+					"Product Setup" => array(
+						"title" => "Order List",
+						"url" => APP_URL."#"
+					),					
+						"Supplier Setup" => array(
+						"title" => "Supplier statement",
+						"url" => APP_URL."#"						
+					),
+				)
+			),
+			"Our Company" => array(
+				"title" => "Our Company",
+				"sub" => array(
+					"Product Setup" => array(
+						"title" => "Expenses",
+						"url" => APP_URL."#"
+					),					
+						"Supplier Setup" => array(
+						"title" => "Other Income",
+						"url" => APP_URL."#"						
+					),
+						"Monthly report" => array(
+						"title" => "Monthly report",
+						"url" => APP_URL."#"						
+					),
+				)
+			),
 		)
 	),
 	"Setup" => array(

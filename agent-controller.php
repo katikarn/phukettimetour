@@ -78,5 +78,13 @@
 		}
 	}else{ 
 	    // echo "not ok";
-	}
+    }
+        // Delete Action
+        if (isset($_GET['hAction']))   {
+            $sql = "DELETE FROM agent WHERE agent_id = '".$_GET['id']."'";
+            $result = mysqli_query($_SESSION['conn'] ,$sql);
+            if(!$result) {
+                echo "<script>alert('Failed to delete.This agent is already used.!'); window.location='agent-management.php'</script>";
+            }
+        }
 ?>

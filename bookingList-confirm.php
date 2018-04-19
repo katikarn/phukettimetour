@@ -2,7 +2,7 @@
 	session_start();
 	include('inc/auth.php');
 	include("inc/connectionToMysql.php");
-	include("registerUserController.php");
+	//include("bookingList-confirm.php");
 	/////////////////////////////////////////////////////////
 	//initilize the page
 	require_once ("inc/init.php");
@@ -15,7 +15,7 @@
 		YOU CAN SET CONFIGURATION VARIABLES HERE BEFORE IT GOES TO NAV, RIBBON, ETC.
 	E.G. $page_title = "Custom Title" */
 	
-	$page_title = "Confirm Booking";
+	$page_title = "Ticket Waiting";
 	
 	/* ---------------- END PHP Custom Scripts ------------- */
 	
@@ -27,15 +27,8 @@
 	
 	//include left panel (navigation)
 	//follow the tree in inc/config.ui.php
-	$page_nav["Booking"]["sub"]["Confirm Booking"]["active"] = true;
-	include ("inc/nav.php");
-
-	if( isset($_GET['id']) )	{
-		echo "id value";
-	}else{
-		echo "no";
-	}
-		
+	$page_nav["Tour Operation"]["sub"]["Ticket Waiting"]["active"] = true;
+	include ("inc/nav.php");	
 ?>
 
 <style>
@@ -131,7 +124,7 @@
 		<div class="row">
 			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 				<h1 class="header">
-					Wait for confirm
+					Ticket waiting for confirmation
 				</h1>
 			</div>
 			<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
@@ -177,50 +170,108 @@
 						        <table id="dt_basic" class="table table-striped table-bordered table-hover" style="margin-top:0px" width="100%">
 									<thead>			                
 										<tr class="header">
-											<th data-hide="phone">Date</th>
-											<th data-class="expand">Product</th>
-											<th data-hide="phone">Agent</th>
-											<th data-hide="phone">Name</th>
-											<th data-hide="phone">Type</th>
-											<th>Status</th>
-											<th></th>
+											<th data-hide="phone">Service Datetime</th>
+											<th data-class="expand">Product Name</th>
+											<th data-hide="phone">Qty</th>
+											<th data-hide="phone">Reservation Info</th>
+											<th class="center"Action</th>
 										</tr>
 									</thead>
 									<tbody>
-										<?PHP
-											$sql = "SELECT `userid`, `username`, `email`, `password`, `type`, `status`,
-											`createdatetime`, `createby`, `updatedatetime`, `updateby` FROM `user` ";
-											$result = mysqli_query($conn ,$sql);
-											if(mysqli_num_rows($result) > 0){
+									<?PHP
+												$sql = "SELECT 	booking_detail_id, booking_detail_status, booking_detail_date, booking_detail_time, 
+																booking_detail_qty, 
+																booking_detail.createdatetime, booking_detail.createby,
+																booking_detail.updatedatetime, booking_detail.updateby,
+																product_name, product_desc, product_seat, product_for, 
+																TIME_FORMAT(product_showtime, '%H:%i') as product_showtime, product_duration, 
+																product_car_type, product_meal_type, product_status,
+																supplier_name, supplier_type, supplier_reserv_tel, supplier_reserv_email, 
+																supplier_reserv_line, supplier_reserv_fax, supplier_reserv_main,
+																booking.booking_id, booking_name, booking_pax, booking_nat, booking_tel, 
+																booking_line, booking_remark
+
+												FROM booking_detail, product, supplier, booking
+												WHERE booking_detail.product_id = product.product_id
+														and product.supplier_id = supplier.supplier_id
+														and booking_detail.booking_id = booking.booking_id
+														and booking_detail.booking_detail_status = 'N'
+												ORDER BY booking_detail.booking_detail_date, booking_detail.booking_detail_time";
+
+												$result = mysqli_query($conn ,$sql);
+												
+												if(mysqli_num_rows($result) > 0){
 												//show data for each row
-												while($row = mysqli_fetch_assoc($result)){
-													if($row['status'] == 'A'){
-														$statusUser = '<font color="green">Active</font>';
-														}else if($row['status'] == 'I'){
-														$statusUser = 'Inactive';
-														
-														}else if($row['status'] == 'C'){
-														$statusUser = '<font color="red">Cancel</font>';
-													}
-													if($row['type'] == 'S'){
-														$typeUser = 'Staf';
-														}else if($row['type'] == 'M'){
-														$typeUser = 'Manager';
-														}else if($row['type'] == 'A'){
-														$typeUser = 'Admin';
-													}?>
+													$numRow=0;
+													while($row = mysqli_fetch_assoc($result)){
+														$numRow++;
+														// Production Option wording
+														$ProductOption = "";
+														if($row['supplier_type'] == 'A'){
+															$SupplierType = 'Adventure';
+														}else if($row['supplier_type'] == 'S'){
+															$SupplierType = 'Show';
+															$ProductOption = "(Show Time:".$row['product_showtime'];
+															if($row['product_for'] == 'S'){
+																$ProductOption = $ProductOption.", Senier";
+															}else if($row['product_for'] == 'A'){
+																$ProductOption = $ProductOption.", Adult";
+															}else if($row['product_for'] == 'C'){
+																$ProductOption = $ProductOption.", Child";
+															}else if($row['product_for'] == 'I'){
+																$ProductOption = $ProductOption.", Infant";
+															}
+															$ProductOption = $ProductOption.")";
+														}else if($row['supplier_type'] == 'D'){
+															$SupplierType = 'Day Trip';
+															$ProductOption = "(".$row['product_desc'].", Trip Time:".$row['product_showtime']."-".$row['product_endtime'].")";
+														}else if($row['supplier_type'] == 'T'){
+															$SupplierType = 'Transport';
+															$ProductOption = "(".$row['product_desc'];
+															if ($row['product_car_type']=='T'){
+																$ProductOption = $ProductOption."Car (Max passenger 4)";
+															}else if($row['product_car_type']=='F'){
+																$ProductOption = $ProductOption."Van (Max passenger 10)";
+															}else if($row['product_car_type']=='E'){
+																$ProductOption = $ProductOption."Bus (Max passenger 35)";
+															}
+															$ProductOption = $ProductOption.")";
+														}else if($row['supplier_type'] == 'M'){
+															$SupplierType = 'Meal';
+															$ProductOption = "(".$row['product_desc'].")";
+														}else if($row['supplier_type'] == 'O'){
+															$SupplierType = 'Other';
+															$ProductOption = "(".$row['product_desc'].")";
+														}
+
+														if ($row['supplier_reserv_main'] == "T")	{
+															$MainContract = "Tel. ".$row['supplier_reserv_tel'];
+														}else if ($row['supplier_reserv_main'] == "F")	{
+															$MainContract = "Fax. ".$row['supplier_reserv_fax'];
+														}else if ($row['supplier_reserv_main'] == "E")	{
+															$MainContract = "Email. ".$row['supplier_reserv_email'];
+														}else if ($row['supplier_reserv_main'] == "L")	{
+															$MainContract = "Line or WhatApp. ".$row['supplier_reserv_line'];
+														}
+												?>
 													<tr>
-														<td><?=$row['username']?></td>
-														<td><?=$row['email']?></td>
-														<td><?=$typeUser?></td>
-														<td><?=$statusUser?></td>
-														<td><?=$statusUser?></td>
-														<td><?=$statusUser?></td>
-														<td class="center"><a class="btn btn-small btn-primary"
+													<td><i class="fa fa-clock-o" title="<?php 
+														echo "Booking ID : ".substr("00000000",1,6-strlen($row['booking_id'])).$row['booking_id'];
+														echo "\nCustomer : ".$row['booking_name']."  ".$row['booking_tel']." ".$row['booking_line'];
+														echo "\nPax : ".$row['booking_pax']."  ".$row['booking_nat'];
+														echo "\n".$row['booking_remark'];
+														echo "\nCreate : ".date("d/m/Y", strtotime($row['createdatetime']))." (".$row['createby'].")";
+														echo "  Update : ".date("d/m/Y", strtotime($row['updatedatetime']))." (".$row['updateby'].")";?>"></i> <?=date("d/m/Y", strtotime($row['booking_detail_date']))." ".date("H:i", strtotime($row['booking_detail_time']))?></td>
+													<td><?="<b>".$row['product_name']."</b>  ".$ProductOption?></td>
+													<td><?=number_format($row['booking_detail_qty'],0)?></td>
+													<td><i class="fa fa-info-circle" title="<?="Tel. ".$row['supplier_reserv_tel']."\n Fax. ".$row['supplier_reserv_fax']."\n Email. ".$row['supplier_reserv_email']."\n Line or WhatApp. ".$row['supplier_reserv_line']?>"></i> <?="[".$SupplierType."] ".$row['supplier_name']."<br>".$MainContract?></td>
+													<td class="center"><a href="bookingList-confirm.php?id=<?=$row['booking_detail_id']?>&hAction=Confirm" 
+														class="btn btn-small btn-primary bg-color-green">Confirm</a>
+															<a onclick="resetModal();" class="btn btn-small bg-color-orange txt-color-white"
 															data-toggle="modal"
 															data-target="#myModal"
-															data-whatever="<?=$row['userid']?>" >Edit</a>
-														</td>
+															data-whatever="<?=$row['booking_detail_id']?>">Cancel</a>
+													</td>
 													</tr>
 													<?PHP
 													}}
@@ -242,121 +293,32 @@
     <div class="modal-dialog modal-Adduser">
 		
 		<!-- Modal content-->
-		
 		<div class="modal-content">
-
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="header">Booking Info</h4>
+				<h4 class="header">Confirm to Cancel</h4>
 			</div>
-			<form action='user-management.php' method='post' class="smart-form">
-				<div class="modal-body">
-					<fieldset>
-						<section>
-							<div class="row">
-								<div class="col col-3 header">Supplier :</div>
-								<div class="col col-9">
-									xxxxxxxxxxxxxxxxx
-								</div>
+			<form action='bookingList-confirm.php' method='post' class="smart-form">
+				<header>
+					Reason
+				</header>
+					<section>
+						<div class="row">
+							<div class="input" style="padding: 25px 20px 0px 20px;">
+								<label class="input">
+									<textarea rows="4" name="remark" id="remark"></textarea>
+								</label>
 							</div>
-						</section>
-						<section>
-							<div class="row">
-								<div class="col col-3 header">Reservation Tel :</div>
-								<div class="col col-9">
-									xxxxxxxxxxxxxxxxx
-								</div>
-							</div>
-						</section>
-						<section>
-							<div class="row">
-								<div class="col col-3 header">Email :</div>
-								<div class="col col-9">
-									xxxxxxxxxxxxxxxxx
-								</div>
-							</div>
-						</section>
-						<section>
-							<div class="row">
-								<div class="col col-3 header">Address :</div>
-								<div class="col col-9">
-									xxxxxxxxxxxxxxxxx
-								</div>
-							</div>
-						</section>
-						<section>
-							<div class="row">
-								<div class="col col-3 header">Close Info :</div>
-								<div class="col col-9">
-									xxxxxxxxxxxxxxxxx
-								</div>
-							</div>
-						</section>
-						<section>
-							<div class="row">
-								<div class="col col-3 header">Finance :</div>
-								<div class="col col-9">
-									xxxxxxxxxxxxxxxxx
-								</div>
-							</div>
-						</section>
-						<section style="border-bottom: 2px solid;padding-bottom: 15px;">
-							<div class="row">
-								<div class="col col-3 header" style="white-space: nowrap;">Maximum Credit :</div>
-								<div class="col col-9">
-									xxxxxxxxxxxxxxxxx
-								</div>
-							</div>
-						</section>
-						<section>
-							<div class="row">
-								<div class="col col-3 header">Product :</div>
-								<div class="col col-9" style="color: green">
-									xxxxxxxxxxxxxxxxx
-								</div>
-							</div>
-						</section>
-						<section>
-							<div class="row">
-								<div class="col col-3 header">Show Time :</div>
-								<div class="col col-9" style="color: red">
-									xxxxxxxxxxxxxxxxx
-								</div>
-							</div>
-						</section>
-						<section>
-							<div class="row">
-								<div class="col col-3 header">QTY :</div>
-								<div class="col col-9" style="color: red">
-									xxxxxxxxxxxxxxxxx
-								</div>
-							</div>
-						</section>
-						<section>
-							<div class="row">
-								<label class="col col-2 header">Remark</label>
-								<div class="input" style="padding: 25px 20px 0px 20px;">
-									<label class="input">
-										<textarea rows="4" name="remark" id="remark"></textarea>
-									</label>
-								</div>
-							</div>
-						</section>
-					</fieldset>
-					<footer>		
+						</div>
+					</section>
+				<footer>		
 					<div class="row center">
-						<button type="submit" class="btn btn-primary" style="float: unset; font-weight: 400;">
-							Confirm
-						</button>
-						<button type="button" class="btn btn-default" style="float: unset; font-weight: 400;" data-dismiss="modal">
-							Cancel
-						</button>
+						<button type="submit" class="btn btn-primary" style="float: unset; font-weight: 400;">Confirm</button>
+						<button type="button" class="btn btn-default" style="float: unset; font-weight: 400;" data-dismiss="modal">Cancel</button>
 					</div>	
-					</footer>		
-				</div>
+				</footer>		
 			</form>
 		</div>
-		
 	</div>
 </div>
 <!-- ==========================CONTENT ENDS HERE ========================== -->

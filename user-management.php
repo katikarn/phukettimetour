@@ -136,27 +136,22 @@
 							<div class="checkbox"  style="padding-left: 0px;">
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #5dc156;">Active</span></label>
+										<input type="checkbox" name="status" id="StatusA" value="Active" onclick="filterCheckbox();" checked ><i></i><span style="background-color: Green">Active</span></label>
 								</div>
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
+										<input type="checkbox" name="status" id="StatusI" value="Inactive" onclick="filterCheckbox();" checked ><i></i><span style="background-color: red">Inactive</span></label>
 								</div>
 								<div class="col-xs-3 col-md-3">
 									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: #ffba42;">Cancel</span></label>
-								</div>
-								<div class="col-xs-3 col-sm-4 col-md-3">
-									<button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button>
+										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: Orange">Cancel</span></label>
 								</div>
 							</div>
 						</div>
-						
 					</div>
 					
 					<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
 						<div>
-							
 							<!-- widget content -->
 							<div class="widget-body no-padding">
 								
@@ -167,7 +162,7 @@
 											<th data-class="expand">Email</th>
 											<th data-hide="phone">Type</th>
 											<th>Status</th>
-											<th></th>
+											<th class="center"><button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -183,17 +178,16 @@
 												while($row = mysqli_fetch_assoc($result)){
 													if($row['status'] == 'A'){
 														$statusUser = '<font color="green">Active</font>';
-														}else if($row['status'] == 'I'){
-														$statusUser = 'Inactive';
-														
-														}else if($row['status'] == 'C'){
-														$statusUser = '<font color="red">Cancel</font>';
+													}else if($row['status'] == 'I'){
+														$statusUser = '<font color="red">Inactive</font>';
+													}else if($row['status'] == 'C'){
+														$statusUser = '<font color="Orange">Cancel</font>';
 													}
 													if($row['type'] == 'S'){
 														$typeUser = 'Staff';
-														}else if($row['type'] == 'M'){
+													}else if($row['type'] == 'M'){
 														$typeUser = 'Manager';
-														}else if($row['type'] == 'A'){
+													}else if($row['type'] == 'A'){
 														$typeUser = 'Admin';
 													}?>
 													<tr>
@@ -204,7 +198,7 @@
 														<td><?=$row['email']?></td>
 														<td><?=$typeUser?></td>
 														<td><?=$statusUser?></td>
-														<td class="center"><a onclick="resetModal();" class="btn btn-small btn-primary"
+														<td class="center"><a onclick="resetModal();" class="btn btn-small btn-success"
 															data-toggle="modal"
 															data-target="#myModal"
 															data-whatever="<?=$row['userid']?>" >Edit</a>
@@ -251,13 +245,13 @@
 										<div class="inline-group">
 											<label class="radio">
 												<input type="radio" name="status" value="A" id="m_StatusA" checked=true>
-												<i></i><span style="background-color: #5dc156;">Active</span></label>
+												<i></i><span style="background-color: green">Active</span></label>
 											<label class="radio">
 												<input type="radio" name="status" value="I" id="m_StatusI">
-												<i></i><span style="background-color: #6dd0ca;">Inactive</span></label>
+												<i></i><span style="background-color: red">Inactive</span></label>
 											<label class="radio">
 												<input type="radio" name="status" value="C" id="m_StatusC">
-												<i></i><span style="background-color: #ffba42;">Cancel</span></label>
+												<i></i><span style="background-color: Orange">Cancel</span></label>
 										</div>
 									</label>
 								</div>

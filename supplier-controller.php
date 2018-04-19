@@ -68,7 +68,7 @@
                         `supplier_account_tel`='$supplier_account_tel', `supplier_account_email`='$supplier_account_email', `supplier_remark`='$supplier_remark',
                         `updatedatetime`=NOW(), `updateby`='$LoginByUser'
 					WHERE `supplier_id` = '$supplier_id'";
-		}else {
+        }else {
             $sql = "";
         }
         if ($sql<>"")   {
@@ -76,14 +76,13 @@
             if($_POST["submitAddSupplier"] == "Insert"){
                 header("location: supplier-management.php");
             }
-		    //echo "result : ".$result."<br>";
-		    if(!$result) {
-			    //echo "<script>alert('Failed to added.This user is already used.!'); window.location='supplier-management.php'</script>";
-		    }else{
-			    //echo "<script>alert('User successfully added!'); window.location='supplier-management.php'</script>";
-            }
         }
-	}else{
-		// echo "not ok";
-	}
+    }
+    if (isset($_GET['hAction']))   {
+        $sql = "DELETE FROM supplier WHERE supplier_id = '".$_GET['id']."'";
+        $result = mysqli_query($_SESSION['conn'] ,$sql);
+        if(!$result) {
+            echo "<script>alert('Failed to delete.This supplier is already used.!'); window.location='supplier-management.php'</script>";
+        }
+    }
 ?>

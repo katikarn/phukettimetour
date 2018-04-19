@@ -66,5 +66,13 @@
         }
 	}else{
 		// echo "not ok";
-	}
+    }
+    // Delete Action
+    if (isset($_GET['hAction']))   {
+        $sql = "DELETE FROM product WHERE product_id = '".$_GET['id']."'";
+        $result = mysqli_query($_SESSION['conn'] ,$sql);
+        if(!$result) {
+            echo "<script>alert('Failed to delete.This product is already used.!'); window.location='product-setup.php'</script>";
+        }
+    }
 ?>
