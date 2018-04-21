@@ -40,4 +40,15 @@
 		$row = mysqli_fetch_array($result);  
 		echo json_encode($row);
 	}
+
+	if(isset($_POST["booking_detail_id"]))  
+	{  
+		$query = 	"SELECT * FROM booking_detail, product, supplier WHERE 
+					booking_detail.product_id = product.product_id and
+					product.supplier_id = supplier.supplier_id and
+					booking_detail.booking_detail_id = '".$_POST["booking_detail_id"]."'";
+		$result = mysqli_query($_SESSION['conn'], $query);  
+		$row = mysqli_fetch_array($result);  
+		echo json_encode($row);
+	}
 ?>

@@ -2,7 +2,7 @@
 	session_start();
 	include('inc/auth.php');
 	include("inc/connectionToMysql.php");
-	//include("bookingList-confirm.php");
+	include("bookingList-controller.php");
 	/////////////////////////////////////////////////////////
 	//initilize the page
 	require_once ("inc/init.php");
@@ -190,7 +190,6 @@
 																supplier_reserv_line, supplier_reserv_fax, supplier_reserv_main,
 																booking.booking_id, booking_name, booking_pax, booking_nat, booking_tel, 
 																booking_line, booking_remark
-
 												FROM booking_detail, product, supplier, booking
 												WHERE booking_detail.product_id = product.product_id
 														and product.supplier_id = supplier.supplier_id
@@ -265,12 +264,16 @@
 													<td><?="<b>".$row['product_name']."</b>  ".$ProductOption?></td>
 													<td><?=number_format($row['booking_detail_qty'],0)?></td>
 													<td><i class="fa fa-info-circle" title="<?="Tel. ".$row['supplier_reserv_tel']."\n Fax. ".$row['supplier_reserv_fax']."\n Email. ".$row['supplier_reserv_email']."\n Line or WhatApp. ".$row['supplier_reserv_line']?>"></i> <?="[".$SupplierType."] ".$row['supplier_name']."<br>".$MainContract?></td>
-													<td class="center"><a href="bookingList-confirm.php?id=<?=$row['booking_detail_id']?>&hAction=Confirm" 
-														class="btn btn-small btn-primary bg-color-green">Confirm</a>
+													<td class="center">
+															<a onclick="resetModal();" class="btn btn-small bg-color-green txt-color-white"
+															data-toggle="modal"
+															data-target="#myModal_Confirm"
+															data-whatever="<?=$row['booking_detail_id']?>">Confirm</a>
+
 															<a onclick="resetModal();" class="btn btn-small bg-color-orange txt-color-white"
 															data-toggle="modal"
 															data-target="#myModal"
-															data-whatever="<?=$row['booking_detail_id']?>">Cancel</a>
+															data-whatever="<?=$row['booking_detail_id']?>">Reject</a>
 													</td>
 													</tr>
 													<?PHP
@@ -296,9 +299,9 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="header">Confirm to Cancel</h4>
+				<h4 class="header">Reject</h4>
 			</div>
-			<form action='bookingList-confirm.php' method='post' class="smart-form">
+			<form action='bookingList-confirm.php' method='post' id="product-form" class="smart-form">
 				<header>
 					Reason
 				</header>
@@ -306,13 +309,47 @@
 						<div class="row">
 							<div class="input" style="padding: 25px 20px 0px 20px;">
 								<label class="input">
-									<textarea rows="4" name="remark" id="remark"></textarea>
+									<textarea rows="4" name="txbbooking_detail_reject_reason" id="txbbooking_detail_reject_reason"></textarea>
 								</label>
 							</div>
 						</div>
 					</section>
 				<footer>		
 					<div class="row center">
+						<input type="hidden" name="booking_detail_id" id="booking_detail_id">
+						<button type="submit" class="btn btn-primary" style="float: unset; font-weight: 400;">Reject</button>
+						<button type="button" class="btn btn-default" style="float: unset; font-weight: 400;" data-dismiss="modal">Cancel</button>
+					</div>	
+				</footer>		
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Modal 2-->
+<div class="modal fade" id="myModal_Confirm" role="dialog">
+    <div class="modal-dialog modal-Adduser">
+		
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="header">Confirm</h4>
+			</div>
+			<form action='bookingList-confirm.php' method='post' id="confirm-form" class="smart-form">
+				<header>
+					Voucher No
+				</header>
+					<section>
+						<div class="row">
+							<div class="input" style="padding: 25px 20px 0px 20px;">
+									<input type="text" name="txbbooking_detail_confirm" id="txbbooking_detail_confirm">
+							</div>
+						</div>
+					</section>
+				<footer>		
+					<div class="row center">
+						<input type="hidden" name="booking_detail_id2" id="booking_detail_id2">
 						<button type="submit" class="btn btn-primary" style="float: unset; font-weight: 400;">Confirm</button>
 						<button type="button" class="btn btn-default" style="float: unset; font-weight: 400;" data-dismiss="modal">Cancel</button>
 					</div>	
@@ -334,21 +371,20 @@
 <script src="<?php echo ASSETS_URL; ?>/js/plugin/datatables/dataTables.tableTools.min.js"></script>
 <script src="<?php echo ASSETS_URL; ?>/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 <script src="<?php echo ASSETS_URL; ?>/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
-
 <script type="text/javascript">
-	
+
 	// DO NOT REMOVE : GLOBAL FUNCTIONS!
 	var otable;
 	$(document).ready(function() {
-		
+
 		/* BASIC ;*/
 		var responsiveHelper_dt_basic = undefined;
-		
+
 		var breakpointDefinition = {
 			tablet : 1024,
 			phone : 480
 		};
-		
+
 		$('#dt_basic').dataTable({
 			"sDom": 
 			"t"+
@@ -370,116 +406,142 @@
 		/* Custom Search box*/
 		var table_dtbasic = $('#dt_basic').DataTable();
 		otable = $('#dt_basic').dataTable();
-		
 		$( "#column3_search" ).keyup(function() {
 			//alert( "Handler for .keyup() called." );
 			table_dtbasic.search( this.value ).draw();
 		});
+
 		$('#myModal').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget) // Button that triggered the modal
 			var recipient = button.data('whatever') // Extract info from data-* attributes
 			var modal = $(this);
-			var dataString = 'user_id=' + recipient;
+			var dataString = 'booking_detail_id=' + recipient;
 			console.log('dataString :'+dataString);
-            $.ajax({
-                
-                url: "fetchEdit.php",
+			$.ajax({
+				
+				url: "fetchEdit.php",
 				type:"POST",
-                data: dataString,
+				data: dataString,
 				dataType : 'json',
-                
-                success: function (data) {
-					if(data != null){
-						console.log('data :'+data);
-						console.log('data.username :'+data.username);
-						console.log('data.status :'+data.status);
-						$('#username').val(data.username);  
-						$('#email').val(data.email);  
-						$('#password').val(data.password);  
-						$('#type').val(data.type);   
-						$('#user_id').val(data.userid);
-						$('#m_Status' + data.status).prop('checked',true);
-						$('#m_type' + data.type).prop('checked',true);
-						$('#submitAddUser').val("Update");  
-					}else{
-						$('#username').val('');  
-						$('#email').val('');  
-						$('#password').val('');  
-						$('#type').val('');    
-						$('#user_id').val('');
-						$('#m_StatusA').prop('checked',false);
-						$('#m_StatusI').prop('checked',false);
-						$('#m_StatusC').prop('checked',false);
-						$('#m_typeS').prop('checked',false);
-						$('#m_typeM').prop('checked',false);
-						$('#m_typeA').prop('checked',false);
-						$('#submitAddUser').val("Insert");
-					}
-				},
-                error: function(err) {
-                    console.log('err : '+err);
 					
+				success: function (data) {
+					$('#booking_detail_id').val(data.booking_detail_id);
+				},
+				error: function(err) {
+					console.log('err : '+err);
 				}
 			});  
 		});
 
-		//// Validate
-		//// set default 
-		$('p[for="username"]').hide();
-		$('p[for="password"]').hide();
-		$('p[for="status"]').hide();
-		$('p[for="type"]').hide();
-		$('p[for="email"]').hide();
-
-		$( "#username" ).keyup(function() {
-			if($( "#username" ).val().length < 6){
-				//console.log('test' + $( "#username" ).val().length);
-				$('p[for="username"]').show();
-			}else{
-				//console.log('test' + $( "#username" ).val().length);
-				$('p[for="username"]').hide();
-			}
+		$('#myModal_Confirm').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget) // Button that triggered the modal
+			var recipient = button.data('whatever') // Extract info from data-* attributes
+			var modal = $(this);
+			var dataString = 'booking_detail_id=' + recipient;
+			console.log('dataString :'+dataString);
 			
-			
+			$.ajax({
+				
+				url: "fetchEdit.php",
+				type:"POST",
+				data: dataString,
+				dataType : 'json',
+
+				success: function (data) {
+					$('#booking_detail_id2').val(data.booking_detail_id);		
+				},
+				error: function(err) {
+					console.log('err : '+err);
+				}
+			});  
+		});
+		//// --------------------------- Validate------------------------------
+		var errorClass = 'invalid';
+		var errorElement = 'em';
+
+		var $contactForm = $("#confirm-form").validate({
+				errorClass		: errorClass,
+				errorElement	: errorElement,
+				highlight: function(element) {
+					$(element).parent().removeClass('state-success').addClass('state-error');
+					//$(element).parent().addClass("required");
+					if($(element).parent().hasClass( "required" )){
+						$(element).parent().css("border-left", "7px solid #FF3333");
+					}
+					$(element).removeClass('valid');
+				},
+				unhighlight: function(element) {
+					$(element).parent().removeClass('state-error').addClass('state-success');
+					//$(element).parent().removeClass("required");
+					if($(element).parent().hasClass( "required" )){
+						$(element).parent().css("border-left", "7px solid #047803");
+					}
+					$(element).addClass('valid');
+				},
+				submitHandler : function(form) {
+				if (confirm("Do you want to save the data?")) {
+					form.submit();
+				}
+				},
+
+				// Do not change code below
+				errorPlacement : function(error, element) {
+					error.insertAfter(element.parent());
+				}
+			});
+
+			var $contactForm2 = $("#product-form").validate({
+				errorClass		: errorClass,
+				errorElement	: errorElement,
+				highlight: function(element) {
+					$(element).parent().removeClass('state-success').addClass('state-error');
+					//$(element).parent().addClass("required");
+					if($(element).parent().hasClass( "required" )){
+						$(element).parent().css("border-left", "7px solid #FF3333");
+					}
+					$(element).removeClass('valid');
+				},
+				unhighlight: function(element) {
+					$(element).parent().removeClass('state-error').addClass('state-success');
+					//$(element).parent().removeClass("required");
+					if($(element).parent().hasClass( "required" )){
+						$(element).parent().css("border-left", "7px solid #047803");
+					}
+					$(element).addClass('valid');
+				},
+				submitHandler : function(form) {
+				if (confirm("Do you want to save the data?")) {
+					form.submit();
+				}
+				},
+				// Rules for form validation
+				rules : {
+					txbbooking_detail_reject_reason : {
+						required : true
+					}		
+				},
+				// Messages for form validation
+				messages : {
+					txbbooking_detail_reject_reason : {
+						required : 'Please fill Remark'
+					}
+				},
+
+				// Do not change code below
+				errorPlacement : function(error, element) {
+					error.insertAfter(element.parent());
+				}
+			});
 		});
 
-		$( "#password" ).keyup(function() {
-			if($( "#password" ).val().length < 6 ){
-				$('p[for="password"]').html("Password must more than 6 character");
-				$('p[for="password"]').show();
-			}else{
-				if($( "#password" ).val().match(/\d/))
-				{
-					$('p[for="password"]').hide();
-				}else{
-					$('p[for="password"]').html("Password must more less than 1 number");
-					$('p[for="password"]').show();
-				}	
-			}
-		});
+		/* END BASIC */
 
-		$( "#email" ).keyup(function() {
-			if($( "#email" ).val().match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
-				$('p[for="email"]').hide();
-			}else{
-				$('p[for="email"]').show();
-			}
-		});
-		
-
-	});
-
-	/* END BASIC */
-	function filterCheckbox(){
-		
-		var types = $('input:checkbox[name="status"]:checked').map(function() {
-    		return '^' + this.value + '\$';
-		}).get().join('|');
-		//filter in column 0, with an regex, no smart filtering, no inputbox,not case sensitive
-		//console.log(types);
-		otable.fnFilter(types, 3, true, false, false, false);
-	}
-	
+	function resetModal(){
+			$( "#product-form" ).find( ".state-error" ).removeClass( "state-error" );
+			$( "#product-form" ).find( ".state-success" ).removeClass( "state-success" );
+			$( "#product-form" ).find( ".required" ).css("border-left", "7px solid #FF3333");
+			$( "em" ).remove();
+		}
 </script>
 
 <?php

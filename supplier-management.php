@@ -397,7 +397,7 @@
 									</div>
 									<label class="label col col-3 header">Email</label>
 									<div class="col col-9">
-										<label class="input">
+										<label class="input required">
 											<input type="text" name="txbsupplier_sales_email" id="txbsupplier_sales_email" maxlength="50">
 										</label>
 									</div>
@@ -418,19 +418,19 @@
 								<div class="row">
 									<label class="label col col-3 header">Name</label>
 									<div class="col col-9">
-										<label class="input">
+										<label class="input required">
 											<input type="text" name="txbsupplier_reserv_name" id="txbsupplier_reserv_name" maxlength="50">
 										</label>
 									</div>
 									<label class="label col col-3 header">Tel</label>
 									<div class="col col-9">
-										<label class="input">
+										<label class="input required">
 											<input type="text" name="txbsupplier_reserv_tel" id="txbsupplier_reserv_tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="15">
 										</label>
 									</div>
 									<label class="label col col-3 header">Email</label>
 									<div class="col col-9">
-										<label class="input">
+										<label class="input required">
 											<input type="text" name="txbsupplier_reserv_email" id="txbsupplier_reserv_email" maxlength="50">
 										</label>
 									</div>
@@ -601,7 +601,7 @@
 						$('#txbsupplier_max_credit').val(data.supplier_max_credit);
 						$('#txbsupplier_credit_term').val(data.supplier_credit_term);
 						$('#txbsupplier_sales_name').val(data.supplier_sales_name);
-						$('#txbsupplier_sales_tel').val(data.supplier_sales_tel);	
+						$('#txbsupplier_sales_tel').val(data.supplier_sales_tel);
 						$('#txbsupplier_sales_email').val(data.supplier_sales_email);
 						$('#txbsupplier_sales_line').val(data.supplier_sales_line);	
 						$('#txbsupplier_reserv_name').val(data.supplier_reserv_name);
@@ -707,6 +707,7 @@
 					required : true
 				},
 				txbsupplier_sales_email : {
+					required : true,
 					email : true
 				},
 				txbsupplier_reserv_email : {
@@ -714,6 +715,12 @@
 				},
 				txbsupplier_account_email : {
 					email : true
+				},
+				txbsupplier_reserv_name : {
+					required : true
+				},
+				txbsupplier_reserv_tel : {
+					required : true
 				}
 			},
 
@@ -738,6 +745,7 @@
 					required : 'Please fill Sales contract Tel'
 				},
 				txbsupplier_sales_email : {
+					required : 'Please fill Sales Email',
 					email : 'Sales Email format incorrect'
 				},
 				txbsupplier_reserv_email : {
@@ -745,7 +753,13 @@
 				},
 				txbsupplier_account_email : {
 					email : 'Account Email format incorrect'
-				}
+				},
+				txbsupplier_reserv_name : {
+					required : 'Please fill Supplier Name'
+				},
+				txbsupplier_reserv_tel : {
+					required : 'Please fill Reservation Tel'
+				},
 			},
 
 			// Do not change code below

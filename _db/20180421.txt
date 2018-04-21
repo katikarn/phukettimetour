@@ -1,0 +1,579 @@
+-- phpMyAdmin SQL Dump
+-- version 4.6.5.2
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Apr 21, 2018 at 04:19 AM
+-- Server version: 10.1.21-MariaDB
+-- PHP Version: 7.1.1
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `webtour`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `agent`
+--
+
+CREATE TABLE `agent` (
+  `agent_id` int(11) NOT NULL,
+  `agent_status` char(1) NOT NULL,
+  `agent_name` varchar(100) NOT NULL,
+  `agent_name_acc` varchar(100) NOT NULL,
+  `agent_tel` varchar(50) NOT NULL,
+  `agent_address` varchar(250) NOT NULL,
+  `agent_license` varchar(20) NOT NULL,
+  `agent_section` char(1) NOT NULL,
+  `agent_file` varchar(100) NOT NULL,
+  `agent_username` varchar(25) NOT NULL,
+  `agent_password` varchar(50) NOT NULL,
+  `agent_pay_type` char(1) NOT NULL,
+  `agent_amount` decimal(10,2) NOT NULL,
+  `agent_creditterm` int(11) NOT NULL,
+  `agent_vat_type` char(1) NOT NULL,
+  `agent_price_type` char(1) NOT NULL,
+  `agent_main_name` varchar(50) NOT NULL,
+  `agent_main_tel` varchar(15) NOT NULL,
+  `agent_main_email` varchar(50) NOT NULL,
+  `agent_main_line` varchar(50) NOT NULL,
+  `agent_reserv_name` varchar(50) NOT NULL,
+  `agent_reserv_tel` varchar(15) NOT NULL,
+  `agent_reserv_email` varchar(50) NOT NULL,
+  `agent_reserv_line` varchar(50) NOT NULL,
+  `agent_reserv_fax` varchar(15) NOT NULL,
+  `agent_reserv_main` char(1) NOT NULL,
+  `agent_account_name` varchar(50) NOT NULL,
+  `agent_account_tel` varchar(15) NOT NULL,
+  `agent_account_email` varchar(50) NOT NULL,
+  `agent_remark` varchar(500) NOT NULL,
+  `createdatetime` datetime NOT NULL,
+  `createby` varchar(25) NOT NULL,
+  `updatedatetime` datetime NOT NULL,
+  `updateby` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `agent`
+--
+
+INSERT INTO `agent` (`agent_id`, `agent_status`, `agent_name`, `agent_name_acc`, `agent_tel`, `agent_address`, `agent_license`, `agent_section`, `agent_file`, `agent_username`, `agent_password`, `agent_pay_type`, `agent_amount`, `agent_creditterm`, `agent_vat_type`, `agent_price_type`, `agent_main_name`, `agent_main_tel`, `agent_main_email`, `agent_main_line`, `agent_reserv_name`, `agent_reserv_tel`, `agent_reserv_email`, `agent_reserv_line`, `agent_reserv_fax`, `agent_reserv_main`, `agent_account_name`, `agent_account_tel`, `agent_account_email`, `agent_remark`, `createdatetime`, `createby`, `updatedatetime`, `updateby`) VALUES
+(2, 'A', 'Easy Travel', '2222', '3333333333333333333', '4', '5', 'T', '', '000010', '666666666666666666', 'C', '1.00', 1, 'I', 'O', '2222222222222222222222', '333333333333333', '4@34', 'sfsf', 'werwerewr', '234234234', '42342@werwer', '234234234', '333333333333333', 'F', 'qwer', '234234234', 'qwerwer@ssweer', 'werwerwer', '2018-04-05 01:09:46', 'admin', '2018-04-17 01:45:35', 'admin'),
+(16, 'A', 'Ocompany', 'Ocompany', '3111111111', '4', '5', 'D', '', '0000050', '7777777', 'C', '7.00', 7, 'I', 'O', '1', '211111111', '3@eee', 'qqq@www', 'a', '1', '2@ww', '3', '4', 'T', '1', '2', '3@4', '6', '2018-04-05 01:23:03', 'admin', '2018-04-17 01:48:23', 'admin');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `audit_log`
+--
+
+CREATE TABLE `audit_log` (
+  `logid` int(11) NOT NULL,
+  `function` varchar(50) NOT NULL,
+  `action` varchar(50) NOT NULL,
+  `detail` varchar(500) NOT NULL,
+  `createdatetime` datetime NOT NULL,
+  `createby` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking`
+--
+
+CREATE TABLE `booking` (
+  `booking_id` int(11) NOT NULL,
+  `booking_status` char(1) NOT NULL,
+  `agent_id` int(11) NOT NULL,
+  `booking_name` varchar(100) NOT NULL,
+  `booking_pax` int(11) NOT NULL,
+  `booking_nat` varchar(50) NOT NULL,
+  `booking_tel` varchar(50) NOT NULL,
+  `booking_line` varchar(50) NOT NULL,
+  `booking_remark` varchar(500) NOT NULL,
+  `createdatetime` datetime NOT NULL,
+  `createby` varchar(25) NOT NULL,
+  `updatedatetime` datetime NOT NULL,
+  `updateby` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `booking`
+--
+
+INSERT INTO `booking` (`booking_id`, `booking_status`, `agent_id`, `booking_name`, `booking_pax`, `booking_nat`, `booking_tel`, `booking_line`, `booking_remark`, `createdatetime`, `createby`, `updatedatetime`, `updateby`) VALUES
+(2, 'N', 2, 'MR. Testa', 4, 'Thai', '081347751', 'LKK', 'NO', '0000-00-00 00:00:00', 'admin', '2018-04-21 03:40:40', 'admin'),
+(10, 'N', 16, 'MISS PATY', 3, 'Japan', '099999999', '', '', '2018-04-13 21:58:51', 'admin', '2018-04-20 01:47:08', 'admin');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking_detail`
+--
+
+CREATE TABLE `booking_detail` (
+  `booking_detail_id` int(11) NOT NULL,
+  `booking_detail_status` char(1) NOT NULL,
+  `booking_detail_note` varchar(250) NOT NULL,
+  `booking_detail_date` date NOT NULL,
+  `booking_detail_time` time NOT NULL,
+  `booking_detail_price` decimal(8,2) NOT NULL,
+  `booking_detail_vat` decimal(8,2) NOT NULL,
+  `booking_detail_qty` int(11) NOT NULL,
+  `booking_detail_total_amount` decimal(10,2) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `booking_detail_confirm` varchar(100) NOT NULL,
+  `booking_detail_reject_reason` varchar(500) NOT NULL,
+  `createdatetime` datetime NOT NULL,
+  `createby` varchar(25) NOT NULL,
+  `updatedatetime` datetime NOT NULL,
+  `updateby` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `booking_detail`
+--
+
+INSERT INTO `booking_detail` (`booking_detail_id`, `booking_detail_status`, `booking_detail_note`, `booking_detail_date`, `booking_detail_time`, `booking_detail_price`, `booking_detail_vat`, `booking_detail_qty`, `booking_detail_total_amount`, `product_id`, `booking_id`, `booking_detail_confirm`, `booking_detail_reject_reason`, `createdatetime`, `createby`, `updatedatetime`, `updateby`) VALUES
+(4, 'R', '', '0000-00-00', '00:00:00', '0.00', '0.00', 0, '0.00', 13, 2, '', 'OOP', '2018-04-03 00:00:00', '', '2018-04-21 01:10:11', 'admin'),
+(5, 'C', 'asd', '2018-04-03', '06:00:00', '1.00', '1.00', 1, '11.00', 27, 2, 'VOU112', 'll', '2018-04-20 00:00:00', 'A', '2018-04-21 01:09:52', 'admin');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `invoice`
+--
+
+CREATE TABLE `invoice` (
+  `invoiceid` int(11) NOT NULL,
+  `status` char(1) NOT NULL,
+  `paymentstatus` char(1) NOT NULL,
+  `note` varchar(500) NOT NULL,
+  `invoicedate` date NOT NULL,
+  `agentid` int(11) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `agentname` varchar(50) NOT NULL,
+  `agentaddress` varchar(50) NOT NULL,
+  `agentcontactname` varchar(50) NOT NULL,
+  `agentcontacttel` varchar(15) NOT NULL,
+  `maximumcredit` decimal(9,2) NOT NULL,
+  `remaincredit` decimal(9,2) NOT NULL,
+  `creditterm` int(11) NOT NULL,
+  `pricetype` char(1) NOT NULL,
+  `vattype` char(1) NOT NULL,
+  `createdatetime` datetime NOT NULL,
+  `createby` varchar(25) NOT NULL,
+  `updatedatetime` datetime NOT NULL,
+  `updateby` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `invoice_detail`
+--
+
+CREATE TABLE `invoice_detail` (
+  `invoicedetailid` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `note` varchar(500) NOT NULL,
+  `priceunit` decimal(8,2) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `productid` int(11) NOT NULL,
+  `supplierid` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `detail` varchar(250) NOT NULL,
+  `t_seattype` char(1) NOT NULL,
+  `t_tickettype` char(1) NOT NULL,
+  `d_detail` varchar(500) NOT NULL,
+  `d_freepickup` char(1) NOT NULL,
+  `c_cartype` varchar(50) NOT NULL,
+  `c_maximumseat` int(11) NOT NULL,
+  `costprice` decimal(8,2) NOT NULL,
+  `normalprice` decimal(8,2) NOT NULL,
+  `salesprice1` decimal(8,2) NOT NULL,
+  `salesprice2` decimal(8,2) NOT NULL,
+  `createdatetime` datetime NOT NULL,
+  `createby` varchar(25) NOT NULL,
+  `updatedatetime` datetime NOT NULL,
+  `updateby` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `invoice_paymentapprove`
+--
+
+CREATE TABLE `invoice_paymentapprove` (
+  `invoicepaymentid` int(11) NOT NULL,
+  `invoiceid` int(11) NOT NULL,
+  `paidstatus` char(1) NOT NULL,
+  `paidamount` decimal(8,2) NOT NULL,
+  `note` varchar(500) NOT NULL,
+  `createdatetime` datetime NOT NULL,
+  `createby` varchar(25) NOT NULL,
+  `updatedatetime` datetime NOT NULL,
+  `updateby` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product`
+--
+
+CREATE TABLE `product` (
+  `product_id` int(11) NOT NULL,
+  `supplier_id` int(11) NOT NULL,
+  `product_status` char(1) NOT NULL,
+  `product_name` varchar(50) NOT NULL,
+  `product_desc` varchar(250) NOT NULL,
+  `product_detail` varchar(500) NOT NULL,
+  `product_file1` varchar(50) NOT NULL,
+  `product_file2` varchar(50) NOT NULL,
+  `product_file3` varchar(50) NOT NULL,
+  `product_confirm_class` char(1) NOT NULL,
+  `product_seat` char(1) NOT NULL,
+  `product_for` char(1) NOT NULL,
+  `product_showtime` time NOT NULL,
+  `product_endtime` time NOT NULL,
+  `product_duration` varchar(20) NOT NULL,
+  `product_car_type` char(1) NOT NULL,
+  `product_meal_type` char(1) NOT NULL,
+  `product_cost_price` decimal(8,2) NOT NULL,
+  `product_normal_price` decimal(8,2) NOT NULL,
+  `product_oversea_price` decimal(8,2) NOT NULL,
+  `product_price_l1` decimal(8,2) NOT NULL,
+  `product_price_l2` decimal(8,2) NOT NULL,
+  `product_remark` varchar(500) NOT NULL,
+  `createdatetime` datetime NOT NULL,
+  `createby` varchar(25) NOT NULL,
+  `updatedatetime` datetime NOT NULL,
+  `updateby` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `product`
+--
+
+INSERT INTO `product` (`product_id`, `supplier_id`, `product_status`, `product_name`, `product_desc`, `product_detail`, `product_file1`, `product_file2`, `product_file3`, `product_confirm_class`, `product_seat`, `product_for`, `product_showtime`, `product_endtime`, `product_duration`, `product_car_type`, `product_meal_type`, `product_cost_price`, `product_normal_price`, `product_oversea_price`, `product_price_l1`, `product_price_l2`, `product_remark`, `createdatetime`, `createby`, `updatedatetime`, `updateby`) VALUES
+(12, 3, 'A', 'Phuket fantasea VIP', 'Phuket Short Description', 'Phuket Detail', '', '', '', 'M', 'Y', '', '21:00:00', '00:00:00', '1:00', '', '', '1.00', '2.00', '3.00', '4.00', '5.00', '', '2018-04-14 23:28:15', 'admin', '2018-04-15 02:04:46', 'admin'),
+(13, 3, 'A', 'Phuket fantasea VIP', 'Phuket Short Description', 'Phuket Detail', '', '', '', 'M', 'N', 'S', '21:00:00', '00:00:00', '1:00', '', '', '1.00', '2.00', '3.00', '4.00', '5.00', '', '2018-04-14 23:31:48', 'admin', '2018-04-15 02:00:53', 'admin'),
+(14, 3, 'A', 'Phuket fantasea', 'Phuket Short Description', 'Phuket Detail', '', '', '', 'M', 'Y', 'A', '21:00:00', '00:00:00', '1:00', '', '', '1.00', '2.00', '3.00', '4.00', '5.00', '', '2018-04-14 23:31:53', 'admin', '2018-04-15 01:44:13', 'admin'),
+(15, 3, 'A', 'Phuket fantasea', '', '', '', '', '', 'M', 'N', 'S', '21:00:00', '00:00:00', '', '', '', '5.00', '6.00', '7.00', '8.00', '9.00', '', '2018-04-15 00:06:25', 'admin', '2018-04-15 01:43:46', 'admin'),
+(16, 8, 'A', 'PP VIP', '5 Island, include Lunch, Ferry', '', '', '', '', 'M', 'Y', '', '09:00:00', '15:30:00', '', '', '', '1.00', '1.00', '1.00', '1.00', '1.00', '', '2018-04-15 02:07:00', 'admin', '2018-04-15 02:30:31', 'admin'),
+(17, 8, 'A', 'James bond island', 'Kayak, Include lunch', '', '', '', '', 'M', 'Y', '', '09:00:00', '14:00:00', '', '', '', '1.00', '1.00', '1.00', '1.00', '1.00', '', '2018-04-15 02:09:08', 'admin', '2018-04-15 02:34:49', 'admin'),
+(18, 9, 'A', 'Airport to Partong', '', '', '', '', '', 'M', 'N', '', '00:00:00', '00:00:00', '', 'F', '', '5.00', '5.00', '5.00', '5.00', '5.00', '', '2018-04-15 02:37:06', 'admin', '2018-04-15 02:37:06', 'admin'),
+(19, 9, 'A', 'Partong hotel to Phuket Fantasea', '', '', '', '', '', 'M', 'N', '', '00:00:00', '00:00:00', '', 'T', '', '1.00', '1.00', '1.00', '1.00', '1.00', '', '2018-04-15 02:40:40', 'admin', '2018-04-15 03:05:22', 'admin'),
+(25, 9, 'A', 'Partong hotel to PP Port', '', '', '', '', '', 'M', 'N', '', '00:00:00', '00:00:00', '', 'F', '', '1.00', '1.00', '1.00', '1.00', '1.00', '', '2018-04-15 03:03:35', 'admin', '2018-04-15 03:05:52', 'admin'),
+(26, 10, 'A', 'Lunch Buffet', 'Lunch Buffet Indea Vet', '', '', '', '', 'M', 'N', '', '11:00:00', '00:00:00', '', '', '1', '8.00', '8.00', '8.00', '8.00', '8.00', '', '2018-04-15 03:24:52', 'admin', '2018-04-15 03:27:02', 'admin'),
+(27, 10, 'A', 'Lunch Buffet', '', '', '', '', '', 'M', 'N', '', '11:00:00', '00:00:00', '', '', '1', '8.00', '8.00', '8.00', '8.00', '8.00', '', '2018-04-15 03:25:33', 'admin', '2018-04-15 03:28:28', 'admin'),
+(28, 11, 'A', 'XX Expense', '', '', '', '', '', 'M', 'N', '', '00:00:00', '00:00:00', '', '', '', '300.00', '2.00', '2.00', '2.00', '2.00', '', '2018-04-15 03:32:30', 'admin', '2018-04-15 03:32:30', 'admin'),
+(29, 11, 'A', 'XX2 Expense', '', '', '', '', '', 'M', 'N', '', '00:00:00', '00:00:00', '', '', '', '300.00', '2.00', '2.00', '2.00', '2.00', '', '2018-04-15 03:34:59', 'admin', '2018-04-15 03:41:17', 'admin'),
+(30, 11, 'A', 'Tip Expense', '', '', '', '', '', 'M', 'N', '', '00:00:00', '00:00:00', '', '', '', '3.00', '3.00', '3.00', '3.00', '33.00', '', '2018-04-15 03:37:40', 'admin', '2018-04-15 03:38:05', 'admin');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supplier`
+--
+
+CREATE TABLE `supplier` (
+  `supplier_id` int(11) NOT NULL,
+  `supplier_status` char(1) NOT NULL,
+  `supplier_type` char(1) NOT NULL,
+  `supplier_destination` varchar(50) NOT NULL,
+  `supplier_name` varchar(100) NOT NULL,
+  `supplier_name_acc` varchar(100) NOT NULL,
+  `supplier_address` varchar(250) NOT NULL,
+  `supplier_tel` varchar(15) NOT NULL,
+  `supplier_website` varchar(50) NOT NULL,
+  `supplier_googlemap` varchar(250) NOT NULL,
+  `supplier_contract_file` varchar(100) NOT NULL,
+  `supplier_other_file` varchar(100) NOT NULL,
+  `supplier_paytype` char(1) NOT NULL,
+  `supplier_max_credit` decimal(9,2) NOT NULL,
+  `supplier_credit_term` int(11) NOT NULL,
+  `supplier_sales_name` varchar(50) NOT NULL,
+  `supplier_sales_tel` varchar(50) NOT NULL,
+  `supplier_sales_email` varchar(50) NOT NULL,
+  `supplier_sales_line` varchar(50) NOT NULL,
+  `supplier_reserv_name` varchar(50) NOT NULL,
+  `supplier_reserv_tel` varchar(50) NOT NULL,
+  `supplier_reserv_email` varchar(50) NOT NULL,
+  `supplier_reserv_line` varchar(50) NOT NULL,
+  `supplier_reserv_fax` varchar(50) NOT NULL,
+  `supplier_reserv_main` varchar(50) NOT NULL,
+  `supplier_account_name` varchar(50) NOT NULL,
+  `supplier_account_tel` varchar(50) NOT NULL,
+  `supplier_account_email` varchar(50) NOT NULL,
+  `supplier_remark` varchar(500) NOT NULL,
+  `createdatetime` datetime NOT NULL,
+  `createby` varchar(25) NOT NULL,
+  `updatedatetime` datetime NOT NULL,
+  `updateby` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `supplier`
+--
+
+INSERT INTO `supplier` (`supplier_id`, `supplier_status`, `supplier_type`, `supplier_destination`, `supplier_name`, `supplier_name_acc`, `supplier_address`, `supplier_tel`, `supplier_website`, `supplier_googlemap`, `supplier_contract_file`, `supplier_other_file`, `supplier_paytype`, `supplier_max_credit`, `supplier_credit_term`, `supplier_sales_name`, `supplier_sales_tel`, `supplier_sales_email`, `supplier_sales_line`, `supplier_reserv_name`, `supplier_reserv_tel`, `supplier_reserv_email`, `supplier_reserv_line`, `supplier_reserv_fax`, `supplier_reserv_main`, `supplier_account_name`, `supplier_account_tel`, `supplier_account_email`, `supplier_remark`, `createdatetime`, `createby`, `updatedatetime`, `updateby`) VALUES
+(3, 'A', 'S', 'Phuket', 'Phuket Fan', 'K Account Name', 'Address', '0999999999', 'www.phuket.com', '', '', '', 'T', '15.00', 100000, 'K Sales', '08888888', 'Sales@PhuketF.com', '7777777', 'Resevation', '0666666666', 'Reservation@phuket', 'LineID', '023333333', 'F', 'K Account', '09999999', '3@2', 'Remark', '2018-04-04 00:27:51', 'admin', '2018-04-17 03:16:15', 'admin'),
+(8, 'A', 'D', 'Phuket', 'PP Transport', 'PP Transport', 'PP Address', '0000000', '', '', '', '', 'T', '0.00', 0, 'PP T', '099999', '', '', '', '', '', '', '', '', '', '', '', '', '2018-04-15 02:06:04', 'admin', '2018-04-15 02:06:04', 'admin'),
+(9, 'A', 'T', 'Phuket', 'Tawan transfer', 'Tawan transfer', '', '', '', '', '', '', 'T', '0.00', 0, 'Tawan', '099999999', '', '', '', '', '', '', '', '', '', '', '', '', '2018-04-15 02:36:10', 'admin', '2018-04-16 13:07:02', 'admin'),
+(10, 'I', 'M', 'Phuket', 'ABC Seafood', 'ABC Seafood', '', '', '', '', '', '', 'T', '0.00', 0, 't', '08888888', '', '', '', '', '', '', '', '', '', '', '', '', '2018-04-15 03:08:00', 'admin', '2018-04-17 01:07:39', 'admin'),
+(11, 'A', 'O', 'Phuket', 'PhuketTimeTour', 'PhuketTimeTour', '', '', '', '', '', '', 'T', '0.00', 0, 'TT', '099999', '', '', '', '', '', '', '', '', '', '', '', '', '2018-04-15 03:29:19', 'admin', '2018-04-15 03:29:19', 'admin'),
+(12, 'A', 'S', 'Phuket', 'Siamniramit phuket', 'Siamniramit phuket', '', '', '', '', '', '', 'T', '0.00', 0, 'd', '1', '', '', '', '', '', '', '', '', '', '', '', '', '2018-04-15 03:40:29', 'admin', '2018-04-15 03:41:01', 'admin');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supplier_showtime`
+--
+
+CREATE TABLE `supplier_showtime` (
+  `showtimeid` int(11) NOT NULL,
+  `supplierid` int(11) NOT NULL,
+  `showtime` varchar(50) NOT NULL,
+  `status` char(1) NOT NULL,
+  `note` varchar(500) NOT NULL,
+  `createdatetime` datetime NOT NULL,
+  `createby` varchar(25) NOT NULL,
+  `updatedatetime` datetime NOT NULL,
+  `updateby` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `userid` int(11) NOT NULL,
+  `username` varchar(25) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `type` char(1) NOT NULL,
+  `status` char(1) NOT NULL,
+  `remark` varchar(250) NOT NULL,
+  `createdatetime` datetime NOT NULL,
+  `createby` varchar(25) NOT NULL,
+  `updatedatetime` datetime NOT NULL,
+  `updateby` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`userid`, `username`, `email`, `password`, `type`, `status`, `remark`, `createdatetime`, `createby`, `updatedatetime`, `updateby`) VALUES
+(1, 'admin', 'tttt@tt.com', 'password', 'S', 'A', '', '2018-02-26 22:28:35', '', '2018-03-08 16:07:17', 'admin'),
+(2, 'boss', 'ttt@tt.com', 'test', 'A', 'I', '', '2018-02-26 22:36:53', 'admin', '2018-02-26 22:36:53', 'admin'),
+(3, 'katikarn', 'katikarn@test.com', '123456', 'A', 'I', '', '2018-03-08 16:03:39', 'admin', '2018-04-04 01:36:14', 'admin');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `agent`
+--
+ALTER TABLE `agent`
+  ADD PRIMARY KEY (`agent_id`);
+
+--
+-- Indexes for table `audit_log`
+--
+ALTER TABLE `audit_log`
+  ADD PRIMARY KEY (`logid`);
+
+--
+-- Indexes for table `booking`
+--
+ALTER TABLE `booking`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `booking_to_agent_FK` (`agent_id`);
+
+--
+-- Indexes for table `booking_detail`
+--
+ALTER TABLE `booking_detail`
+  ADD PRIMARY KEY (`booking_detail_id`),
+  ADD KEY `booking_detail_to_booking_FK` (`booking_id`),
+  ADD KEY `booking_detail_to_product_FK` (`product_id`);
+
+--
+-- Indexes for table `invoice`
+--
+ALTER TABLE `invoice`
+  ADD PRIMARY KEY (`invoiceid`),
+  ADD KEY `invoice_agentid` (`agentid`);
+
+--
+-- Indexes for table `invoice_detail`
+--
+ALTER TABLE `invoice_detail`
+  ADD PRIMARY KEY (`invoicedetailid`),
+  ADD KEY `invoice_detail_productid` (`productid`),
+  ADD KEY `invoice_detail_supplierid` (`supplierid`);
+
+--
+-- Indexes for table `invoice_paymentapprove`
+--
+ALTER TABLE `invoice_paymentapprove`
+  ADD PRIMARY KEY (`invoicepaymentid`),
+  ADD KEY `paymentapprove_invoiceid` (`invoiceid`);
+
+--
+-- Indexes for table `product`
+--
+ALTER TABLE `product`
+  ADD PRIMARY KEY (`product_id`),
+  ADD KEY `product_supplierid` (`supplier_id`);
+
+--
+-- Indexes for table `supplier`
+--
+ALTER TABLE `supplier`
+  ADD PRIMARY KEY (`supplier_id`);
+
+--
+-- Indexes for table `supplier_showtime`
+--
+ALTER TABLE `supplier_showtime`
+  ADD PRIMARY KEY (`showtimeid`),
+  ADD KEY `supplierid` (`supplierid`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`userid`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `agent`
+--
+ALTER TABLE `agent`
+  MODIFY `agent_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+--
+-- AUTO_INCREMENT for table `audit_log`
+--
+ALTER TABLE `audit_log`
+  MODIFY `logid` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `booking`
+--
+ALTER TABLE `booking`
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+--
+-- AUTO_INCREMENT for table `booking_detail`
+--
+ALTER TABLE `booking_detail`
+  MODIFY `booking_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `invoice`
+--
+ALTER TABLE `invoice`
+  MODIFY `invoiceid` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `invoice_detail`
+--
+ALTER TABLE `invoice_detail`
+  MODIFY `invoicedetailid` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `invoice_paymentapprove`
+--
+ALTER TABLE `invoice_paymentapprove`
+  MODIFY `invoicepaymentid` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `product`
+--
+ALTER TABLE `product`
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+--
+-- AUTO_INCREMENT for table `supplier`
+--
+ALTER TABLE `supplier`
+  MODIFY `supplier_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT for table `supplier_showtime`
+--
+ALTER TABLE `supplier_showtime`
+  MODIFY `showtimeid` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `booking`
+--
+ALTER TABLE `booking`
+  ADD CONSTRAINT `booking_to_agent_FK` FOREIGN KEY (`agent_id`) REFERENCES `agent` (`agent_id`);
+
+--
+-- Constraints for table `booking_detail`
+--
+ALTER TABLE `booking_detail`
+  ADD CONSTRAINT `booking_detail_to_booking_FK` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`booking_id`),
+  ADD CONSTRAINT `booking_detail_to_product_FK` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`);
+
+--
+-- Constraints for table `invoice`
+--
+ALTER TABLE `invoice`
+  ADD CONSTRAINT `invoice_agentid` FOREIGN KEY (`agentid`) REFERENCES `agent` (`agent_id`);
+
+--
+-- Constraints for table `invoice_detail`
+--
+ALTER TABLE `invoice_detail`
+  ADD CONSTRAINT `invoice_detail_productid` FOREIGN KEY (`productid`) REFERENCES `product` (`product_id`),
+  ADD CONSTRAINT `invoice_detail_supplierid` FOREIGN KEY (`supplierid`) REFERENCES `supplier` (`supplier_id`);
+
+--
+-- Constraints for table `invoice_paymentapprove`
+--
+ALTER TABLE `invoice_paymentapprove`
+  ADD CONSTRAINT `paymentapprove_invoiceid` FOREIGN KEY (`invoiceid`) REFERENCES `invoice` (`invoiceid`);
+
+--
+-- Constraints for table `product`
+--
+ALTER TABLE `product`
+  ADD CONSTRAINT `product_to_supplierid_FK` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`supplier_id`);
+
+--
+-- Constraints for table `supplier_showtime`
+--
+ALTER TABLE `supplier_showtime`
+  ADD CONSTRAINT `supplierid` FOREIGN KEY (`supplierid`) REFERENCES `supplier` (`supplier_id`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

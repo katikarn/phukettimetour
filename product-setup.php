@@ -152,8 +152,7 @@
 											<th data-hide="phone">Supplier Name</th>
 											<th data-hide="phone">Supplier Type</th>
 											<th data-hide="phone">Status</th>
-											<th class="center"><button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button>
-</th>
+											<th class="center"><button style="padding: 6px 12px;" class="btn btn-primary" id="m1s" data-whatever="" data-toggle="modal" data-target="#myModal" onclick="resetModal()">Add new</button></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -181,8 +180,10 @@
 													// Production Option wording
 													$ProductOption = "";
 													if($row['supplier_type'] == 'A'){
+													//A : Adventure
 														$SupplierType = 'Adventure';
 													}else if($row['supplier_type'] == 'S'){
+													//S : Show
 														$SupplierType = 'Show';
 														$ProductOption = "(Show Time:".$row['product_showtime'];
 														if($row['product_for'] == 'S'){
@@ -198,20 +199,23 @@
 													}else if($row['supplier_type'] == 'D'){
 														$SupplierType = 'Day Trip';
 														$ProductOption = "(".$row['product_desc'].", Trip Time:".$row['product_showtime']."-".$row['product_endtime'].")";
+													//T : Transport
 													}else if($row['supplier_type'] == 'T'){
 														$SupplierType = 'Transport';
 														$ProductOption = "(".$row['product_desc'];
 														if ($row['product_car_type']=='T'){
-															$ProductOption = $ProductOption."Car (Max passenger 4)";
+															$ProductOption = $ProductOption."Car (Max passenger 3)";
 														}else if($row['product_car_type']=='F'){
 															$ProductOption = $ProductOption."Van (Max passenger 10)";
 														}else if($row['product_car_type']=='E'){
-															$ProductOption = $ProductOption."Bus (Max passenger 35)";
+															$ProductOption = $ProductOption."Bus (Max passenger 40)";
 														}
 														$ProductOption = $ProductOption.")";
+													//M : Meal
 													}else if($row['supplier_type'] == 'M'){
 														$SupplierType = 'Meal';
 														$ProductOption = "(".$row['product_desc'].")";
+													//O : Other
 													}else if($row['supplier_type'] == 'O'){
 														$SupplierType = 'Other';
 														$ProductOption = "(".$row['product_desc'].")";
@@ -434,7 +438,7 @@
 									<label class="input">
 										<select name="lsbproduct_car_type" id="lsbproduct_car_type">
 											<option value="" selected></option>
-											<option value="T">Car (Max passenger 4)</option>
+											<option value="T">Car (Max passenger 3)</option>
 											<option value="F">Van (Max passenger 10)</option>
 											<option value="E">Bus (Max passenger 35)</option>
 									  	</select>
@@ -447,9 +451,10 @@
 									<label class="input">
 										<select name="lsbproduct_meal_type" id="lsbproduct_meal_type">
 											<option value="" selected></option>
-											<option value="1">Buffet</option>
-											<option value="2">VET</option>
-											<option value="3">--</option>
+											<option value="1">Buffet:Veg+Non-Veg</option>
+											<option value="2">Buffet:Non-Veg</option>
+											<option value="3">Buffet:Veg</option>
+											<option value="4">Lunch Box:Non-Veg</option>
 									  	</select>
 									</label>
 								</div>
@@ -462,7 +467,7 @@
 		  			<fieldset>
 		  				<section>
 							<div class="row">
-								<label class="label col col-3 header">Cost Price</label>
+								<label class="label col col-3 header">Contract Rate</label>
 								<div class="col col-9">
 									<label class="input required">
 										<input type="number" step=".01" name="txbproduct_cost_price" id="txbproduct_cost_price">
@@ -470,23 +475,17 @@
 								</div>
 							</div>
 							<div class="row">
-								<label class="label col col-3 header">Price-Normal</label>
+								<label class="label col col-3 header">Walk In Rate</label>
 								<div class="col col-9">
 									<label class="input required">
 										<input type="number" step=".01" name="txbproduct_normal_price" id="txbproduct_normal_price">
 									</label>
 								</div>
 							</div>
+						</section>
+						<section>
 							<div class="row">
-								<label class="label col col-3 header">Price-Oversea</label>
-								<div class="col col-9">
-									<label class="input required">
-										<input type="number" step=".01" name="txbproduct_oversea_price" id="txbproduct_oversea_price">
-									</label>
-								</div>
-							</div>
-							<div class="row">
-								<label class="label col col-3 header">Price-Level 1</label>
+								<label class="label col col-3 header">Agent Rate A</label>
 								<div class="col col-9">
 									<label class="input required">
 										<input type="number" step=".01" name="txbproduct_price_l1" id="txbproduct_price_l1">
@@ -494,13 +493,23 @@
 								</div>
 							</div>
 							<div class="row">
-								<label class="label col col-3 header">Price-Level 2</label>
+								<label class="label col col-3 header">Agent Rate B</label>
 								<div class="col col-9">
 									<label class="input required">
 										<input type="number" step=".01" name="txbproduct_price_l2" id="txbproduct_price_l2">
 									</label>
 								</div>
-							</div>					
+							</div>
+							<div class="row">
+								<label class="label col col-3 header">Oversea Rate</label>
+								<div class="col col-9">
+									<label class="input required">
+										<input type="number" step=".01" name="txbproduct_oversea_price" id="txbproduct_oversea_price">
+									</label>
+								</div>
+							</div>
+						<section>
+						</section>
 							<div class="row">
 								<label class="label col col-3 header">Remark</label>
 								<div class="col col-9">

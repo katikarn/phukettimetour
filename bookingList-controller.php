@@ -1,56 +1,29 @@
 <?php
-	
-	if( isset($_POST['submitAddUser']) )
+	if (isset($_REQUEST['booking_detail_id']))
 	{
-		// echo " ok2<br>";
-		//Variable from the user
-		if(isset($_POST["user_id"])){
-			$user_id = $_POST["user_id"];
-		}	
-		
-		$status = $_POST["status"];
-		$type = $_POST["type"];
-		$usernameR = $_POST["username"];
-		$passwordR = $_POST["password"];
-		$email = $_POST["email"];
-		$remark = $_POST["remark"];
+		// Reject
+		$id = $_REQUEST['booking_detail_id'];
 		$LoginByUser = trim($_SESSION['LoginUser']);
-		// $request = $_POST["Remark"]." 00:00:00";
-		
-		// echo "status : ".$status."<br>";
-		// echo "type : ".$type."<br>";
-		// echo "username : ".$usernameR."<br>";
-		// echo "password : ".$passwordR."<br>";
-		// echo "email : ".$email."<br>";
-		// //echo "request : ".$request."<br>";
-		
-		if($_POST['submitAddUser'] == 'Insert'){
-			$sql = "INSERT INTO `user` (`userid`, `username`, `email`, `password`, `type`, `status`,`remark`,
-			`createdatetime`, `createby`, `updatedatetime`, `updateby`)
-			VALUES (NULL,'$usernameR','$email', '$passwordR','$type',
-			'$status','$remark',NOW(),'$LoginByUser',NOW(),'$LoginByUser')";
-			
-		}else if($_POST['submitAddUser'] == 'Update'){
-			$sql = "UPDATE `user` SET `username`='$usernameR',`email`='$email',
-			`password`='$passwordR',`type`='$type',`status`='$status',`remark`='$remark',
-			`updatedatetime`=NOW(),`updateby`='$LoginByUser' 
-			WHERE `userid` = '$user_id'";
-		}
-		
-		echo $sql."<br>";
+		$txbbooking_detail_reject_reason=$_REQUEST['txbbooking_detail_reject_reason'];
+
+		$sql = "UPDATE booking_detail SET booking_detail_status='R', booking_detail_reject_reason='$txbbooking_detail_reject_reason',
+		updatedatetime=NOW(), updateby='$LoginByUser'	WHERE booking_detail_id = '$id'";
 		$result = mysqli_query($_SESSION['conn'] ,$sql);
-		 //echo $result."<br>";
-		
-		
-		if(!$result) {
-			 //echo "<script>alert('Error: Can not save Username is duplicate')</script>";
-			}else{
-			 // echo "<script>window.location='user-management.php'</script>";
-		} 
-		
-		
-		}else{ 
-		// echo "not ok";
+	}elseif ( isset($_REQUEST['booking_detail_id2']))
+	{
+		// Confirm
+		$id = $_REQUEST['booking_detail_id2'];
+		$LoginByUser = trim($_SESSION['LoginUser']);
+		$txbbooking_detail_confirm=$_REQUEST['txbbooking_detail_confirm'];
+
+		$sql = "UPDATE booking_detail SET booking_detail_status='C', booking_detail_confirm='$txbbooking_detail_confirm', 
+		updatedatetime=NOW(), updateby='$LoginByUser'	WHERE booking_detail_id = '$id'";
+		$result = mysqli_query($_SESSION['conn'] ,$sql);
+
+		$sql = "UPDATE booking SET booking_status='C' WHERE booking_id=(SELECT booking_id from 
+		booking_detail WHERE booking_detail_id='$id') and 0=(SELECT count(booking_id) AS cN FROM 
+		booking_detail WHERE booking_id=(SELECT booking_id from 
+		booking_detail WHERE booking_detail_id='$id') and booking_detail_status='N')";
+		$result = mysqli_query($_SESSION['conn'] ,$sql);
 	}
-	
 ?>

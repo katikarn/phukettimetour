@@ -60,10 +60,6 @@ $page_nav = array(
 				"title" => "Daily Transport",
 				"url" => APP_URL."#"
 			),
-			"Re-confirm Ticket" => array(
-				"title" => "Re-confirm Ticket",
-				"url" => APP_URL."#"
-			),
 			"Report" => array(
 				"title" => "Report",
 				"sub" => array(

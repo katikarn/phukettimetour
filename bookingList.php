@@ -115,19 +115,12 @@
 								<div class="col col-6">
 									<label class="checkbox">
 										<input type="checkbox" name="status" id="StatusN" value="New" onclick="filterCheckbox();" checked ><i></i><span style="background-color: green;">New</span></label>
-									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusW" value="Waiting" onclick="filterCheckbox();" checked ><i></i><span style="background-color: orange;">Waiting</span></label>
 								</div>
 								<div class="col col-4">
 								<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusF" value="Confirm" onclick="filterCheckbox();" checked ><i></i><span style="background-color: blue;">Confirm</span></label>
-									<label class="checkbox">
-										<input type="checkbox" name="status" id="StatusC" value="Cancel" onclick="filterCheckbox();" checked ><i></i><span style="background-color: red;">Cancel</span></label>
+										<input type="checkbox" name="status" id="StatusC" value="Confirm" onclick="filterCheckbox();" checked ><i></i><span style="background-color: blue;">Confirm</span></label>
 								</div>
 							</div>
-						</div>
-						<div class="col-xs-4 col-sm-2 col-md-2 filterbar">
-							<a class="btn btn-primary" id="m1s" href="bookingList-info.php">Add new</a>
 						</div>
 					</div>
 					
@@ -143,7 +136,9 @@
 											<th>First Service Date</th>
 											<th>Agent Name</th>
 											<th>Booking Status</th>
-											<th></th>
+											<th class="center">
+											<a class="btn btn-small btn-primary bg-color-blue" id="m1s" href="bookingList-info.php">
+											<i style="margin-right: 10px;" class="icon-append fa fa-plus"></i>Add new</a></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -159,12 +154,10 @@
 												while($row = mysqli_fetch_assoc($result)){
 													if($row['booking_status'] == 'N'){
 														$statusUser = '<font color="green">New</font>';
-													}else if($row['booking_status'] == 'W'){
-														$statusUser = '<font color="orange">Waiting</font>';
-													}else if($row['booking_status'] == 'F'){
-														$statusUser = '<font color="blue">Confirm</font>';
 													}else if($row['booking_status'] == 'C'){
-														$statusUser = '<font color="red">Cancel</font>';
+														$statusUser = '<font color="blue">Confirm</font>';
+													}else{
+														$statusUser = '';
 													}?>
 													<tr>
 														<td><?=substr("00000000",1,6-strlen($row['booking_id'])).$row['booking_id'];?></td>
@@ -173,7 +166,8 @@
 														<td><?=$row['agent_name']?></td>
 														<td><?=$statusUser?></td>
 														<td style="text-align: center;">
-														<a class="btn btn-small btn-primary" id="m1s" href="bookingList-info.php?id=<?=$row['booking_id']?>">Edit</a>
+														<a class="btn btn-small btn-primary bg-color-green" id="m1s" href="bookingList-info.php?id=<?=$row['booking_id']?>">Edit</a>
+														<a class="btn btn-small btn-primary bg-color-red" id="m1s" href="bookingList-info-controller-main.php?hAction=Del&id=<?=$row['booking_id']?>">Del</a>
 														</td>
 													</tr>
 													<?PHP

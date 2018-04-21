@@ -2,7 +2,7 @@
 	session_start();
 	include('inc/auth.php');
 	include("inc/connectionToMysql.php");
-	//include("bookingList-info-controller.php");
+	include("bookingList-info-controller.php");
 	/////////////////////////////////////////////////////////
 	//initilize the page
 	require_once ("inc/init.php");
@@ -285,14 +285,8 @@
 													<input type="radio" name="chkbooking_status" id="chkbooking_status_N" value="N" checked>
 													<i></i>New</label>
 												<label class="radio">
-													<input type="radio" name="chkbooking_status" id="chkbooking_status_W" value="W" <?php if ($_booking_status=="W")	{ echo " checked "; }?>>
-													<i></i>Waiting</label>
-												<label class="radio">
-													<input type="radio" name="chkbooking_status" id="chkbooking_status_F" value="F" <?php if ($_booking_status=="F")	{ echo " checked "; }?>>
-													<i></i>Confrim</label>
-												<label class="radio">
-													<input type="radio" name="chkbooking_status" id="chkbooking_status_C" value="C" <?php if ($_booking_status=="C")	{ echo " checked "; }?>>
-													<i></i>Cancel</label>
+													<input type="radio" name="chkbooking_status" id="chkbooking_status_C" value="C" <?php if ($_booking_status=="C")	{ echo " checked "; }?> readonly>
+													<i></i>Confirm</label>
 											</div>
 										</section>
 										<section class="col col-4">
@@ -313,7 +307,7 @@
 			<!-- END ROW -->
 		</section>
 		<!-- end widget grid -->
-
+<?php if (isset($_GET['id'])){	?>
 		<!-- widget grid -->
 		<section id="widget-grid" class="">
 			<!-- START ROW -->
@@ -339,7 +333,7 @@
 													<th>Service DateTime</th>
 													<th>Product Name</th>
 													<th>Price x Pax</th>
-													<th>Amount</th>											
+													<th>Amount</th>
 													<th>Status</th>
 													<th>
 														<div style="text-align: center">
@@ -351,12 +345,16 @@
 											</thead>
 											<tbody>
 												<?PHP
-												$sql = "SELECT 	booking_detail_id, booking_detail_status, booking_detail_date, booking_detail_time, 
-												booking_detail_price, booking_detail_vat, booking_detail_qty, booking_detail_total_amount, 
-												product_name, product_desc, product_seat,	product_for, product_showtime, product_duration, 
-												product_car_type, product_meal_type, supplier_name
-												FROM booking_detail 
-												WHERE booking_id = '$_booking_id'
+												$sql = "SELECT 	booking_detail_id, booking_detail_status, booking_detail_date, 
+												booking_detail_time, booking_detail_price, booking_detail_vat, booking_detail_qty, 
+												booking_detail_total_amount, booking_detail_reject_reason, booking_detail_confirm, 
+												product_name, product_desc, product_seat, product_for, product_showtime, product_duration, 
+												product_car_type, product_meal_type, 
+												supplier_name
+												FROM booking_detail, product, supplier
+												WHERE booking_detail.product_id = product.product_id 
+												    and product.supplier_id = supplier.supplier_id
+													and booking_detail.booking_id = '$_booking_id'
 												ORDER BY booking_detail_date, booking_detail_time";
 												$result = mysqli_query($conn ,$sql);
 												
@@ -380,12 +378,15 @@
 
 														if($row['booking_detail_status'] == 'N'){
 															$statusUser = '<font color="green">New</font>';
-														}else if($row['booking_detail_status'] == 'W'){
-															$statusUser = 'Waiting';
-														}else if($row['booking_detail_status'] == 'F'){
-															$statusUser = 'Confirm';
+														}else if($row['booking_detail_status'] == 'R'){
+															$statusUser = '<font color="red">Reject</font> <i class="fa fa-info-circle" title="'.$row['booking_detail_reject_reason'].'"></i>';
 														}else if($row['booking_detail_status'] == 'C'){
-															$statusUser = '<font color="red">Cancel</font>';
+															if ($row['booking_detail_confirm']<>"")	{
+																$conf=$row['booking_detail_confirm'];
+															}else{
+																$conf="-";
+															}
+															$statusUser = '<font color="blue">Confirm</font><br><b>'.$conf.'</b>';
 														}else{
 															$statusUser = '';
 														}
@@ -401,10 +402,7 @@
 															data-toggle="modal"
 															data-target="#myModal"
 															data-whatever="<?=$row['booking_detail_id']?>">Edit</a>
-															<a onclick="resetModal();" class="btn btn-small bg-color-orange txt-color-white"
-															data-toggle="modal"
-															data-target="#myModal"
-															data-whatever="<?=$row['booking_detail_id']?>">Del</a>
+															<a href="bookingList-info.php?booking_detail_id=<?=$row['booking_detail_id']?>&hAction=Delete&booking_id=<?=$_booking_id?>" class="btn btn-small btn-danger">Del</a>
 													</td>
 												</tr>
 												<?PHP }}?>
@@ -423,7 +421,7 @@
 			<!-- END ROW -->
 		</section>
 		<!-- end widget grid -->
-
+<?php }?>
 		<!-- Modal -->
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
 			<div class="modal-dialog">
@@ -438,7 +436,7 @@
 						</h4>
 					</div>
 					<div class="modal-body no-padding">
-						<form id="detail-form" class="smart-form">
+						<form action='bookingList-info.php' method='get' id="detail-form" class="smart-form">						
 							<fieldset>
 								<section>
 									<div class="row">
@@ -453,10 +451,7 @@
 													if(mysqli_num_rows($result) > 0)	{
 														//show data for each row
 														while($row = mysqli_fetch_assoc($result))	{
-															echo "<option value='".$row['supplier_id']."'"; 
-															//if ($row['supplier_id']==$_supplier_id)	{ 
-															//	echo " selected ";
-															//}
+															echo "<option value='".$row['supplier_id']."'";
 															echo ">".$row['supplier_destination']." : ".$row['supplier_name']."</option>";
 														}
 													}?>
@@ -471,8 +466,8 @@
 										<label class="label col col-2">Product</label>
 										<div class="col col-10">
 											<label class="input required">
-											<select name="lsbproduct_id" id="lsbproduct_id" >
-												<option value="" selected></option>
+												<select name="lsbproduct_id" id="lsbproduct_id" >
+													<option value="" selected></option>
 													<?php
 													$sql = "SELECT product_id, product_name, product_for, product_showtime, product_car_type, 
 															product_meal_type, product_normal_price, product_oversea_price, product_price_l1, 
@@ -573,16 +568,10 @@
 											<label class="input">
 												<div class="inline-group">
 													<label class="radio">
-														<input type="radio" name="chkbooking_detail_status" value="N" checked=""><i></i>New
+														<input type="radio" name="chkbooking_detail_status" id="chkbooking_detail_status_N" value="N" checked=""><i></i>New
 													</label>
 													<label class="radio">
-														<input type="radio" name="chkbooking_detail_status" value="W"><i></i>Waiting
-													</label>
-													<label class="radio">
-														<input type="radio" name="chkbooking_detail_status" value="F"><i></i>Confirm
-													</label>
-													<label class="radio">
-														<input type="radio" name="chkbooking_detail_status" value="C"><i></i>Cancel
+														<input type="radio" name="chkbooking_detail_status" id="chkbooking_detail_status_C" value="C"><i></i>Confirm
 													</label>
 												</div>
 											</label>
@@ -592,7 +581,10 @@
 							</fieldset>
 									
 							<footer class="center">
-								<button type="submit" class="btn btn-primary" style="float: unset;font-weight: 400;">Save</button>
+								<input type="hidden" name="booking_id" id="booking_id" value="<?=$_booking_id?>">
+								<input type="hidden" name="booking_detail_id" id="booking_detail_id">
+								<input type="hidden" name="hAction" id="hAction">
+								<button type="submit" class="btn btn-primary" name="submitBookingDetail" id="submitBookingDetail" style="float: unset;font-weight: 400;">Save</button>
 								<button type="button" class="btn btn-default" data-dismiss="modal" style="float: unset;font-weight: 400;">Cancel</button>
 							</footer>
 						</form>
@@ -617,85 +609,135 @@
 	//include required scripts
 	include("inc/scripts.php"); 
 ?>
-
 <!-- PAGE RELATED PLUGIN(S) -->
-<script src="<?php echo ASSETS_URL; ?>/js/plugin/jquery-form/jquery-form.min.js"></script>
+<script src="<?php echo ASSETS_URL; ?>/js/plugin/datatables/jquery.dataTables.min.js"></script>
+<script src="<?php echo ASSETS_URL; ?>/js/plugin/datatables/dataTables.colVis.min.js"></script>
+<script src="<?php echo ASSETS_URL; ?>/js/plugin/datatables/dataTables.tableTools.min.js"></script>
+<script src="<?php echo ASSETS_URL; ?>/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+<script src="<?php echo ASSETS_URL; ?>/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+
 <script type="text/javascript">
-// DO NOT REMOVE : GLOBAL FUNCTIONS!
-$(document).ready(function() {
-
-	var errorClass = 'invalid';
-	var errorElement = 'em';
-	var re_v;
-
-	var $contactForm = $("#contact-form").validate({
-		errorClass		: errorClass,
-		errorElement	: errorElement,
-		highlight: function(element) {
-	        $(element).parent().removeClass('state-success').addClass("state-error");
-	        $(element).removeClass('valid');
-	    },
-	    unhighlight: function(element) {
-	        $(element).parent().removeClass("state-error").addClass('state-success');
-	        $(element).addClass('valid');
-	    },		
-		// Rules for form validation
-		rules : {
-			lsbagent_id : {
-				required : true,
-			},
-			txbbooking_name : {
-				required : true,
-			},
-			txbbooking_pax : {
-				required : true,
-			}
-		},
-		// Messages for form validation
-		messages : {
-			lsbagent_id : {
-				required : 'Please select agent',
-			},
-			txbbooking_name : {
-				required : 'Please fill Tour Leader Name',
-			},
-			txbbooking_pax : {
-				required : 'Please fill PAX',
-			}
-		},
+	
+	// DO NOT REMOVE : GLOBAL FUNCTIONS!
+	var otable;
+	$(document).ready(function() {
 		
-		// Ajax form submition
-		submitHandler : function(form) {
-			if (confirm("Do you want to save the data?")) {
-			   	form.submit();
-			}			
-			//$(form).ajaxSubmit({
-				//success : function() {
-					//document.getElementById('txtBookingId').innerHTML = 'your tip has been submitted!'
-					//$("#contact-form").addClass('submited');
-			//	}
-			//});
-		},
+		/* BASIC ;*/
+		var responsiveHelper_dt_basic = undefined;
+		
+		var breakpointDefinition = {
+			tablet : 1024,
+			phone : 480
+		};
+		
+		$('#dt_basic').dataTable({
+			"sDom": 
+			"t"+
+			"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+			"autoWidth" : true,
+			"preDrawCallback" : function() {
+				// Initialize the responsive datatables helper once.
+				if (!responsiveHelper_dt_basic) {
+					responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#dt_basic'), breakpointDefinition);
+				}
+			},
+			"rowCallback" : function(nRow) {
+				responsiveHelper_dt_basic.createExpandIcon(nRow);
+			},
+			"drawCallback" : function(oSettings) {
+				responsiveHelper_dt_basic.respond();
+			}
+		});
+		/* Custom Search box*/
+		var table_dtbasic = $('#dt_basic').DataTable();
+		otable = $('#dt_basic').dataTable();
+		
+		$( "#column3_search" ).keyup(function() {
+			//alert( "Handler for .keyup() called." );
+			table_dtbasic.search( this.value ).draw();
+		});
 
-		// Do not change code below
-		errorPlacement : function(error, element) {
-			error.insertAfter(element.parent());
-		}
-	});
+		$( "#date_search" ).keyup(function() {
+			//alert( "Handler for .keyup() called." );
+			table_dtbasic.columns( 2 ).search( this.value ).draw();
+		});
+		$('#myModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget) // Button that triggered the modal
+			var recipient = button.data('whatever') // Extract info from data-* attributes
+			var modal = $(this);
+			var dataString = 'booking_detail_id=' + recipient;
 
-
-
-	var $loginForm = $("#detail-form").validate({
-		errorClass		: errorClass,
-		errorElement	: errorElement,
-		highlight: function(element) {
-	        $(element).parent().removeClass('state-success').addClass("state-error");
-	        $(element).removeClass('valid');
-	    },
-	    unhighlight: function(element) {
-	        $(element).parent().removeClass("state-error").addClass('state-success');
-	        $(element).addClass('valid');
-	    },
+			//console.log('dataString :'+dataString);
+            $.ajax({
+                
+                url: "fetchEdit.php",
+				type:"POST",
+                data: dataString,
+				dataType : 'json',
+				
+                success: function (data) {
+					if(data != null){
+						$('#lsbsupplier_id').val(data.supplier_id);
+						$('#lsbproduct_id').val(data.product_id);
+						$('#txbbooking_detail_qty').val(data.booking_detail_qty);
+						$('#txbbooking_detail_price').val(data.booking_detail_price);
+						$('#txbbooking_detail_vat').val(data.booking_detail_vat);
+						$('#txbbooking_detail_total_amount').val(data.booking_detail_total_amount);
+						$('#txbbooking_detail_date').val(data.booking_detail_date);
+						$('#txbbooking_detail_time').val(data.booking_detail_time);
+						$('#txbbooking_detail_note').val(data.booking_detail_note);
+						$('#booking_detail_id').val(data.booking_detail_id);
+						$('#hAction').val("Update");
+						//$('#chkbooking_detail_status_' + data.booking_detail_status).proop('checked',true);
+					}else{
+						$('#lsbsupplier_id').val('');
+						$('#lsbproduct_id').val('');
+						$('#txbbooking_detail_qty').val('');
+						$('#txbbooking_detail_price').val('');
+						$('#txbbooking_detail_vat').val('');
+						$('#txbbooking_detail_total_amount').val('');
+						$('#txbbooking_detail_date').val('');
+						$('#txbbooking_detail_time').val('');
+						$('#txbbooking_detail_note').val('');
+						$('#booking_detail_id').val('');
+						$('#hAction').val("Insert");  
+						//$('#chkbooking_detail_status_C').proop('checked',true);
+					}
+				},
+                error: function(err) {
+                    console.log('err : '+err);
+					
+				}
+			});  
+		});
+	//// --------------------------- Validate------------------------------
+	var errorClass = 'invalid';
+		var errorElement = 'em';
+		
+		var $contactForm = $("#detail-form").validate({
+			errorClass		: errorClass,
+			errorElement	: errorElement,
+			highlight: function(element) {
+		        $(element).parent().removeClass('state-success').addClass('state-error');
+		        //$(element).parent().addClass("required");
+		        if($(element).parent().hasClass( "required" )){
+		        	 $(element).parent().css("border-left", "7px solid #FF3333");
+		        }
+		        $(element).removeClass('valid');
+		    },
+		    unhighlight: function(element) {
+		        $(element).parent().removeClass('state-error').addClass('state-success');
+		        //$(element).parent().removeClass("required");
+		        if($(element).parent().hasClass( "required" )){
+		        	$(element).parent().css("border-left", "7px solid #047803");
+		        }
+		        $(element).addClass('valid');
+		    },
+		    submitHandler : function(form) {
+		      if (confirm("Do you want to save the data?")) {
+		        form.submit();
+		      }
+		    },
 		// Rules for form validation
 		rules : {
 			lsbsupplier_id : {

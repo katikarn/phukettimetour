@@ -1,6 +1,7 @@
 <?php
 session_start();
 include('inc/auth.php');
+include("inc/connectionToMysql.php");
 //initilize the page
 require_once("inc/init.php");
 
