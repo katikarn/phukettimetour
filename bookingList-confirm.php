@@ -338,7 +338,7 @@
 			</div>
 			<form action='bookingList-confirm.php' method='post' id="confirm-form" class="smart-form">
 				<header>
-					Voucher No
+					Confirmation No
 				</header>
 					<section>
 						<div class="row">

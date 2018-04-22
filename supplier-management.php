@@ -1,6 +1,7 @@
 <?php 
 	session_start();
 	include('inc/auth.php');
+	include("inc/constant.php");
 	include("inc/connectionToMysql.php");
 	include("supplier-controller.php");
 	/////////////////////////////////////////////////////////
@@ -224,7 +225,7 @@
 					<h4 class="header">Supplier</h4>
 				</div>
 				<div class="modal-body no-padding">
-					<form action='supplier-management.php' method='post' id="supplier-form" class="smart-form">
+					<form action='supplier-management.php' method='post' id="supplier-form" class="smart-form" enctype="multipart/form-data">
 						<header>
 							General Info
 						</header>
@@ -326,13 +327,20 @@
 									</div>
 								</div>
 								<div class="row">
-								<label class="label col col-3 header">Attachment File</label>
+									<label class="label col col-3 header">Contract File</label>
+									<div class="input input-file col col-9">
+										<span class="button"><input type="file" id="txbsupplier_contract_file" name="txbsupplier_contract_file" onchange="this.parentNode.nextSibling.value = this.value; showFile(this.id);">Browse</span><input type="text" id="show_contract_file"  placeholder="contract files" readonly="">
+										<a id="show_txbsupplier_contract_file" target="_blank" style="display: none"></a>
+										<input type="hidden" id="Text_contract_file" name="Text_contract_file"/> 
+									</div>
 								</div>
-								<div class="input input-file">
-									<span class="button"><input type="file" id="txbsupplier_contract_file" name="txbsupplier_contract_file" onchange="this.parentNode.nextSibling.value = this.value">Browse</span><input type="text" placeholder="contract files" readonly="">
-								</div>
-								<div class="input input-file">
-									<span class="button"><input type="file" id="txbsupplier_other_file" name="txbsupplier_other_file" onchange="this.parentNode.nextSibling.value = this.value">Browse</span><input type="text" placeholder="Other files" readonly="">
+								<div class="row">
+									<label class="label col col-3 header">Other File</label>
+									<div class="input input-file col col-9">
+										<span class="button"><input type="file" id="txbsupplier_other_file" name="txbsupplier_other_file" onchange="this.parentNode.nextSibling.value = this.value; showFile(this.id);">Browse</span><input type="text" id="show_other_file" placeholder="Other files" readonly="">
+										<a id="show_txbsupplier_other_file" target="_blank" style="display: none"></a>
+										<input type="hidden" id="Text_other_file" name="Text_other_file"/>
+									</div>
 								</div>
 							</section>
 						</fieldset>
@@ -595,8 +603,20 @@
 						$('#txbsupplier_tel').val(data.supplier_tel);
 						$('#txbsupplier_website').val(data.supplier_website);
 						$('#txbsupplier_googlemap').val(data.supplier_googlemap);
-						$('#txbsupplier_contract_file').val(data.supplier_contract_file);
-						$('#txbsupplier_other_file').val(data.supplier_other_file);
+						//console.log('data.supplier_contract_file'+ data.supplier_contract_file);
+						//$('#txbsupplier_contract_file').val('upload/supplier/' + data.supplier_contract_file);
+						$('#show_contract_file').val(data.supplier_contract_file);
+						$('#Text_contract_file').val(data.supplier_contract_file);
+						$('#show_txbsupplier_contract_file').html(data.supplier_contract_file);
+						$('#show_txbsupplier_contract_file').attr('href','<?=$path_folder_Supplier ?>' + data.supplier_contract_file);
+						$('#show_txbsupplier_contract_file').css("display","block");
+						//$('#txbsupplier_other_file').val(data.supplier_other_file);
+						$('#show_other_file').val(data.supplier_other_file);
+						$('#Text_other_file').val(data.supplier_other_file);
+						$('#show_txbsupplier_other_file').html(data.supplier_other_file);
+						$('#show_txbsupplier_other_file').attr('href','<?=$path_folder_Supplier ?>' + data.supplier_other_file);
+						$('#show_txbsupplier_other_file').css("display","block");
+
 						$('#id_supplier_paytype_' + data.status).prop('checked',true);
 						$('#txbsupplier_max_credit').val(data.supplier_max_credit);
 						$('#txbsupplier_credit_term').val(data.supplier_credit_term);
@@ -628,11 +648,24 @@
 						$('#txbsupplier_tel').val('');
 						$('#txbsupplier_website').val('');
 						$('#txbsupplier_googlemap').val('');
-						$('#txbsupplier_contract_file').val('');
-						$('#txbsupplier_other_file').val('');
 						$('#id_supplier_paytype_T').prop('checked',true);
 						//$('#id_supplier_paytype_C' + data.status).prop('checked',true);
 						//$('#id_supplier_paytype_D' + data.status).prop('checked',true);
+						//$('#id_supplier_paytype_C' + data.status).prop('checked',true);
+						//$('#id_supplier_paytype_D' + data.status).prop('checked',true);
+						$('#show_txbsupplier_contract_file').html('');
+						$('#show_txbsupplier_contract_file').attr('href','');
+						$('#show_txbsupplier_other_file').html('');
+						$('#show_txbsupplier_other_file').attr('href','');
+						$('#show_txbsupplier_contract_file').css("display","none");
+						$('#show_txbsupplier_other_file').css("display","none");
+						$('#txbsupplier_contract_file').val('');
+						$('#txbsupplier_other_file').val('');
+						$('#show_contract_file').val('');
+						$('#show_other_file').val('');
+						$('#Text_contract_file').val('');
+						$('#Text_other_file').val('');
+
 						$('#txbsupplier_max_credit').val('');
 						$('#txbsupplier_credit_term').val('');
 						$('#txbsupplier_sales_name').val('');
@@ -771,6 +804,16 @@
 	});
 
 	/* END BASIC */
+	function showFile(inputID){
+		console.log('inputID' + inputID);
+		console.log($("#"+ inputID)[0].files[0].name);
+		var fileName = $("#" + inputID)[0].files[0].name;
+		var pathFile = $("#" + inputID).val();
+		$("#show_" + inputID ).css("display","block");
+		$("#show_" + inputID).html(fileName);
+		$("#show_" + inputID).attr("href", pathFile);
+	}
+
 	function filterCheckbox(){
 		
 		var types = $('input:checkbox[name="status"]:checked').map(function() {

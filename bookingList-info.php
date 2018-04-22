@@ -231,7 +231,7 @@
 										</section>
 										<div class="row">
 											<section class="col col-8">
-												<label class="label">Tour Leader Name</label>
+												<label class="label">Booking Name</label>
 												<label class="input required">
 													<i class="icon-append fa fa-user"></i>
 													<input type="text" name="txbbooking_name" id="txbbooking_name" maxlength="100" value="<?=$_booking_name;?>">

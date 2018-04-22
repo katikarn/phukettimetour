@@ -73,14 +73,14 @@ include("inc/header.php");
 								<label class="label">Username</label>
 								<label class="input"> <i class="icon-append fa fa-user"></i>
 									<input type="text" name="username" id="username">
-									<!-- <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Please enter username</b> --></label>
+									<b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Please enter username</b></label>
 							</section>
 
 							<section>
 								<label class="label">Password</label>
 								<label class="input"> <i class="icon-append fa fa-lock"></i>
 									<input type="password" name="password" id="password">
-									<!-- <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Enter your password</b> --> </label>
+									<b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Enter your password</b></label>
 								<div class="note">
 									<a href="<?php echo APP_URL; ?>/forgotpassword.php">Forgot password?</a>
 								</div>
@@ -109,6 +109,12 @@ include("inc/header.php");
 </div>
 <!-- END MAIN PANEL -->
 <!-- ==========================CONTENT ENDS HERE ========================== -->
+<!-- PAGE FOOTER -->
+<?php
+	// include page footer
+	include("inc/footer.php");
+?>
+<!-- END PAGE FOOTER -->
 
 <?php 
 	//include required scripts

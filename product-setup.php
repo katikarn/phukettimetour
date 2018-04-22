@@ -1,6 +1,7 @@
 <?php
 	session_start();
 	include('inc/auth.php');
+	include("inc/constant.php");
 	include("inc/connectionToMysql.php");
 	include("product-controller.php");
 /////////////////////////////////////////////////////////
@@ -261,7 +262,7 @@
 	          	<h4 class="header">Product</h4>
 	        </div>
 	        <div class="modal-body no-padding">
-		  		<form action="product-setup.php" method='post' id="product-form" class="smart-form">
+		  		<form action="product-setup.php" method='post' id="product-form" class="smart-form" enctype="multipart/form-data">
 		  			<fieldset>
 		  				<section>
 							<div class="row">
@@ -340,14 +341,32 @@
 									</label>
 								</div>
 							</div>
-							<div class="input input-file">
-								<span class="button"><input type="file" id="txbproduct_file1" name="txbproduct_file1" onchange="this.parentNode.nextSibling.value = this.value">Browse</span><input type="text" placeholder="Include contract files" readonly="">
+							<label class="label col col-3 header">Image file 1</label>
+							<div class="input input-file col col-9">
+								<span class="button">
+									<input type="file" id="txbproduct_file1" name="txbproduct_file1" onchange="this.parentNode.nextSibling.value = this.value; showFile(this.id);">Browse
+								</span>
+								<input type="text" placeholder="Include contract files" id="show_product_file1" readonly="">
+									<a id="show_txbproduct_file1" target="_blank" style="display: none"></a>
+								<input type="hidden" id="Text_txbproduct_file1" name="Text_txbproduct_file1"/> 
 							</div>
-							<div class="input input-file">
-								<span class="button"><input type="file" id="txbproduct_file2" name="txbproduct_file2" onchange="this.parentNode.nextSibling.value = this.value">Browse</span><input type="text" placeholder="Include contract files" readonly="">
-							</div>
-							<div class="input input-file">
-								<span class="button"><input type="file" id="txbproduct_file3" name="txbproduct_file3" onchange="this.parentNode.nextSibling.value = this.value">Browse</span><input type="text" placeholder="Include contract files" readonly="">
+							<label class="label col col-3 header">Image file 2</label>
+							<div class="input input-file col col-9">
+								<span class="button">
+									<input type="file" id="txbproduct_file2" name="txbproduct_file2" onchange="this.parentNode.nextSibling.value = this.value; showFile(this.id);">Browse
+								</span>
+								<input type="text" placeholder="Include contract files" id="show_product_file2" readonly="">
+								<a id="show_txbproduct_file2" target="_blank" style="display: none"></a>
+								<input type="hidden" id="Text_txbproduct_file2" name="Text_txbproduct_file2"/> 
+							</div>							
+							<label class="label col col-3 header">Image file 3</label>
+							<div class="input input-file col col-9">
+								<span class="button">
+									<input type="file" id="txbproduct_file3" name="txbproduct_file3" onchange="this.parentNode.nextSibling.value = this.value; showFile(this.id);">Browse
+								</span>
+								<input type="text" placeholder="Include contract files" id="show_product_file3" readonly="">
+								<a id="show_txbproduct_file3" target="_blank" style="display: none"></a>
+								<input type="hidden" id="Text_txbproduct_file3" name="Text_txbproduct_file3"/> 
 							</div>
 						</section>		  				
 		  			</fieldset>
@@ -606,9 +625,24 @@ include ("inc/scripts.php");
 						$('#txbproduct_name').val(data.product_name);
 						$('#txbproduct_desc').val(data.product_desc);
 						$('#txbproduct_detail').val(data.product_detail);
-						$('#txbproduct_file1').val(data.product_file1);
-						$('#txbproduct_file2').val(data.product_file2);
-						$('#txbproduct_file3').val(data.product_file3);
+						// $('#txbproduct_file1').val(data.product_file1);
+						$('#show_product_file1').val(data.product_file1);
+						$('#Text_txbproduct_file1').val(data.product_file1);
+						$('#show_txbproduct_file1').html(data.product_file1);
+						$('#show_txbproduct_file1').attr('href','<?=$path_folder_Product ?>' + data.product_file1);
+						$('#show_txbproduct_file1').css("display","block");
+						// $('#txbproduct_file2').val(data.product_file2);
+						$('#show_product_file2').val(data.product_file2);
+						$('#Text_txbproduct_file2').val(data.product_file2);
+						$('#show_txbproduct_file2').html(data.product_file2);
+						$('#show_txbproduct_file2').attr('href','<?=$path_folder_Product ?>' + data.product_file2);
+						$('#show_txbproduct_file2').css("display","block");
+						// $('#txbproduct_file3').val(data.product_file3);
+						$('#show_product_file3').val(data.product_file3);
+						$('#Text_txbproduct_file3').val(data.product_file3);
+						$('#show_txbproduct_file3').html(data.product_file3);
+						$('#show_txbproduct_file3').attr('href','<?=$path_folder_Product ?>' + data.product_file3);
+						$('#show_txbproduct_file3').css("display","block");
 						$('#chkproduct_confirm_class_' + data.product_confirm_class).prop('checked',true);
 						$('#chkproduct_seat_' + data.product_seat).prop('checked',true);
 						$('#chkproduct_for_' + data.product_for).prop('checked',true);
@@ -636,6 +670,21 @@ include ("inc/scripts.php");
 						$('#txbproduct_file1').val('');
 						$('#txbproduct_file2').val('');
 						$('#txbproduct_file3').val('');
+						$('#show_product_file1').val('');
+						$('#show_product_file2').val('');
+						$('#show_product_file3').val('');
+						$('#Text_txbproduct_file1').val('');
+						$('#Text_txbproduct_file2').val('');
+						$('#Text_txbproduct_file3').val('');
+						$('#show_txbproduct_file1').html('');
+						$('#show_txbproduct_file1').attr('href','');
+						$('#show_txbproduct_file1').css("display","none");
+						$('#show_txbproduct_file2').html('');
+						$('#show_txbproduct_file2').attr('href','');
+						$('#show_txbproduct_file2').css("display","none");
+						$('#show_txbproduct_file3').html('');
+						$('#show_txbproduct_file3').attr('href','');
+						$('#show_txbproduct_file3').css("display","none");
 						$('#chkproduct_confirm_class_M').prop('checked',true);
 						//$('#chkproduct_confirm_class_A').prop('checked',true);
 						$('#chkproduct_seat_N').prop('checked',true);
@@ -750,6 +799,16 @@ include ("inc/scripts.php");
 		});
 
 		/* END BASIC */
+		function showFile(inputID){
+			//console.log('inputID' + inputID);
+			//console.log($("#"+ inputID)[0].files[0].name);
+			var fileName = $("#" + inputID)[0].files[0].name;
+			var pathFile = $("#" + inputID).val();
+			$("#show_" + inputID ).css("display","block");
+			$("#show_" + inputID).html(fileName);
+			$("#show_" + inputID).attr("href", pathFile);
+		}
+
 		function filterCheckbox(){
 			var types = $('input:checkbox[name="status"]:checked').map(function() {
 				return '^' + this.value + '\$';

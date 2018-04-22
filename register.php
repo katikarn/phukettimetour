@@ -1,4 +1,5 @@
 <?php
+include("inc/connectionToMysql.php");
 
 //initilize the page
 require_once("inc/init.php");
@@ -46,112 +47,116 @@ include("inc/header.php");
 
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 hidden-xs hidden-sm">
-						<h1 class="txt-color-red login-header-big">SmartAdmin</h1>
+						<h1 class="txt-color-red login-header-big">Online Agent Booking</h1>
 						<div class="hero">
 
 							<div class="pull-left login-desc-box-l">
-								<h4 class="paragraph-header">It's Okay to be Smart. Experience the simplicity of SmartAdmin, everywhere you go!</h4>
+								<h4 class="paragraph-header">It's Okay to be Smart. Fast and Simple of Phuket Time Tour System, everywhere you go!</h4>
 								<div class="login-app-icons">
-									<a href="javascript:void(0);" class="btn btn-danger btn-sm">Frontend Template</a>
-									<a href="javascript:void(0);" class="btn btn-danger btn-sm">Find out more</a>
+									<img src="<?php echo ASSETS_URL; ?>/img/demo/responseimg.png" alt="" class="pull-right display-image" style="width:210px">
 								</div>
 							</div>
-							
-							<img src="<?php echo ASSETS_URL; ?>/img/demo/iphoneview.png" alt="" class="pull-right display-image" style="width:210px">
 							
 						</div>
 
 						<div class="row">
 							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-								<h5 class="about-heading">About SmartAdmin - Are you up to date?</h5>
+								<h5 class="about-heading">Completely Attractions And travel</h5>
 								<p>
-									Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa.
+								- Phuket, Krabi, Samui<br>
+								- Most Popular Attraction Day Trip and Activity<br>
+								- Car Transfer								
 								</p>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-								<h5 class="about-heading">Not just your average template!</h5>
+								<h5 class="about-heading">Feature</h5>
 								<p>
-									Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi voluptatem accusantium!
+									- 24 Hour Online Booking<br>
+									- Easy for payment<br>
+									- Fast, Easy and Correct Booking<br>
+									- Free Travel consoultance Online Support
 								</p>
 							</div>
 						</div>
-
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
 						<div class="well no-padding">
 
-							<form action="php/demo-register.php" id="smart-form-register" class="smart-form client-form">
+							<form action="register-controller.php" id="smart-form-register" class="smart-form client-form"  method='post'>
 								<header>
 									Registration is FREE*
 								</header>
 
 								<fieldset>
 									<section>
-										<label class="input"> <i class="icon-append fa fa-user"></i>
-											<input type="text" name="username" placeholder="Username">
-											<b class="tooltip tooltip-bottom-right">Needed to enter the website</b> </label>
+										<label class="input"> <i class="icon-append fa fa-bank"></i>
+											<input type="text" name="txbagent_name" placeholder="Agent name">
+											<b class="tooltip tooltip-bottom-right">Needed to enter Agent name</b>
+										</label>
 									</section>
-
 									<section>
-										<label class="input"> <i class="icon-append fa fa-envelope"></i>
-											<input type="email" name="email" placeholder="Email address">
-											<b class="tooltip tooltip-bottom-right">Needed to verify your account</b> </label>
+										<label class="input"> <i class="icon-append fa fa-bank"></i>
+											<input type="text" name="txbagent_name_acc" placeholder="Agent name for Accounting">
+											<b class="tooltip tooltip-bottom-right">Needed to enter Agent name for Accounting</b>
+										</label>
 									</section>
-
-									<section>
-										<label class="input"> <i class="icon-append fa fa-lock"></i>
-											<input type="password" name="password" placeholder="Password" id="password">
-											<b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
-									</section>
-
-									<section>
-										<label class="input"> <i class="icon-append fa fa-lock"></i>
-											<input type="password" name="passwordConfirm" placeholder="Confirm password">
-											<b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
-									</section>
+									<div class="row">
+										<section class="col col-6">
+											<label class="input"> <i class="icon-append fa fa-user"></i>
+												<input type="text" name="txbagent_main_name" placeholder="Contact Person">
+												<b class="tooltip tooltip-bottom-right">Needed to enter Contact Person</b>
+											</label>
+										</section>
+										<section class="col col-6">
+											<label class="input"> <i class="icon-append fa fa-phone"></i>
+												<input type="text" name="txbagent_mail_tel" placeholder="Telephone">
+												<b class="tooltip tooltip-bottom-right">Needed to enter Agent name for Accounting</b>
+											</label>
+										</section>
+										<section class="col col-6">
+											<label class="input"> <i class="icon-append fa fa-map-marker"></i>
+												<input type="email" name="txbagent_main_email" placeholder="E-mail">
+												<b class="tooltip tooltip-bottom-right">Needed to verify E-mail</b> </label>
+										</section>
+										<section class="col col-6">
+											<label class="input"> <i class="icon-append fa fa-envelope-o"></i>
+												<input type="text" name="txbagent_main_line" placeholder="Line or WhatApp">
+												<b class="tooltip tooltip-bottom-right">Needed to verify your Line or WhatApp</b> </label>
+										</section>
+									</div>
 								</fieldset>
-
 								<fieldset>
 									<div class="row">
-										<section class="col col-6">
-											<label class="input">
-												<input type="text" name="firstname" placeholder="First name">
-											</label>
-										</section>
-										<section class="col col-6">
-											<label class="input">
-												<input type="text" name="lastname" placeholder="Last name">
-											</label>
-										</section>
+											<section class="col col-6">
+												<label class="select">
+													<select name="lsbagent_section">
+														<option value="" selected="" disabled="">Business Type</option>
+														<option value="D">Destination Management Company</option>
+														<option value="T">Tour Counter</option>
+														<option value="A">Travel Agent</option>
+														<option value="W">Wholesale Travel Company</option>
+														<option value="C">Corperate</option>
+														<option value="G">Goverment</option>
+													</select> <i></i> 
+												</label>
+											</section>
+											<section class="col col-6">
+												<label class="input">
+													<input type="text" name="txbagent_license" placeholder="TAT License">
+												</label>
+											</section>
 									</div>
-
-									<div class="row">
-										<section class="col col-6">
-											<label class="select">
-												<select name="gender">
-													<option value="0" selected="" disabled="">Gender</option>
-													<option value="1">Male</option>
-													<option value="2">Female</option>
-													<option value="3">Prefer not to answer</option>
-												</select> <i></i> </label>
-										</section>
-										<section class="col col-6">
-											<label class="input"> <i class="icon-append fa fa-calendar"></i>
-												<input type="text" name="request" placeholder="Request activation on" class="datepicker" data-dateformat='dd/mm/yy'>
-											</label>
-										</section>
-									</div>
-
+								<fieldset>
 									<section>
 										<label class="checkbox">
-											<input type="checkbox" name="subscription" id="subscription">
-											<i></i>I want to receive news and special offers</label>
-										<label class="checkbox">
 											<input type="checkbox" name="terms" id="terms">
-											<i></i>I agree with the <a href="#" data-toggle="modal" data-target="#myModal"> Terms and Conditions </a></label>
+											<i></i>I agree with the <a href="#" data-toggle="modal" data-target="#myModal"> Terms and Conditions </a>
+										</label>
 									</section>
 								</fieldset>
+								
 								<footer>
+									<input type="hidden" name="hAction" value="Register">
 									<button type="submit" class="btn btn-primary">
 										Register
 									</button>
@@ -164,21 +169,8 @@ include("inc/header.php");
 									</p>
 								</div>
 							</form>
-
 						</div>
-						<p class="note text-center">*FREE Registration ends on October 2015.</p>
-						<h5 class="text-center">- Or sign in using -</h5>
-						<ul class="list-inline text-center">
-							<li>
-								<a href="javascript:void(0);" class="btn btn-primary btn-circle"><i class="fa fa-facebook"></i></a>
-							</li>
-							<li>
-								<a href="javascript:void(0);" class="btn btn-info btn-circle"><i class="fa fa-twitter"></i></a>
-							</li>
-							<li>
-								<a href="javascript:void(0);" class="btn btn-warning btn-circle"><i class="fa fa-linkedin"></i></a>
-							</li>
-						</ul>
+						<p class="note text-center">*FREE Registration ends on December 2018.</p>
 					</div>
 				</div>
 			</div>
@@ -196,7 +188,7 @@ include("inc/header.php");
 						<h4 class="modal-title" id="myModalLabel">Terms & Conditions</h4>
 					</div>
 					<div class="modal-body custom-scroll terms-body">
-						
+					
  <div id="left">
 
 
@@ -425,32 +417,21 @@ Contractology supply a wide variety of commercial legal documents, such as <a hr
 
 			// Rules for form validation
 			rules : {
-				username : {
+				txbagent_name : {
 					required : true
 				},
-				email : {
+				txbagent_name_acc : {
+					required : true
+				},
+				txbagent_main_name : {
+					required : true
+				},
+				txbagent_mail_tel : {
+					required : true
+				},
+				txbagent_main_email : {
 					required : true,
 					email : true
-				},
-				password : {
-					required : true,
-					minlength : 3,
-					maxlength : 20
-				},
-				passwordConfirm : {
-					required : true,
-					minlength : 3,
-					maxlength : 20,
-					equalTo : '#password'
-				},
-				firstname : {
-					required : true
-				},
-				lastname : {
-					required : true
-				},
-				gender : {
-					required : true
 				},
 				terms : {
 					required : true
@@ -459,28 +440,21 @@ Contractology supply a wide variety of commercial legal documents, such as <a hr
 
 			// Messages for form validation
 			messages : {
-				login : {
-					required : 'Please enter your login'
+				txbagent_name : {
+					required : 'Please enter Agent Name'
 				},
-				email : {
-					required : 'Please enter your email address',
+				txbagent_name_acc : {
+					required : 'Please enter Agent Name for Accounting'
+				},
+				txbagent_main_name : {
+					required : 'Please enter Contact Person'
+				},
+				txbagent_mail_tel : {
+					required : 'Please enter Telephone Number'
+				},
+				txbagent_main_email : {
+					required : 'Please enter email address',
 					email : 'Please enter a VALID email address'
-				},
-				password : {
-					required : 'Please enter your password'
-				},
-				passwordConfirm : {
-					required : 'Please enter your password one more time',
-					equalTo : 'Please enter the same password as above'
-				},
-				firstname : {
-					required : 'Please select your first name'
-				},
-				lastname : {
-					required : 'Please select your last name'
-				},
-				gender : {
-					required : 'Please select your gender'
 				},
 				terms : {
 					required : 'You must agree with Terms and Conditions'
