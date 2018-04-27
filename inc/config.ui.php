@@ -6,7 +6,20 @@ if(mysqli_num_rows($result) > 0) {
 	$row = mysqli_fetch_assoc($result);
 	$TicketWaiting = $row['nrow'];
 }
-
+//Get num row
+$sql = "SELECT count(*) AS nrow FROM booking WHERE booking_status='N'";
+$result = mysqli_query($conn ,$sql);
+if(mysqli_num_rows($result) > 0) {
+	$row = mysqli_fetch_assoc($result);
+	$BookingNstatus = $row['nrow'];
+}
+//Get num row
+$sql = "SELECT count(*) AS nrow FROM booking WHERE booking_status='C'";
+$result = mysqli_query($conn ,$sql);
+if(mysqli_num_rows($result) > 0) {
+	$row = mysqli_fetch_assoc($result);
+	$BookingCstatus = $row['nrow'];
+}
 //CONFIGURATION for SmartAdmin UI
 
 //ribbon breadcrumbs config
@@ -38,13 +51,21 @@ $page_nav = array(
 		"title" => "Booking",
 		"icon" => "fa-book",
 		"sub" => array(
-			"Create New Booking" => array(
-				"title" => "Create New Booking",
-				"url" => APP_URL."/bookingList-info.php"
-			),
+			//"Create New Booking" => array(
+			//	"title" => "Create New Booking",
+			//	"url" => APP_URL."/bookingList-info.php"
+			//),
 			"Booking List" => array(
-				"title" => "Booking List",
+				"title" => "[1] Booking List ($BookingNstatus)",
 				"url" => APP_URL."/bookingList.php"
+			),
+			"Wait for Confirm" => array(
+				"title" => "[2] Wait for Confirm ($TicketWaiting)",
+				"url" => APP_URL."/bookingList-confirm.php"
+			),
+			"Submit Invoice" => array(
+				"title" => "[3] Submit Invoice ($BookingCstatus)",
+				"url" => APP_URL."/bookingList-submit-invoice.php"						
 			)
 		)
 	),
@@ -52,26 +73,13 @@ $page_nav = array(
 		"title" => "Tour Operation",
 		"icon" => "fa-ra",
 		"sub" => array(
-			"Ticket Waiting" => array(
-				"title" => "Ticket Waiting ($TicketWaiting)",
-				"url" => APP_URL."/bookingList-confirm.php"
-			),
 			"Daily Transport" => array(
 				"title" => "Daily Transport",
 				"url" => APP_URL."#"
 			),
-			"Report" => array(
-				"title" => "Report",
-				"sub" => array(
-					"Supplier Setup" => array(
-						"title" => "Itinerary Report",
-						"url" => APP_URL."#"						
-					),
-					"Product Setup" => array(
-						"title" => "Pickup Card",
-						"url" => APP_URL."#"
-					)
-				)
+			"Daily Tour Operation" => array(
+				"title" => "Daily Tour Operation",
+				"url" => APP_URL."/tour_operation.php"
 			)
 		)
 	),
@@ -85,19 +93,11 @@ $page_nav = array(
 					"Product Setup" => array(
 						"title" => "Invoice List",
 						"url" => APP_URL."#"
-					),					
-						"Supplier Setup" => array(
-						"title" => "Submit Invoice",
-						"url" => APP_URL."#"						
 					),
-					"Payment Approve" => array(
-						"title" => "Payment Approve",
-						"url" => APP_URL."#"
-					),
-					"Invoice Over Due" => array(
-						"title" => "Invoice Over Due (99)",
-						"url" => APP_URL."#"
-					),
+					//"Payment Approve" => array(
+					//	"title" => "Payment Approve",
+					//	"url" => APP_URL."#"
+					//),
 					"Agent statement card" => array(
 						"title" => "Agent statement",
 						"url" => APP_URL."#"

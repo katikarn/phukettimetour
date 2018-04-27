@@ -33,12 +33,13 @@
 	//Get data from database
 
 	if( isset($_GET['id']) )	{
-		$sql = "SELECT booking_id, booking_status, agent_id, booking_name, booking_pax, booking_nat, booking_tel, booking_line, 
-		booking_remark, createdatetime, createby, updatedatetime, updateby
+		$sql = "SELECT booking_id, booking_status, agent_id, booking_name, booking_pax, 
+		booking_nat, booking_tel, booking_line, booking_remark, createdatetime, createby, updatedatetime, updateby
 		FROM booking
 		WHERE booking_id = '".$_GET['id']."'";
 		$result = mysqli_query($conn ,$sql);
 		$row = mysqli_fetch_assoc($result);
+
 		if (mysqli_num_rows($result) > 0)	{
 			$_booking_id = $row['booking_id'];
 			$_booking_status = $row['booking_status'];
@@ -169,12 +170,18 @@
 				</h1>
 			</div>
 			<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8" style="text-align: right;">
+			<?php if ($_booking_status=="C")	{ ?>
+				<a href="bookingList-invoice.php" target="_blank" class="btn btn-default" style="margin-right: 10px;"> 
+					<i style="margin-right: 5px;" class="icon-append fa fa-print"></i>Print Invoice</a>
+			<?php }?>
+			<?php if ($_booking_status=="P")	{ ?>
 				<a href="bookingList.php" class="btn btn-default" style="margin-right: 10px;"> 
-					<i style="margin-right: 5px;" class="icon-append fa fa-send"></i>Send Mail</a>
+					<i style="margin-right: 5px;" class="icon-append fa fa-send"></i>Send Confirmation</a>
+				<a class="btn btn-default" style="margin-right: 10px;">
+					<i style="margin-right: 5px;" class="icon-append fa fa-file-o"></i>Itinerary</a>					
 				<a class="btn btn-default" style="margin-right: 10px;">
 					<i style="margin-right: 5px;" class="icon-append fa fa-car"></i>Pickup Card</a>
-				<a class="btn btn-default" style="margin-right: 10px;">
-					<i style="margin-right: 5px;" class="icon-append fa fa-file-o"></i>Itinerary</a>
+			<?php }?>
 			</div>
 		</div>
 		<!-- widget grid -->
@@ -285,8 +292,11 @@
 													<input type="radio" name="chkbooking_status" id="chkbooking_status_N" value="N" checked>
 													<i></i>New</label>
 												<label class="radio">
-													<input type="radio" name="chkbooking_status" id="chkbooking_status_C" value="C" <?php if ($_booking_status=="C")	{ echo " checked "; }?> readonly>
+													<input type="radio" name="chkbooking_status" id="chkbooking_status_C" value="C" <?php if ($_booking_status=="C")	{ echo " checked "; }?>>
 													<i></i>Confirm</label>
+												<label class="radio">
+													<input type="radio" name="chkbooking_status" id="chkbooking_status_P" value="P" <?php if ($_booking_status=="P")	{ echo " checked "; }?>>
+													<i></i>Paid</label>
 											</div>
 										</section>
 										<section class="col col-4">

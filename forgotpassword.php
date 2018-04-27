@@ -1,5 +1,5 @@
 <?php
-include("inc/connectionToMysql.php");
+
 //initilize the page
 require_once("inc/init.php");
 
@@ -26,7 +26,7 @@ include("inc/header.php");
 		$email = $_POST["email"];
 		echo "<script>alert('". $email ."');</script>";
 
-		$to = 'ntw@ii.co.th'; // note the comma
+		$to = 'katikarn@gmail.com'; // note the comma
 
 		// Subject
 		$subject = 'Birthday Reminders for August';
@@ -139,12 +139,7 @@ include("inc/header.php");
 
 <!-- END MAIN PANEL -->
 <!-- ==========================CONTENT ENDS HERE ========================== -->
-<!-- PAGE FOOTER -->
-<?php
-	// include page footer
-	include("inc/footer.php");
-?>
-<!-- END PAGE FOOTER -->
+
 
 <?php 
 	//include required scripts

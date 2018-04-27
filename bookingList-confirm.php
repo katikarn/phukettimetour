@@ -15,7 +15,7 @@
 		YOU CAN SET CONFIGURATION VARIABLES HERE BEFORE IT GOES TO NAV, RIBBON, ETC.
 	E.G. $page_title = "Custom Title" */
 	
-	$page_title = "Ticket Waiting";
+	$page_title = "Wait for Confirm";
 	
 	/* ---------------- END PHP Custom Scripts ------------- */
 	
@@ -27,7 +27,7 @@
 	
 	//include left panel (navigation)
 	//follow the tree in inc/config.ui.php
-	$page_nav["Tour Operation"]["sub"]["Ticket Waiting"]["active"] = true;
+	$page_nav["Booking"]["sub"]["Wait for Confirm"]["active"] = true;
 	include ("inc/nav.php");	
 ?>
 
