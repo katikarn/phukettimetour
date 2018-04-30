@@ -341,7 +341,7 @@
 									</label>
 								</div>
 							</div>
-							<label class="label col col-3 header">Image file 1</label>
+							<label class="label col col-3 header">Itinerary (PDF)</label>
 							<div class="input input-file col col-9">
 								<span class="button">
 									<input type="file" id="txbproduct_file1" name="txbproduct_file1" onchange="this.parentNode.nextSibling.value = this.value; showFile(this.id);">Browse
@@ -350,7 +350,7 @@
 									<a id="show_txbproduct_file1" target="_blank" style="display: none"></a>
 								<input type="hidden" id="Text_txbproduct_file1" name="Text_txbproduct_file1"/> 
 							</div>
-							<label class="label col col-3 header">Image file 2</label>
+							<label class="label col col-3 header">Image file 1</label>
 							<div class="input input-file col col-9">
 								<span class="button">
 									<input type="file" id="txbproduct_file2" name="txbproduct_file2" onchange="this.parentNode.nextSibling.value = this.value; showFile(this.id);">Browse
@@ -359,7 +359,7 @@
 								<a id="show_txbproduct_file2" target="_blank" style="display: none"></a>
 								<input type="hidden" id="Text_txbproduct_file2" name="Text_txbproduct_file2"/> 
 							</div>							
-							<label class="label col col-3 header">Image file 3</label>
+							<label class="label col col-3 header">Image file 2</label>
 							<div class="input input-file col col-9">
 								<span class="button">
 									<input type="file" id="txbproduct_file3" name="txbproduct_file3" onchange="this.parentNode.nextSibling.value = this.value; showFile(this.id);">Browse
@@ -367,6 +367,14 @@
 								<input type="text" placeholder="Include contract files" id="show_product_file3" readonly="">
 								<a id="show_txbproduct_file3" target="_blank" style="display: none"></a>
 								<input type="hidden" id="Text_txbproduct_file3" name="Text_txbproduct_file3"/> 
+							</div>
+							<div class="row">
+								<label class="label col col-3 header">Remark</label>
+								<div class="col col-9">
+									<label class="input">
+										<textarea type="text" rows="5" name="txbproduct_remark" id="txbproduct_remark"></textarea>
+									</label>
+								</div>
 							</div>
 						</section>		  				
 		  			</fieldset>
@@ -397,16 +405,16 @@
 										<div class="inline-group">
 											<label class="radio">
 												<input type="radio" name="chkproduct_seat" value="N" id="chkproduct_seat_N" checked>
-												<i></i>No Seat</label>
+												<i></i>No Fixed</label>
 											<label class="radio">
 												<input type="radio" name="chkproduct_seat" value="Y" id="chkproduct_seat_Y">
-												<i></i>Fixed Seat</label>
+												<i></i>Fixed</label>
 										</div>
 									</label>
 								</div>
 							</div>
 							<div class="row">
-								<label class="label col col-3 header">Use for</label>
+								<label class="label col col-3 header">Passenger Type</label>
 								<div class="col col-9">
 									<label class="input">
 										<div class="inline-group">
@@ -415,7 +423,7 @@
 												<i></i>All</label>
 											<label class="radio" title="60 or older">
 												<input type="radio" name="chkproduct_for" value="S" id="chkproduct_for_S">
-												<i></i>Senier</label>
+												<i></i>Senior</label>
 											<label class="radio" title="12 or older">
 												<input type="radio" name="chkproduct_for" value="A" id="chkproduct_for_A">
 												<i></i>Adult</label>
@@ -430,24 +438,30 @@
 								</div>
 							</div>
 							<div class="row">
-								<label class="label col col-3 header">Start Time</label>
-								<div class="col col-4">
+								<label class="label col col-3 header">Open Time</label>
+								<div class="col col-3">
 									<label class="input">
-										<input type="Time" name="txbproduct_showtime" id="txbproduct_showtime">
+										<input type="Time" name="txbproduct_starttime" id="txbproduct_starttime">
 									</label>
 								</div>
-								<label class="label col col-1 header"> To </label>
-								<div class="col col-4">
+								<label class="label col col-3 header">Close Time</label>
+								<div class="col col-3">
 									<label class="input">
 										<input type="Time" name="txbproduct_endtime" id="txbproduct_endtime">
 									</label>
 								</div>								
 							</div>
 							<div class="row">
-								<label class="label col col-3 header">Duration</label>
-								<div class="col col-9">
+								<label class="label col col-3 header">Show Time</label>
+								<div class="col col-3">
 									<label class="input">
-										<input type="text" name="txbproduct_duration" id="txbproduct_duration" mamaxlength="20"x>
+										<input type="Time" name="txbproduct_showtime" id="txbproduct_showtime">
+									</label>
+								</div>	
+								<label class="label col col-3 header">Duration</label>
+								<div class="col col-3">
+									<label class="input">
+										<input type="text" name="txbproduct_duration" id="txbproduct_duration" maxlength="15">
 									</label>
 								</div>
 							</div>
@@ -524,16 +538,6 @@
 								<div class="col col-9">
 									<label class="input required">
 										<input type="number" step=".01" name="txbproduct_oversea_price" id="txbproduct_oversea_price">
-									</label>
-								</div>
-							</div>
-						<section>
-						</section>
-							<div class="row">
-								<label class="label col col-3 header">Remark</label>
-								<div class="col col-9">
-									<label class="input">
-										<textarea type="text" rows="5" name="txbproduct_remark" id="txbproduct_remark"></textarea>
 									</label>
 								</div>
 							</div>
@@ -647,6 +651,7 @@ include ("inc/scripts.php");
 						$('#chkproduct_seat_' + data.product_seat).prop('checked',true);
 						$('#chkproduct_for_' + data.product_for).prop('checked',true);
 						$('#txbproduct_showtime').val(data.product_showtime);
+						$('#txbproduct_starttime').val(data.product_starttime);
 						$('#txbproduct_endtime').val(data.product_endtime);
 						$('#txbproduct_duration').val(data.product_duration);
 						$('#lsbproduct_car_type').val(data.product_car_type);
@@ -694,6 +699,7 @@ include ("inc/scripts.php");
 						//$('#chkproduct_for_C' + data.chkproduct_for).prop('checked',true);
 						//$('#chkproduct_for_S' + data.chkproduct_for).prop('checked',true);
 						$('#txbproduct_showtime').val('');
+						$('#txbproduct_starttime').val('');
 						$('#txbproduct_endtime').val('');
 						$('#txbproduct_duration').val('');
 						$('#lsbproduct_car_type').val('');

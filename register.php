@@ -146,15 +146,10 @@ include("inc/header.php");
 												</label>
 											</section>
 									</div>
-								<fieldset>
-									<section>
 										<label class="checkbox">
 											<input type="checkbox" name="terms" id="terms">
 											<i></i>I agree with the <a href="#" data-toggle="modal" data-target="#myModal"> Terms and Conditions </a>
 										</label>
-									</section>
-								</fieldset>
-								
 								<footer>
 									<input type="hidden" name="hAction" value="Register">
 									<button type="submit" class="btn btn-primary">
@@ -478,7 +473,10 @@ Contractology supply a wide variety of commercial legal documents, such as <a hr
 
 	});
 </script>
-
+<?php
+	// include page footer
+	include("inc/footer.php");
+?>
 <?php 
 	//include footer
 	include("inc/google-analytics.php"); 

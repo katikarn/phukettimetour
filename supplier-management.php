@@ -335,7 +335,7 @@
 									</div>
 								</div>
 								<div class="row">
-									<label class="label col col-3 header">Other File</label>
+									<label class="label col col-3 header">Logo Image</label>
 									<div class="input input-file col col-9">
 										<span class="button"><input type="file" id="txbsupplier_other_file" name="txbsupplier_other_file" onchange="this.parentNode.nextSibling.value = this.value; showFile(this.id);">Browse</span><input type="text" id="show_other_file" placeholder="Other files" readonly="">
 										<a id="show_txbsupplier_other_file" target="_blank" style="display: none"></a>

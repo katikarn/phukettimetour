@@ -73,13 +73,13 @@ $page_nav = array(
 		"title" => "Tour Operation",
 		"icon" => "fa-ra",
 		"sub" => array(
-			"Daily Transport" => array(
-				"title" => "Daily Transport",
-				"url" => APP_URL."#"
-			),
 			"Daily Tour Operation" => array(
 				"title" => "Daily Tour Operation",
 				"url" => APP_URL."/tour_operation.php"
+			),
+			"Daily Transport" => array(
+				"title" => "Daily Transport",
+				"url" => APP_URL."/transport_operation.php"
 			)
 		)
 	),
